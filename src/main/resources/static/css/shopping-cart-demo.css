@@ -1,0 +1,336 @@
+:root {
+    --primary-color: #007bff;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --border-color: #dee2e6;
+    --text-dark: #212529;
+    --text-muted: #6c757d;
+
+    /* highlight vars */
+    --method-highlight-bg: #fffbea;       /* very light yellow */
+    --method-highlight-border: #ffc107;   /* strong yellow border */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--light-bg);
+}
+
+.main-container {
+    background: var(--white);
+    margin: 0 auto;
+    border: 1px solid var(--border-color);
+    border-radius: .5rem;
+    overflow: hidden;
+    max-width: 1200px;
+}
+
+.demo-header {
+    padding: 1rem;
+    background: var(--text-dark);
+    color: var(--white);
+    text-align: center;
+}
+
+.demo-header h1 {
+    font-weight: 700;
+    font-size: 1.75rem;
+}
+
+.demo-page-container {
+    padding: 1rem;
+}
+
+.demo-card {
+    border: 1px solid var(--border-color);
+    border-radius: .375rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+}
+
+.demo-card h5, .demo-card h6 {
+    font-weight: 600;
+    margin-bottom: .75rem;
+}
+
+.cart-items-display {
+    flex-grow: 1;
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: .25rem;
+    padding: .5rem;
+    min-height: 150px;
+}
+
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.cart-item-row:last-child { border-bottom: none; }
+
+.badge { font-weight: 500; }
+
+.cart-actions {
+    padding-top: .75rem;
+    margin-top: .75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.product-add-btn { font-size: 0.8rem; }
+.product-add-btn i {
+    display: block;
+    font-size: 1.25rem;
+    margin-bottom: .25rem;
+}
+
+.action-button { font-size: 0.9rem; }
+.redo-btn {
+    background-color: var(--text-muted);
+    color: var(--white);
+}
+.remove-btn {
+    font-size: 0.75rem;
+    padding: .2rem .4rem;
+}
+
+.api-log-container {
+    background-color: #212529;
+    color: #f8f9fa;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85em;
+    padding: .75rem;
+    border-radius: .25rem;
+    height: 320px;
+    overflow-y: auto;
+}
+
+.api-flow-block {
+    margin-bottom: .5rem;
+    padding-left: .5rem;
+    border-left: 3px solid var(--info-color);
+}
+
+.api-flow-child {
+    padding-left: 1.25rem;
+    position: relative;
+}
+
+.api-flow-child::before {
+    content: '└──';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--text-muted);
+}
+
+.api-flow-block strong { color: var(--warning-color); }
+.api-flow-block .java21-method-tag {
+    color: var(--white);
+    background-color: var(--success-color);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.clear-log-btn { line-height: 1; font-size: 0.75rem; }
+
+/* --- API Reference Table --- */
+.api-reference-table { font-size: 0.85em; }
+.api-reference-table td, .api-reference-table th {
+    padding: .4rem;
+    vertical-align: middle;
+}
+.api-reference-table code {
+    background-color: #e9ecef;
+    padding: .2em .4em;
+    border-radius: .25rem;
+}
+
+/* === FIX: Reliable highlight on Bootstrap table rows ===
+   Bootstrap stripes/hover color cells via --bs-table-accent-bg on <tr>,
+   so we set that and also color the cells directly. */
+.api-reference-table tr.method-highlight {
+    --bs-table-accent-bg: var(--method-highlight-bg) !important;
+}
+.api-reference-table tr.method-highlight > * {
+    background-color: var(--method-highlight-bg) !important;
+    border-top: 2px solid var(--method-highlight-border);
+    border-bottom: 2px solid var(--method-highlight-border);
+    transition: background-color 250ms ease;
+}
+.api-reference-table tr.method-highlight > *:first-child {
+    border-left: 2px solid var(--method-highlight-border);
+}
+.api-reference-table tr.method-highlight > *:last-child {
+    border-right: 2px solid var(--method-highlight-border);
+}
+@media (prefers-reduced-motion: reduce) {
+    .api-reference-table tr.method-highlight > * { transition: none; }
+}
+/* === Hard override: make highlight always visible on Bootstrap tables === */
+:root{
+  --method-highlight-bg: #fffbea;
+  --method-highlight-border: #ffc107;
+}
+
+.api-reference-table tr.method-highlight > * {
+  /* Bootstrap colors cells via inset box-shadow. Do the same, but with our color. */
+  box-shadow: inset 0 0 0 9999px var(--method-highlight-bg) !important;
+  background-color: transparent !important; /* let the box-shadow be the paint */
+  border-top: 2px solid var(--method-highlight-border) !important;
+  border-bottom: 2px solid var(--method-highlight-border) !important;
+  transition: box-shadow 250ms ease;
+}
+.api-reference-table tr.method-highlight > *:first-child {
+  border-left: 2px solid var(--method-highlight-border) !important;
+}
+.api-reference-table tr.method-highlight > *:last-child {
+  border-right: 2px solid var(--method-highlight-border) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .api-reference-table tr.method-highlight > * { transition: none; }
+}
+/* Enhanced Shopping Cart Demo Header Styles */
+/* Add this to your shopping-cart-demo.css file */
+
+.demo-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    color: var(--white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 3px solid #4facfe;
+}
+
+/* Animated background shimmer effect */
+.demo-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: headerShimmer 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes headerShimmer {
+    0%, 100% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+        opacity: 0.6;
+    }
+}
+
+.demo-header h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.demo-header h1 i {
+    font-size: 1.8rem;
+    color: #fff;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.demo-header p {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    opacity: 0.95;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Java 21 badge */
+.java21-badge {
+    display: inline-block;
+    background: linear-gradient(45deg, #10b981, #06b6d4);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    animation: badgePulse 3s infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
+    }
+}
+
+/* Responsive header */
+@media (max-width: 768px) {
+    .demo-header {
+        padding: 1.25rem 1rem;
+    }
+
+    .demo-header h1 {
+        font-size: 1.75rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .demo-header h1 i {
+        font-size: 1.5rem;
+    }
+
+    .demo-header p {
+        font-size: 1rem;
+    }
+
+    .java21-badge {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .demo-header {
+        padding: 1rem 0.75rem;
+    }
+
+    .demo-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .demo-header p {
+        font-size: 0.9rem;
+    }
+}

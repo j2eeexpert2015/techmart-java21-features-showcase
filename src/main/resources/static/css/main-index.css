@@ -1,0 +1,579 @@
+/**
+ * TechMart Main Index Page - CSS Stylesheet
+ * Professional landing page for Java 21 Demo Platform
+ *
+ * Author: Java 21 Course
+ * Purpose: Main navigation hub for all Java 21 feature demonstrations
+ * Features: Clean design, colorful accents, responsive layout, no scroll issues
+ */
+
+/* ================================
+   CSS CUSTOM PROPERTIES (VARIABLES)
+   ================================ */
+:root {
+    /* Brand color palette */
+    --primary-color: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #3b82f6;
+    --secondary-color: #1e40af;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --info-color: #06b6d4;
+
+    /* Neutral colors */
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+
+    /* Colorful gradients for beautification */
+    --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-pink: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-blue: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-green: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --gradient-orange: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+
+    /* Spacing and layout */
+    --border-radius: 12px;
+    --border-radius-lg: 20px;
+    --border-radius-xl: 24px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+    /* Animation timing */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+
+/* ================================
+   GLOBAL STYLES AND RESET
+   ================================ */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--gradient-purple);
+    line-height: 1.6;
+    color: var(--gray-800);
+}
+
+/* ================================
+   MAIN CONTAINER
+   ================================ */
+.main-container {
+    background: var(--white);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-2xl);
+    margin: 0.5rem auto;
+    max-width: 1400px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ================================
+   HERO SECTION
+   ================================ */
+.hero-section {
+    background: var(--gradient-purple);
+    color: var(--white);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated shimmer effect for hero */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: heroShimmer 4s ease-in-out infinite;
+}
+
+@keyframes heroShimmer {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    opacity: 0.95;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.java-version-badge {
+    background: var(--gradient-green);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-lg);
+    animation: subtlePulse 3s infinite;
+}
+
+@keyframes subtlePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: var(--shadow-lg);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 20px rgba(67, 233, 123, 0.4);
+    }
+}
+
+/* ================================
+   STATS SECTION
+   ================================ */
+.stats-section {
+    background: linear-gradient(135deg, var(--gray-50) 0%, #e0f2fe 50%, var(--gray-50) 100%);
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* ================================
+   DEMO CARDS SECTION
+   ================================ */
+.demos-section {
+    padding: 2.5rem 1.5rem;
+    background: linear-gradient(180deg, var(--white) 0%, #fefbff 50%, var(--white) 100%);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--gray-600);
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.demos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.demo-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.demo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Shimmer effect on hover */
+.demo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.05), transparent);
+    transition: left var(--transition-slow);
+}
+
+.demo-card:hover::before {
+    left: 100%;
+}
+
+/* ================================
+   DEMO CARD ICONS (COLORFUL)
+   ================================ */
+.demo-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.demo-icon i {
+    font-size: 1.25rem;
+    color: var(--white);
+}
+
+/* Individual icon colors */
+.shopping-cart-icon {
+    background: var(--gradient-purple);
+}
+
+.payment-icon {
+    background: var(--gradient-pink);
+}
+
+.templates-icon {
+    background: var(--gradient-blue);
+}
+
+/* ================================
+   DEMO CARD CONTENT
+   ================================ */
+.demo-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--gray-800);
+    position: relative;
+    z-index: 1;
+}
+
+.demo-description {
+    color: var(--gray-600);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    font-size: 0.9rem;
+}
+
+.demo-features {
+    list-style: none;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+    margin: 0;
+}
+
+.demo-features li {
+    padding: 0.2rem 0;
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+}
+
+.demo-features li::before {
+    content: '✓';
+    color: var(--success-color);
+    font-weight: bold;
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* ================================
+   DEMO BADGES (COLORFUL)
+   ================================ */
+.demo-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: var(--white);
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    z-index: 1;
+}
+
+/* Badge colors for each demo */
+.demo-card[data-demo="shopping-cart"] .demo-badge {
+    background: var(--gradient-green);
+}
+
+.demo-card[data-demo="payment-processing"] .demo-badge {
+    background: var(--gradient-orange);
+}
+
+.demo-card[data-demo="string-templates"] .demo-badge {
+    background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+}
+
+/* ================================
+   FOOTER SECTION
+   ================================ */
+.footer-section {
+    background: linear-gradient(135deg, var(--gray-800) 0%, #374151 50%, var(--gray-800) 100%);
+    color: var(--white);
+    padding: 2rem 1.5rem 1.5rem;
+    text-align: center;
+}
+
+.footer-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.footer-description {
+    color: var(--gray-300);
+    margin-bottom: 1.5rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.9rem;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.footer-link {
+    color: var(--gray-300);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    font-size: 0.9rem;
+}
+
+.footer-link:hover {
+    color: var(--white);
+}
+
+.footer-copyright {
+    color: var(--gray-400);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--gray-700);
+    padding-top: 1rem;
+}
+
+/* ================================
+   TOAST NOTIFICATIONS
+   ================================ */
+.toast-container {
+    z-index: 9999;
+}
+
+.custom-toast {
+    min-width: 300px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+@media (max-width: 768px) {
+    .main-container {
+        margin: 0.25rem;
+        border-radius: var(--border-radius);
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+
+    .demos-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .demo-card {
+        padding: 1.25rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .demos-section {
+        padding: 2rem 1rem;
+    }
+
+    .stats-section {
+        padding: 1.5rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .demos-section {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .stats-section {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .main-container {
+        margin: 0.1rem;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .demos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
+
+/* ================================
+   ACCESSIBILITY ENHANCEMENTS
+   ================================ */
+.demo-card:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .hero-section::before,
+    .java-version-badge,
+    .demo-card::before {
+        animation: none;
+    }
+
+    .demo-card:hover {
+        transform: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .demo-card {
+        border-width: 2px;
+    }
+
+    .demo-features li::before {
+        content: '●';
+    }
+}
+
+/* Print styles */
+@media print {
+    .demo-card:hover {
+        transform: none;
+        box-shadow: var(--shadow-md);
+    }
+
+    .hero-section {
+        background: var(--gray-800);
+    }
+
+    .footer-section {
+        background: var(--gray-800);
+    }
+}
