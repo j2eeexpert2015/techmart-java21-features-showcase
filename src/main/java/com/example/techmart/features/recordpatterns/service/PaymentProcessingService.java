@@ -1,14 +1,20 @@
 package com.example.techmart.features.recordpatterns.service;
 
+// FIX: Add necessary imports for the payment method records
+import com.example.techmart.features.recordpatterns.domain.BankTransfer;
+import com.example.techmart.features.recordpatterns.domain.CreditCard;
+import com.example.techmart.features.recordpatterns.domain.PayPal;
 import com.example.techmart.features.recordpatterns.domain.PaymentMethod;
 import com.example.techmart.features.recordpatterns.domain.PaymentProcessingResult;
 import com.example.techmart.features.recordpatterns.domain.PaymentProcessingStats;
 import com.example.techmart.shared.domain.Customer;
+import com.example.techmart.shared.domain.CustomerTier; // FIX: Add missing import
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime; // FIX: Add missing import
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -251,5 +257,83 @@ public class PaymentProcessingService {
         List<PaymentProcessingResult> results = getProcessingHistory();
 
         long totalProcessed = results.size();
-        long successfulPayments = results.stream().mapToLong(r -> r.isSuccessful() ? 1 : 0).sum();
-        long requiresVerification = results
+        long successfulPayments = results.stream().filter(PaymentProcessingResult::isSuccessful).count();
+        long requiresVerification = results.stream().filter(r -> r.status() == PaymentProcessingResult.ProcessingStatus.REQUIRES_VERIFICATION).count();
+        long requiresApproval = results.stream().filter(r -> r.status() == PaymentProcessingResult.ProcessingStatus.REQUIRES_APPROVAL).count();
+        long declined = results.stream().filter(PaymentProcessingResult::hasFailed).count();
+        BigDecimal totalAmount = results.stream().map(PaymentProcessingResult::amount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new PaymentProcessingStats(totalProcessed, successfulPayments, requiresVerification, requiresApproval, declined, totalAmount);
+    }
+
+    // ============================================================================
+    // FIX: IMPLEMENT MISSING HELPER METHODS
+    // ============================================================================
+
+    /**
+     * Helper to validate a bank routing number using a standard checksum algorithm.
+     * This method was missing, causing a compilation error.
+     */
+    private boolean isValidRoutingNumber(String routingNumber) {
+        if (routingNumber == null || !routingNumber.matches("\\d{9}")) {
+            return false;
+        }
+
+        int[] weights = {3, 7, 1, 3, 7, 1, 3, 7, 1};
+        int sum = 0;
+        for (int i = 0; i < 9; i++) {
+            sum += Character.getNumericValue(routingNumber.charAt(i)) * weights[i];
+        }
+        return sum != 0 && sum % 10 == 0;
+    }
+
+    /**
+     * Helper to log the outcome of the pattern matching for educational purposes.
+     * This method was missing, causing a compilation error.
+     */
+    private void logPatternMatchingResult(PaymentProcessingResult result, Customer customer) {
+        String logMessage = String.format(
+                "Pattern Match Result -> [Customer: %s (%s), PaymentType: %s, Pattern: %s, Guard: '%s', Action: %s, Status: %s]",
+                customer.username(),
+                customer.tier(),
+                result.paymentMethod().getType(),
+                result.patternMatched(),
+                result.guardCondition(),
+                result.processingAction(),
+                result.status()
+        );
+        logger.info(logMessage);
+    }
+
+    /**
+     * Helper to create a demo customer based on a tier string.
+     * This method was missing, causing a compilation error.
+     */
+    private Customer createDemoCustomer(String tier) {
+        CustomerTier customerTier = CustomerTier.BASIC;
+        try {
+            if (tier != null) {
+                customerTier = CustomerTier.valueOf(tier.toUpperCase());
+            }
+        } catch (IllegalArgumentException e) {
+            logger.warn("Invalid customer tier string '{}', defaulting to BASIC.", tier);
+        }
+        return new Customer(1L, "demo_user", "demo@example.com", "Demo User", customerTier, null, LocalDateTime.now(), true);
+    }
+
+    /**
+     * Helper to adjust a payment method for a specific demo scenario.
+     * This method was missing, causing a compilation error.
+     */
+    private PaymentMethod adjustPaymentMethodForScenario(PaymentMethod paymentMethod, boolean isInternational) {
+        if (paymentMethod instanceof CreditCard cc) {
+            // Return a new record with the 'isInternational' flag updated
+            return new CreditCard(
+                    cc.cardNumber(), cc.cardType(), cc.cvv(), cc.expiryMonth(), cc.expiryYear(),
+                    cc.cardholderName(), isInternational, cc.createdAt()
+            );
+        }
+        // Return original payment method if not a CreditCard
+        return paymentMethod;
+    }
+}
