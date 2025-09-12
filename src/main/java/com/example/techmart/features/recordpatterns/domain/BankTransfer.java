@@ -42,7 +42,7 @@ public record BankTransfer(
 
     @Override
     public String getType() {
-        return "BANK_TRANSFER";
+        return "BankTransfer";
     }
 
     @Override

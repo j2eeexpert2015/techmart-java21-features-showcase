@@ -37,7 +37,7 @@ public record PayPal(
 
     @Override
     public String getType() {
-        return "PAYPAL";
+        return "PayPal";
     }
 
     @Override

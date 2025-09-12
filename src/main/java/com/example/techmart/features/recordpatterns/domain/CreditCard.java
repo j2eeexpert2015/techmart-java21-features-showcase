@@ -48,8 +48,9 @@ public record CreditCard(
 
     @Override
     public String getType() {
-        return "CREDIT_CARD";
+        return "CreditCard";
     }
+
 
     @Override
     public boolean isValid() {
