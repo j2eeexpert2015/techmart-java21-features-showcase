@@ -115,7 +115,7 @@ public class PaymentProcessingController {
      */
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getProcessingStats() {
-        var stats = paymentService.getProcessingStats();
+        PaymentProcessingStats stats = paymentService.getProcessingStats();
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("totalProcessed", stats.totalProcessed());
