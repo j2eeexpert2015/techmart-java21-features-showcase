@@ -1,0 +1,655 @@
+/**
+ * TechMart Payment Processing Demo - CSS Stylesheet
+ * Demonstrating Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy
+ *
+ * Author: Java 21 Course
+ * Purpose: Interactive payment processing with pattern matching visualization
+ * Features: Consistent styling with shopping cart, colorful payment methods, real-time feedback
+ */
+
+/* ================================
+   CSS CUSTOM PROPERTIES (VARIABLES) - Matching Shopping Cart
+   ================================ */
+:root {
+    --primary-color: #007bff;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --danger-color: #dc3545;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --border-color: #dee2e6;
+    --text-dark: #212529;
+    --text-muted: #6c757d;
+
+    /* Payment-specific colors */
+    --visa-color: #1a1f71;
+    --mastercard-color: #eb001b;
+    --paypal-color: #0070ba;
+    --bank-color: #2e8b57;
+
+    /* Pattern matching highlight colors */
+    --pattern-highlight-bg: #e8f4fd;
+    --pattern-highlight-border: #007bff;
+    --guard-condition-bg: #fff3cd;
+    --guard-condition-border: #ffc107;
+}
+
+/* ================================
+   BASE STYLES - Consistent with Shopping Cart
+   ================================ */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--light-bg);
+}
+
+.main-container {
+    background: var(--white);
+    margin: 0 auto;
+    border: 1px solid var(--border-color);
+    border-radius: .5rem;
+    overflow: hidden;
+    max-width: 1400px;
+}
+
+.demo-page-container {
+    padding: 1rem;
+}
+
+.demo-card {
+    border: 1px solid var(--border-color);
+    border-radius: .375rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+}
+
+.demo-card h5, .demo-card h6 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+/* ================================
+   ENHANCED HEADER - Matching Shopping Cart Style
+   ================================ */
+.demo-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    color: var(--white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 3px solid #4facfe;
+}
+
+/* Animated background shimmer effect */
+.demo-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: headerShimmer 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes headerShimmer {
+    0%, 100% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+        opacity: 0.6;
+    }
+}
+
+.demo-header h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.demo-header h1 i {
+    font-size: 1.8rem;
+    color: #fff;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.demo-header p {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    opacity: 0.95;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Java 21 badge */
+.java21-badge {
+    display: inline-block;
+    background: linear-gradient(45deg, #10b981, #06b6d4);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    animation: badgePulse 3s infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
+    }
+}
+
+/* ================================
+   ORDER SUMMARY SECTION
+   ================================ */
+.cart-summary {
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: .25rem;
+    padding: 1rem;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.total-amount {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+/* ================================
+   PAYMENT METHOD CARDS
+   ================================ */
+.payment-method-card {
+    border: 2px solid var(--border-color);
+    border-radius: .5rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--white);
+    text-align: center;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.payment-method-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.payment-method-card.selected {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.05) 0%, rgba(0, 123, 255, 0.02) 100%);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.payment-method-icon {
+    width: 60px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--light-bg);
+    border-radius: .5rem;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+}
+
+/* Payment method specific colors */
+.payment-method-card[data-method="creditcard"] .payment-method-icon {
+    background: linear-gradient(135deg, var(--visa-color), #3b82f6);
+    color: white;
+}
+
+.payment-method-card[data-method="paypal"] .payment-method-icon {
+    background: linear-gradient(135deg, var(--paypal-color), #38bdf8);
+    color: white;
+}
+
+.payment-method-card[data-method="banktransfer"] .payment-method-icon {
+    background: linear-gradient(135deg, var(--bank-color), #22c55e);
+    color: white;
+}
+
+/* ================================
+   DYNAMIC PAYMENT FORM
+   ================================ */
+.dynamic-form {
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: .5rem;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.dynamic-form h6 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.pattern-matching-indicator {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ================================
+   VALIDATION FEEDBACK
+   ================================ */
+.validation-feedback {
+    padding: 1rem;
+    border-radius: .5rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    border-left: 4px solid;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.validation-feedback {
+    background: var(--guard-condition-bg);
+    color: #856404;
+    border-left-color: var(--warning-color);
+}
+
+/* ================================
+   PATTERN MATCHING STATUS
+   ================================ */
+.processing-status {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: .5rem;
+    padding: 1rem;
+}
+
+.status-step {
+    display: flex;
+    align-items: flex-start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.status-step:last-child {
+    border-bottom: none;
+}
+
+.status-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
+.status-active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.status-complete {
+    background: var(--success-color);
+    color: white;
+}
+
+.status-pending {
+    background: var(--text-muted);
+    color: white;
+}
+
+/* ================================
+   CODE PREVIEW
+   ================================ */
+.code-preview {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: .5rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    overflow-x: auto;
+}
+
+.code-preview pre {
+    margin: 0;
+    color: inherit;
+}
+
+/* ================================
+   API REFERENCE TABLE
+   ================================ */
+.api-reference-table {
+    font-size: 0.85em;
+}
+
+.api-reference-table td,
+.api-reference-table th {
+    padding: 0.5rem;
+    vertical-align: middle;
+}
+
+.api-reference-table code {
+    background-color: var(--pattern-highlight-bg);
+    color: var(--primary-color);
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-weight: 600;
+}
+
+/* Pattern matching highlight */
+.api-reference-table tr.pattern-highlight {
+    background-color: var(--pattern-highlight-bg) !important;
+    border-left: 4px solid var(--pattern-highlight-border);
+}
+
+.api-reference-table tr.pattern-highlight > * {
+    background-color: var(--pattern-highlight-bg) !important;
+    border-top: 2px solid var(--pattern-highlight-border);
+    border-bottom: 2px solid var(--pattern-highlight-border);
+    animation: highlightPulse 2s ease-in-out;
+}
+
+@keyframes highlightPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 rgba(0, 123, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+    }
+}
+
+/* ================================
+   VISUAL FLOW INSPECTOR - Matching Shopping Cart
+   ================================ */
+.api-log-container {
+    background-color: #212529;
+    color: #f8f9fa;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85em;
+    padding: .75rem;
+    border-radius: .25rem;
+    height: 250px;
+    overflow-y: auto;
+}
+
+.api-flow-block {
+    margin-bottom: .5rem;
+    padding-left: .5rem;
+    border-left: 3px solid var(--info-color);
+    animation: flowSlideIn 0.3s ease-out;
+}
+
+@keyframes flowSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.api-flow-child {
+    padding-left: 1.25rem;
+    position: relative;
+    margin-top: 0.25rem;
+}
+
+.api-flow-child::before {
+    content: '└──';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--text-muted);
+}
+
+.api-flow-block strong {
+    color: var(--warning-color);
+}
+
+.java21-pattern-tag {
+    color: var(--white);
+    background-color: var(--success-color);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 0.75rem;
+}
+
+/* ================================
+   BUTTONS
+   ================================ */
+.btn-primary-custom {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3);
+    border: none;
+    padding: 0.875rem 2rem;
+    border-radius: .5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary-custom:active {
+    transform: translateY(0);
+}
+
+.clear-log-btn {
+    line-height: 1;
+    font-size: 0.75rem;
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+@media (max-width: 768px) {
+    .demo-header {
+        padding: 1.25rem 1rem;
+    }
+
+    .demo-header h1 {
+        font-size: 1.75rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .demo-header h1 i {
+        font-size: 1.5rem;
+    }
+
+    .demo-header p {
+        font-size: 1rem;
+    }
+
+    .java21-badge {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .demo-page-container {
+        padding: 0.75rem;
+    }
+
+    .demo-card {
+        padding: 1rem;
+    }
+
+    .payment-method-card {
+        padding: 1rem;
+        min-height: auto;
+    }
+
+    .dynamic-form h6 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .pattern-matching-indicator {
+        align-self: flex-start;
+    }
+
+    .api-log-container {
+        height: 200px;
+    }
+
+    .btn-primary-custom {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .demo-header {
+        padding: 1rem 0.75rem;
+    }
+
+    .demo-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .demo-header p {
+        font-size: 0.9rem;
+    }
+
+    .demo-page-container {
+        padding: 0.5rem;
+    }
+
+    .demo-card {
+        padding: 0.75rem;
+    }
+
+    .payment-method-card {
+        padding: 0.75rem;
+    }
+
+    .api-log-container {
+        height: 150px;
+        font-size: 0.8em;
+    }
+}
+
+/* ================================
+   ACCESSIBILITY ENHANCEMENTS
+   ================================ */
+.payment-method-card:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.btn-primary-custom:focus {
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .demo-header::before,
+    .java21-badge,
+    .payment-method-card,
+    .validation-feedback,
+    .api-flow-block {
+        animation: none;
+    }
+
+    .payment-method-card:hover,
+    .btn-primary-custom:hover {
+        transform: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .payment-method-card {
+        border-width: 3px;
+    }
+
+    .pattern-matching-indicator {
+        border: 2px solid white;
+    }
+}
+
+/* Print styles */
+@media print {
+    .demo-header {
+        background: var(--text-dark) !important;
+        color: white !important;
+    }
+
+    .payment-method-card:hover,
+    .btn-primary-custom:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}

@@ -160,6 +160,10 @@ function handleDemoCardClick(event, demoType, demoInfo) {
     // Show loading state
     showDemoLoadingState(event.currentTarget, demoType);
 
+    // FIX: Actually navigate to the demo page after a short delay
+    setTimeout(() => {
+        navigateToDemo(demoInfo.url, demoInfo.name);
+    }, 600); // Give time for loading animation
 }
 
 /**
@@ -238,7 +242,7 @@ function showDemoLoadingState(card, demoType) {
         title.setAttribute('data-original-text', originalText);
         title.textContent = 'Loading Demo...';
 
-        // Reset after navigation
+        // Reset after navigation (in case navigation fails)
         setTimeout(() => {
             const storedOriginal = title.getAttribute('data-original-text');
             if (storedOriginal) {
@@ -251,7 +255,7 @@ function showDemoLoadingState(card, demoType) {
                     icon.className = originalClass;
                 }
             }
-        }, 2000);
+        }, 3000); // Longer timeout
     }
 }
 
@@ -530,7 +534,7 @@ function setupPerformanceMonitoring() {
  */
 function showWelcomeMessage() {
     setTimeout(() => {
-        showSuccessNotification('Welcome to TechMart! Explore Java 21 features through interactive demos.');
+        showSuccessNotification('Welcome to TechMart! Click the Shopping Cart Demo to get started.');
     }, 1500);
 }
 

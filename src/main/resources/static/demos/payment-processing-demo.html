@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechMart - Payment Processing Demo | Java 21 Pattern Matching</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/payment-processing-demo.css">
+</head>
+<body>
+<div class="container-fluid my-3">
+    <div class="main-container">
+        <!-- Enhanced Header matching shopping cart style -->
+        <header class="demo-header">
+            <h1>
+                <i class="fas fa-credit-card"></i>
+                Payment Processing Engine
+                <span class="java21-badge">Java 21</span>
+            </h1>
+            <p>Interactive demonstration of Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy</p>
+        </header>
+
+        <section class="demo-page-container">
+            <div class="row">
+                <!-- Left Column: Payment Form -->
+                <div class="col-lg-7">
+                    <!-- Order Summary -->
+                    <div class="demo-card">
+                        <h5><i class="fas fa-shopping-cart"></i> Order Summary</h5>
+                        <div class="cart-summary" id="order-summary">
+                            <div class="cart-item">
+                                <div>
+                                    <strong>iPhone 15 Pro</strong>
+                                    <div class="text-muted">Quantity: 1</div>
+                                </div>
+                                <div class="text-end">$999.00</div>
+                            </div>
+                            <div class="cart-item">
+                                <div>
+                                    <strong>MacBook Pro M3</strong>
+                                    <div class="text-muted">Quantity: 1</div>
+                                </div>
+                                <div class="text-end">$2,499.00</div>
+                            </div>
+                            <div class="cart-item">
+                                <div>
+                                    <strong>AirPods Pro</strong>
+                                    <div class="text-muted">Quantity: 2</div>
+                                </div>
+                                <div class="text-end">$498.00</div>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <strong>Total Amount:</strong>
+                                <strong class="total-amount">$3,996.00</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Selection -->
+                    <div class="demo-card">
+                        <h5><i class="fas fa-credit-card"></i> Select Payment Method</h5>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="payment-method-card selected" data-method="creditcard">
+                                    <div class="payment-method-icon">
+                                        <i class="fab fa-cc-visa"></i>
+                                    </div>
+                                    <h6>Credit Card</h6>
+                                    <small class="text-muted">Visa, MasterCard, Amex</small>
+                                    <div class="form-check mt-3">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" value="creditcard" checked>
+                                        <label class="form-check-label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="payment-method-card" data-method="paypal">
+                                    <div class="payment-method-icon">
+                                        <i class="fab fa-paypal"></i>
+                                    </div>
+                                    <h6>PayPal</h6>
+                                    <small class="text-muted">Pay with PayPal account</small>
+                                    <div class="form-check mt-3">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" value="paypal">
+                                        <label class="form-check-label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="payment-method-card" data-method="banktransfer">
+                                    <div class="payment-method-icon">
+                                        <i class="fas fa-university"></i>
+                                    </div>
+                                    <h6>Bank Transfer</h6>
+                                    <small class="text-muted">Direct bank transfer</small>
+                                    <div class="form-check mt-3">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" value="banktransfer">
+                                        <label class="form-check-label">Select</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Payment Form -->
+                        <div class="dynamic-form" id="payment-form">
+                            <h6>
+                                <i class="fas fa-credit-card text-primary"></i>Credit Card Details
+                                <span class="pattern-matching-indicator ms-2">Pattern: CreditCard</span>
+                            </h6>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="form-label">Card Number</label>
+                                    <input type="text" class="form-control" placeholder="1234 5678 9012 3456" id="card-number">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" class="form-control" placeholder="123" maxlength="4" id="card-cvv">
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Expiry Month</label>
+                                    <select class="form-control" id="expiry-month">
+                                        <option value="">Select Month</option>
+                                        <option value="01">01 - January</option>
+                                        <option value="02">02 - February</option>
+                                        <option value="12">12 - December</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Expiry Year</label>
+                                    <select class="form-control" id="expiry-year">
+                                        <option value="">Select Year</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Guard Condition Warning -->
+                            <div class="validation-feedback" id="guard-condition-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>High-Value International Transaction Detected</strong><br>
+                                Amount > $1,000 with international card requires additional verification.
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button class="btn btn-primary-custom btn-lg w-100" onclick="processPayment()">
+                                <i class="fas fa-lock me-2"></i>Process Payment - $3,996.00
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Pattern Matching Logic -->
+                <div class="col-lg-5">
+                    <!-- Java 21 API Reference -->
+                    <div class="demo-card">
+                        <h6><i class="fas fa-book"></i> Java 21 Pattern Matching Reference</h6>
+                        <table class="table table-sm table-bordered api-reference-table mb-0">
+                            <tbody>
+                            <tr id="pattern-switch"><td><code>switch (payment)</code></td><td>Pattern matching switch expression</td></tr>
+                            <tr id="pattern-creditcard"><td><code>case CreditCard(...)</code></td><td>Record pattern with destructuring</td></tr>
+                            <tr id="pattern-guard"><td><code>when amount > 1000</code></td><td>Guard condition for business rules</td></tr>
+                            <tr id="pattern-paypal"><td><code>case PayPal(...)</code></td><td>Alternative payment method pattern</td></tr>
+                            <tr id="pattern-banktransfer"><td><code>case BankTransfer(...)</code></td><td>Bank transfer pattern matching</td></tr>
+                            <tr id="pattern-sealed"><td><code>sealed interface</code></td><td>Sealed hierarchy for type safety</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pattern Matching Logic Display -->
+                    <div class="demo-card">
+                        <h6><i class="fas fa-cogs"></i> Pattern Matching Logic</h6>
+
+                        <div class="processing-status" id="pattern-status">
+                            <div class="status-step">
+                                <div class="status-icon status-complete">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>
+                                    <div><strong>Payment Method Detection</strong></div>
+                                    <small class="text-muted">Pattern: CreditCard identified</small>
+                                </div>
+                            </div>
+
+                            <div class="status-step">
+                                <div class="status-icon status-active">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
+                                <div>
+                                    <div><strong>Guard Condition Check</strong></div>
+                                    <small class="text-muted">Amount > $1,000 → Additional verification</small>
+                                </div>
+                            </div>
+
+                            <div class="status-step">
+                                <div class="status-icon status-pending">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <div><strong>Validation</strong></div>
+                                    <small class="text-muted">Pending form completion</small>
+                                </div>
+                            </div>
+
+                            <div class="status-step">
+                                <div class="status-icon status-pending">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <div><strong>Payment Processing</strong></div>
+                                    <small class="text-muted">Ready to process</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Java 21 Code Preview -->
+                    <div class="demo-card">
+                        <h6><i class="fas fa-code"></i> Java 21 Pattern Matching Code</h6>
+                        <div class="code-preview" id="code-preview">
+<pre>switch (paymentMethod) {
+  case CreditCard(var number, var type, var cvv)
+       when amount > 1000 && isInternational(number) ->
+    requireAdditionalVerification();
+
+  case PayPal(var email)
+       when isPremiumCustomer(customer) ->
+    processExpedited(email);
+
+  case BankTransfer(var account, var routing) ->
+    processBankTransfer(account, routing);
+}</pre>
+                        </div>
+                    </div>
+
+                    <!-- Visual Flow Inspector -->
+                    <div class="demo-card h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6><i class="fas fa-stream"></i> Visual Flow Inspector</h6>
+                            <button class="btn btn-sm btn-outline-secondary clear-log-btn" onclick="clearInspectorLog()">
+                                <i class="fas fa-eraser"></i> Clear
+                            </button>
+                        </div>
+                        <div id="api-log" class="api-log-container" aria-live="polite">
+                            <div class="text-muted text-center py-2">Select a payment method to see pattern matching in action...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/payment-processing-demo.js"></script>
+</body>
+</html>
