@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Payment Demo</title>
+    <!-- Cache busting with timestamp -->
+    <link rel="stylesheet" href="../css/simple-demo.css?v=2024">
+</head>
+<body>
+<!-- Full page header -->
+<div class="header">
+    <h1>🚀 Simple Payment Demo</h1>
+    <p>Java 21 Pattern Matching - Step by Step</p>
+</div>
+
+<!-- Main content area with left-right layout -->
+<div class="main-container">
+    <!-- Left side: Payment form and controls -->
+    <div class="left-panel">
+        <!-- Step 1: Payment Method Selection -->
+        <section class="card">
+            <h3>Step 1: Select Payment Method</h3>
+            <div class="payment-methods">
+                <div class="payment-card selected" data-method="creditcard">
+                    <h4>💳 Credit Card</h4>
+                    <p>Visa, MasterCard</p>
+                </div>
+                <div class="payment-card" data-method="paypal">
+                    <h4>🟦 PayPal</h4>
+                    <p>Pay with PayPal</p>
+                </div>
+                <div class="payment-card" data-method="bank">
+                    <h4>🏦 Bank Transfer</h4>
+                    <p>Direct transfer</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Amount Selection -->
+        <section class="card amount-section">
+            <h3>Step 2: Select Amount</h3>
+            <p>Current Amount: <strong id="current-amount">$500</strong></p>
+            <div class="amount-buttons">
+                <button class="btn btn-outline" onclick="setAmount(500)">$500</button>
+                <button class="btn btn-outline" onclick="setAmount(1500)">$1,500</button>
+                <button class="btn btn-outline" onclick="setAmount(5000)">$5,000</button>
+            </div>
+        </section>
+
+        <!-- Step 3: Process Payment -->
+        <section class="card">
+            <button class="btn btn-primary btn-large" onclick="processPayment()">
+                🔒 Process Payment
+            </button>
+        </section>
+
+        <!-- Step 4: Results -->
+        <section class="card result-section" id="result-section">
+            <h3>✅ Payment Result</h3>
+            <div id="result-content"></div>
+        </section>
+    </div>
+
+    <!-- Right side: API Log and Java 21 Info -->
+    <div class="right-panel">
+        <!-- Java 21 Pattern Matching Info -->
+        <section class="card pattern-info-card">
+            <h3>🔥 Java 21 Features</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>Pattern Matching for Switch</strong>
+                    <code>switch(paymentMethod) { ... }</code>
+                </div>
+                <div class="feature-item">
+                    <strong>Guard Conditions</strong>
+                    <code>when amount > 1000</code>
+                </div>
+                <div class="feature-item">
+                    <strong>Sealed Interfaces</strong>
+                    <code>No default case needed</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Log -->
+        <section class="card log-card">
+            <div class="log-header">
+                <h3>📊 API Log</h3>
+                <button class="btn btn-small" onclick="clearLog()">Clear</button>
+            </div>
+            <div class="log-section" id="api-log">
+                Ready... Click Process Payment to see Java 21 pattern matching in action!
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- Cache busting with timestamp -->
+<script src="../js/simple-demo.js?v=2024"></script>
+</body>
+</html>
