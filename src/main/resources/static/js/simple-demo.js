@@ -1,6 +1,7 @@
 /**
  * Simple Payment Demo - JavaScript
- * Full Page Layout with Right-Side API Log
+ * Location: src/main/resources/static/js/simple-demo.js
+ * Full Page Layout with Right-Side API Log - FIXED VERSION
  */
 
 // Global Variables
@@ -9,6 +10,7 @@ let currentAmount = 500;
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing demo...'); // Debug log
     initializeDemo();
 });
 
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
  * Initialize the demo
  */
 function initializeDemo() {
+    console.log('Initializing demo...'); // Debug log
     setupPaymentMethodSelection();
     addLog('🚀 Simple Payment Demo initialized');
     addLog('Ready to demonstrate Java 21 Pattern Matching!');
@@ -32,8 +35,12 @@ function initializeDemo() {
  * Setup payment method selection handlers
  */
 function setupPaymentMethodSelection() {
-    document.querySelectorAll('.payment-card').forEach(card => {
+    const paymentCards = document.querySelectorAll('.payment-card');
+    console.log('Found payment cards:', paymentCards.length); // Debug log
+
+    paymentCards.forEach(card => {
         card.addEventListener('click', function() {
+            console.log('Payment card clicked:', this.dataset.method); // Debug log
             selectPaymentMethod(this);
         });
     });
@@ -43,6 +50,8 @@ function setupPaymentMethodSelection() {
  * Handle payment method selection
  */
 function selectPaymentMethod(selectedCard) {
+    console.log('Selecting payment method:', selectedCard.dataset.method); // Debug log
+
     // Remove selected class from all cards
     document.querySelectorAll('.payment-card').forEach(card => {
         card.classList.remove('selected');
@@ -64,12 +73,17 @@ function selectPaymentMethod(selectedCard) {
  * Set the payment amount
  */
 function setAmount(amount) {
+    console.log('Setting amount to:', amount); // Debug log
     currentAmount = amount;
-    document.getElementById('current-amount').textContent = `${amount.toLocaleString()}`;
+
+    const amountElement = document.getElementById('current-amount');
+    if (amountElement) {
+        amountElement.textContent = `$${amount.toLocaleString()}`;
+    }
 
     // Log with context
     addLog('─'.repeat(50));
-    addLog(`💰 Amount set to: ${amount.toLocaleString()}`);
+    addLog(`💰 Amount set to: $${amount.toLocaleString()}`);
     addLog(`   This will ${getAmountContext(currentMethod, amount)}`);
 }
 
@@ -77,11 +91,13 @@ function setAmount(amount) {
  * Process the payment (main demo function)
  */
 function processPayment() {
+    console.log('Processing payment...', { method: currentMethod, amount: currentAmount }); // Debug log
+
     // Clear previous results and add header
     addLog('');
     addLog('🟰'.repeat(25) + ' PROCESSING PAYMENT ' + '🟰'.repeat(25));
     addLog(`💳 Method: ${getMethodName(currentMethod)}`);
-    addLog(`💵 Amount: ${currentAmount.toLocaleString()}`);
+    addLog(`💵 Amount: $${currentAmount.toLocaleString()}`);
     addLog('');
 
     // Simulate Java 21 pattern matching logic
@@ -179,157 +195,19 @@ function simulatePatternMatching(method, amount) {
     }
 }
 
-/**/**
- * Simple Payment Demo - JavaScript
- * Demonstrates Java 21 Pattern Matching
- */
-
-// Global Variables
-let currentMethod = 'creditcard';
-let currentAmount = 500;
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    initializeDemo();
-});
-
-/**
- * Initialize the demo
- */
-function initializeDemo() {
-    setupPaymentMethodSelection();
-    addLog('Simple Payment Demo initialized');
-    addLog('Ready to demonstrate Java 21 Pattern Matching!');
-}
-
-/**
- * Setup payment method selection handlers
- */
-function setupPaymentMethodSelection() {
-    document.querySelectorAll('.payment-card').forEach(card => {
-        card.addEventListener('click', function() {
-            selectPaymentMethod(this);
-        });
-    });
-}
-
-/**
- * Handle payment method selection
- */
-function selectPaymentMethod(selectedCard) {
-    // Remove selected class from all cards
-    document.querySelectorAll('.payment-card').forEach(card => {
-        card.classList.remove('selected');
-    });
-
-    // Add selected class to clicked card
-    selectedCard.classList.add('selected');
-
-    // Update current method
-    currentMethod = selectedCard.dataset.method;
-
-    // Log the selection
-    addLog(`Selected payment method: ${currentMethod}`);
-}
-
-/**
- * Set the payment amount
- */
-function setAmount(amount) {
-    currentAmount = amount;
-    document.getElementById('current-amount').textContent = `$${amount.toLocaleString()}`;
-    addLog(`Amount set to: $${amount.toLocaleString()}`);
-}
-
-/**
- * Process the payment (main demo function)
- */
-function processPayment() {
-    addLog(`Processing payment: ${currentMethod} for $${currentAmount.toLocaleString()}`);
-
-    // Simulate Java 21 pattern matching logic
-    const result = simulatePatternMatching(currentMethod, currentAmount);
-
-    // Show the result
-    showResult(result);
-
-    // Log the final result
-    addLog(`Result: ${result.status} - ${result.message}`);
-}
-
-/**
- * Simulate Java 21 pattern matching
- * This demonstrates the switch expression with guard conditions
- */
-function simulatePatternMatching(method, amount) {
-    addLog(`🔥 Java 21 Pattern Matching: switch(${method})`);
-
-    // This simulates the Java 21 pattern matching logic
-    switch(method) {
-        case 'creditcard':
-            if (amount > 1000) {
-                addLog(`   ➜ case CreditCard when amount > 1000 → requiresVerification`);
-                return {
-                    status: 'REQUIRES_VERIFICATION',
-                    message: 'High-value credit card transaction requires verification',
-                    pattern: 'CreditCard with guard condition',
-                    color: '#ffc107'
-                };
-            } else {
-                addLog(`   ➜ case CreditCard → approved`);
-                return {
-                    status: 'APPROVED',
-                    message: 'Credit card payment approved',
-                    pattern: 'CreditCard standard processing',
-                    color: '#28a745'
-                };
-            }
-
-        case 'paypal':
-            addLog(`   ➜ case PayPal → approved`);
-            return {
-                status: 'APPROVED',
-                message: 'PayPal payment processed successfully',
-                pattern: 'PayPal standard processing',
-                color: '#28a745'
-            };
-
-        case 'bank':
-            if (amount >= 5000) {
-                addLog(`   ➜ case BankTransfer when amount >= 5000 → requiresApproval`);
-                return {
-                    status: 'REQUIRES_APPROVAL',
-                    message: 'Large bank transfer requires manager approval',
-                    pattern: 'BankTransfer with approval workflow',
-                    color: '#dc3545'
-                };
-            } else {
-                addLog(`   ➜ case BankTransfer → approved`);
-                return {
-                    status: 'APPROVED',
-                    message: 'Bank transfer approved',
-                    pattern: 'BankTransfer standard processing',
-                    color: '#28a745'
-                };
-            }
-
-        default:
-            addLog(`   ➜ default case (should not happen with sealed types)`);
-            return {
-                status: 'ERROR',
-                message: 'Unknown payment method',
-                pattern: 'Default case (should not happen with sealed types)',
-                color: '#dc3545'
-            };
-    }
-}
-
 /**
  * Show the processing result
  */
 function showResult(result) {
+    console.log('Showing result:', result); // Debug log
+
     const resultSection = document.getElementById('result-section');
     const resultContent = document.getElementById('result-content');
+
+    if (!resultSection || !resultContent) {
+        console.error('Result elements not found!'); // Debug log
+        return;
+    }
 
     // Create the result HTML
     resultContent.innerHTML = `
@@ -354,6 +232,13 @@ function showResult(result) {
  */
 function addLog(message) {
     const log = document.getElementById('api-log');
+
+    if (!log) {
+        console.error('API log element not found!'); // Debug log
+        console.log('Message would be:', message); // Fallback debug log
+        return;
+    }
+
     const timestamp = new Date().toLocaleTimeString();
 
     // Create new log entry
@@ -377,7 +262,46 @@ function addLog(message) {
  */
 function clearLog() {
     const log = document.getElementById('api-log');
-    log.innerHTML = 'Log cleared...';
+    if (log) {
+        log.innerHTML = 'Log cleared...';
+    }
+}
+
+/**
+ * Get user-friendly method name
+ */
+function getMethodName(method) {
+    const names = {
+        'creditcard': 'Credit Card',
+        'paypal': 'PayPal',
+        'bank': 'Bank Transfer'
+    };
+    return names[method] || method;
+}
+
+/**
+ * Get pattern description for educational purposes
+ */
+function getPatternDescription(method) {
+    const patterns = {
+        'creditcard': 'CreditCard(number, cvv, expiry) with guard conditions',
+        'paypal': 'PayPal(email, verified) with business rules',
+        'bank': 'BankTransfer(account, routing) with approval workflow'
+    };
+    return patterns[method] || 'Unknown pattern';
+}
+
+/**
+ * Get amount context for user feedback
+ */
+function getAmountContext(method, amount) {
+    if (method === 'creditcard' && amount > 1000) {
+        return 'trigger the high-value guard condition';
+    } else if (method === 'bank' && amount >= 5000) {
+        return 'require manager approval for large transfer';
+    } else {
+        return 'use standard processing';
+    }
 }
 
 /**
@@ -391,12 +315,14 @@ function getDemoState() {
     };
 }
 
-// Export functions for testing (optional)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        setAmount,
-        processPayment,
-        simulatePatternMatching,
-        getDemoState
-    };
-}
+// Debug: Make functions available globally for troubleshooting
+window.demoFunctions = {
+    setAmount,
+    processPayment,
+    simulatePatternMatching,
+    getDemoState,
+    addLog,
+    clearLog
+};
+
+console.log('Simple demo JavaScript loaded successfully!');

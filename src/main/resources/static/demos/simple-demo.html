@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Payment Demo</title>
-    <!-- Cache busting with timestamp -->
-    <link rel="stylesheet" href="../css/simple-demo.css?v=2024">
+    <!-- FIXED: Updated CSS path and removed cache busting that might cause issues -->
+    <link rel="stylesheet" href="/css/simple-demo.css">
 </head>
 <body>
 <!-- Full page header -->
@@ -96,7 +96,15 @@
     </div>
 </div>
 
-<!-- Cache busting with timestamp -->
-<script src="../js/simple-demo.js?v=2024"></script>
+<!-- FIXED: Updated JavaScript path and removed problematic cache busting -->
+<script src="/js/simple-demo.js"></script>
+
+<!-- Debug script to help troubleshoot -->
+<script>
+    console.log('HTML loaded, checking for elements...');
+    console.log('Payment cards found:', document.querySelectorAll('.payment-card').length);
+    console.log('API log element:', document.getElementById('api-log') ? 'Found' : 'NOT FOUND');
+    console.log('Result section:', document.getElementById('result-section') ? 'Found' : 'NOT FOUND');
+</script>
 </body>
 </html>
