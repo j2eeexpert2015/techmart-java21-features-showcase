@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Payment Demo - Java 21 Pattern Matching</title>
+
+    <!-- TRY BOTH PATH FORMATS TO SEE WHICH WORKS -->
+    <!-- Option 1: Relative path from demos/ folder -->
+    <link rel="stylesheet" href="../css/simple-demo.css">
+
+    <!-- Option 2: If above doesn't work, try absolute path -->
+    <!-- <link rel="stylesheet" href="/css/simple-demo.css"> -->
+
+    <style>
+        /* INLINE CSS AS BACKUP - This will definitely work */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 100px);
+            gap: 0;
+        }
+
+        .left-panel {
+            flex: 1;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            overflow-y: auto;
+        }
+
+        .right-panel {
+            width: 400px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            color: #333;
+        }
+
+        .card h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .payment-card {
+            border: 2px solid #e5e7eb;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .payment-card:hover {
+            border-color: #667eea;
+            background: #f8faff;
+            transform: translateY(-2px);
+        }
+
+        .payment-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f8faff 0%, #e8f2ff 100%);
+            transform: translateY(-2px);
+        }
+
+        .payment-card h4 {
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .amount-section {
+            background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+            border: 1px solid #e0e7ff;
+        }
+
+        .amount-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+            font-size: 18px;
+            padding: 16px 24px;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            flex: 1;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .result-section {
+            background: linear-gradient(135deg, #f0f9f0 0%, #e8f5e8 100%);
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .pattern-info-card, .log-card {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .pattern-info-card h3, .log-header h3 {
+            color: #fbbf24;
+            margin-bottom: 16px;
+        }
+
+        .feature-item {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #fbbf24;
+            margin-bottom: 12px;
+        }
+
+        .feature-item strong {
+            display: block;
+            color: #f3f4f6;
+            margin-bottom: 4px;
+        }
+
+        .feature-item code {
+            color: #34d399;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .log-card {
+            flex: 1;
+            margin: 0 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .log-section {
+            flex: 1;
+            background: #0f1419;
+            color: #00ff41;
+            padding: 16px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 13px;
+            overflow-y: auto;
+            line-height: 1.5;
+            border-radius: 8px;
+            min-height: 300px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 1024px) {
+            .main-container { flex-direction: column; }
+            .right-panel { width: 100%; height: 400px; }
+            .payment-methods { grid-template-columns: 1fr; }
+            .amount-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<!-- Full page header -->
+<div class="header">
+    <h1>🚀 Simple Payment Demo</h1>
+    <p>Java 21 Pattern Matching - Step by Step</p>
+</div>
+
+<!-- Main content area with left-right layout -->
+<div class="main-container">
+    <!-- Left side: Payment form and controls -->
+    <div class="left-panel">
+        <!-- Step 1: Payment Method Selection -->
+        <section class="card">
+            <h3>Step 1: Select Payment Method</h3>
+            <div class="payment-methods">
+                <div class="payment-card selected" data-method="creditcard">
+                    <h4>💳 Credit Card</h4>
+                    <p>Visa, MasterCard</p>
+                </div>
+                <div class="payment-card" data-method="paypal">
+                    <h4>🟦 PayPal</h4>
+                    <p>Pay with PayPal</p>
+                </div>
+                <div class="payment-card" data-method="bank">
+                    <h4>🏦 Bank Transfer</h4>
+                    <p>Direct transfer</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Amount Selection -->
+        <section class="card amount-section">
+            <h3>Step 2: Select Amount</h3>
+            <p>Current Amount: <strong id="current-amount">$500</strong></p>
+            <div class="amount-buttons">
+                <button class="btn btn-outline" onclick="setAmount(500)">$500</button>
+                <button class="btn btn-outline" onclick="setAmount(1500)">$1,500</button>
+                <button class="btn btn-outline" onclick="setAmount(5000)">$5,000</button>
+            </div>
+        </section>
+
+        <!-- Step 3: Process Payment -->
+        <section class="card">
+            <button class="btn btn-primary" onclick="processPayment()">
+                🔒 Process Payment
+            </button>
+        </section>
+
+        <!-- Step 4: Results -->
+        <section class="card result-section" id="result-section">
+            <h3>✅ Payment Result</h3>
+            <div id="result-content"></div>
+        </section>
+    </div>
+
+    <!-- Right side: API Log and Java 21 Info -->
+    <div class="right-panel">
+        <!-- Java 21 Pattern Matching Info -->
+        <section class="pattern-info-card">
+            <h3>🔥 Java 21 Features</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>Pattern Matching for Switch</strong>
+                    <code>switch(paymentMethod) { ... }</code>
+                </div>
+                <div class="feature-item">
+                    <strong>Guard Conditions</strong>
+                    <code>when amount > 1000</code>
+                </div>
+                <div class="feature-item">
+                    <strong>Sealed Interfaces</strong>
+                    <code>No default case needed</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Log -->
+        <section class="log-card">
+            <div class="log-header">
+                <h3>📊 API Log</h3>
+                <button class="btn btn-small" onclick="clearLog()">Clear</button>
+            </div>
+            <div class="log-section" id="api-log">
+                Ready... Click Process Payment to see Java 21 pattern matching in action!
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- INLINE JAVASCRIPT - This will definitely work -->
+<script>
+    /**
+     * Simple Payment Demo - JavaScript
+     * INLINE VERSION - No external file dependencies
+     */
+
+    // Global Variables
+    let currentMethod = 'creditcard';
+    let currentAmount = 500;
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 DOM loaded, initializing demo...');
+        initializeDemo();
+    });
+
+    /**
+     * Initialize the demo
+     */
+    function initializeDemo() {
+        console.log('📋 Initializing demo...');
+        setupPaymentMethodSelection();
+        addLog('🚀 Simple Payment Demo initialized');
+        addLog('Ready to demonstrate Java 21 Pattern Matching!');
+        addLog('');
+        addLog('Instructions:');
+        addLog('1. Select a payment method on the left');
+        addLog('2. Choose an amount');
+        addLog('3. Click Process Payment');
+        addLog('4. Watch the pattern matching results!');
+        addLog('');
+        console.log('✅ Demo initialization complete');
+    }
+
+    /**
+     * Setup payment method selection handlers
+     */
+    function setupPaymentMethodSelection() {
+        const paymentCards = document.querySelectorAll('.payment-card');
+        console.log('🃏 Found payment cards:', paymentCards.length);
+
+        paymentCards.forEach(card => {
+            card.addEventListener('click', function() {
+                console.log('🖱️ Payment card clicked:', this.dataset.method);
+                selectPaymentMethod(this);
+            });
+        });
+    }
+
+    /**
+     * Handle payment method selection
+     */
+    function selectPaymentMethod(selectedCard) {
+        console.log('🎯 Selecting payment method:', selectedCard.dataset.method);
+
+        // Remove selected class from all cards
+        document.querySelectorAll('.payment-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+
+        // Add selected class to clicked card
+        selectedCard.classList.add('selected');
+
+        // Update current method
+        currentMethod = selectedCard.dataset.method;
+
+        // Log the selection with visual separator
+        addLog('─'.repeat(50));
+        addLog(`🎯 Selected payment method: ${getMethodName(currentMethod)}`);
+        addLog(`   Pattern: ${getPatternDescription(currentMethod)}`);
+    }
+
+    /**
+     * Set the payment amount
+     */
+    function setAmount(amount) {
+        console.log('💰 Setting amount to:', amount);
+        currentAmount = amount;
+
+        const amountElement = document.getElementById('current-amount');
+        if (amountElement) {
+            amountElement.textContent = `$${amount.toLocaleString()}`;
+        }
+
+        // Log with context
+        addLog('─'.repeat(50));
+        addLog(`💰 Amount set to: $${amount.toLocaleString()}`);
+        addLog(`   This will ${getAmountContext(currentMethod, amount)}`);
+    }
+
+    /**
+     * Process the payment (main demo function)
+     */
+    function processPayment() {
+        console.log('💳 Processing payment...', { method: currentMethod, amount: currentAmount });
+
+        // Clear previous results and add header
+        addLog('');
+        addLog('🟰'.repeat(25) + ' PROCESSING PAYMENT ' + '🟰'.repeat(25));
+        addLog(`💳 Method: ${getMethodName(currentMethod)}`);
+        addLog(`💵 Amount: $${currentAmount.toLocaleString()}`);
+        addLog('');
+
+        // Simulate Java 21 pattern matching logic
+        const result = simulatePatternMatching(currentMethod, currentAmount);
+
+        // Show the result on left side
+        showResult(result);
+
+        // Log the final result with formatting
+        addLog('✅ RESULT:');
+        addLog(`   Status: ${result.status}`);
+        addLog(`   Message: ${result.message}`);
+        addLog(`   Java 21 Feature: ${result.pattern}`);
+        addLog('');
+        addLog('🎉 Pattern matching complete!');
+        addLog('');
+    }
+
+    /**
+     * Simulate Java 21 pattern matching with enhanced logging
+     */
+    function simulatePatternMatching(method, amount) {
+        addLog('🔥 Java 21 Pattern Matching Starting...');
+        addLog(`   switch(${method}) {`);
+
+        // This simulates the Java 21 pattern matching logic
+        switch(method) {
+            case 'creditcard':
+                if (amount > 1000) {
+                    addLog(`   ➜ case CreditCard(var details)`);
+                    addLog(`     when amount > 1000 && isHighValue() {`);
+                    addLog(`       return requiresVerification();`);
+                    addLog(`     }`);
+                    return {
+                        status: 'REQUIRES_VERIFICATION',
+                        message: 'High-value credit card transaction requires additional verification',
+                        pattern: 'CreditCard with guard condition (amount > $1,000)',
+                        color: '#f59e0b'
+                    };
+                } else {
+                    addLog(`   ➜ case CreditCard(var details) {`);
+                    addLog(`       return processStandard();`);
+                    addLog(`     }`);
+                    return {
+                        status: 'APPROVED',
+                        message: 'Credit card payment approved successfully',
+                        pattern: 'CreditCard standard processing',
+                        color: '#10b981'
+                    };
+                }
+
+            case 'paypal':
+                addLog(`   ➜ case PayPal(var email, var verified) {`);
+                addLog(`       return processPayPal();`);
+                addLog(`     }`);
+                return {
+                    status: 'APPROVED',
+                    message: 'PayPal payment processed successfully',
+                    pattern: 'PayPal standard processing',
+                    color: '#10b981'
+                };
+
+            case 'bank':
+                if (amount >= 5000) {
+                    addLog(`   ➜ case BankTransfer(var account, var routing)`);
+                    addLog(`     when amount >= 5000 && requiresApproval() {`);
+                    addLog(`       return requiresManagerApproval();`);
+                    addLog(`     }`);
+                    return {
+                        status: 'REQUIRES_APPROVAL',
+                        message: 'Large bank transfer requires manager approval',
+                        pattern: 'BankTransfer with approval workflow (amount ≥ $5,000)',
+                        color: '#ef4444'
+                    };
+                } else {
+                    addLog(`   ➜ case BankTransfer(var account, var routing) {`);
+                    addLog(`       return processStandard();`);
+                    addLog(`     }`);
+                    return {
+                        status: 'APPROVED',
+                        message: 'Bank transfer approved successfully',
+                        pattern: 'BankTransfer standard processing',
+                        color: '#10b981'
+                    };
+                }
+
+            default:
+                addLog(`   ➜ // No default case needed with sealed types!`);
+                return {
+                    status: 'ERROR',
+                    message: 'This should never happen with sealed interfaces',
+                    pattern: 'Sealed types eliminate need for default case',
+                    color: '#ef4444'
+                };
+        }
+    }
+
+    /**
+     * Show the processing result
+     */
+    function showResult(result) {
+        console.log('📊 Showing result:', result);
+
+        const resultSection = document.getElementById('result-section');
+        const resultContent = document.getElementById('result-content');
+
+        if (!resultSection || !resultContent) {
+            console.error('❌ Result elements not found!');
+            return;
+        }
+
+        // Create the result HTML
+        resultContent.innerHTML = `
+            <div style="border-left: 4px solid ${result.color}; padding-left: 15px;">
+                <h4 style="color: ${result.color}; margin: 0 0 10px 0;">${result.status}</h4>
+                <p style="margin: 0 0 10px 0; font-size: 16px;">${result.message}</p>
+                <small style="color: #666; font-style: italic;">
+                    Java 21 Pattern: ${result.pattern}
+                </small>
+            </div>
+        `;
+
+        // Show the result section
+        resultSection.style.display = 'block';
+
+        // Scroll to result
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    /**
+     * Add a message to the API log
+     */
+    function addLog(message) {
+        const log = document.getElementById('api-log');
+
+        if (!log) {
+            console.error('❌ API log element not found!');
+            console.log('📝 Message would be:', message);
+            return;
+        }
+
+        const timestamp = new Date().toLocaleTimeString();
+
+        // Create new log entry
+        const logEntry = document.createElement('div');
+        logEntry.innerHTML = `[${timestamp}] ${message}`;
+        logEntry.style.marginBottom = '4px';
+
+        // Add to log
+        log.appendChild(logEntry);
+
+        // Auto-scroll to bottom
+        log.scrollTop = log.scrollHeight;
+
+        // Keep only last 50 entries to prevent memory issues
+        while (log.children.length > 50) {
+            log.removeChild(log.firstChild);
+        }
+    }
+
+    /**
+     * Clear the API log
+     */
+    function clearLog() {
+        const log = document.getElementById('api-log');
+        if (log) {
+            log.innerHTML = 'Log cleared... Ready for new pattern matching demo!';
+        }
+        console.log('🧹 API log cleared');
+    }
+
+    /**
+     * Helper functions
+     */
+    function getMethodName(method) {
+        const names = {
+            'creditcard': 'Credit Card',
+            'paypal': 'PayPal',
+            'bank': 'Bank Transfer'
+        };
+        return names[method] || method;
+    }
+
+    function getPatternDescription(method) {
+        const patterns = {
+            'creditcard': 'CreditCard(number, cvv, expiry) with guard conditions',
+            'paypal': 'PayPal(email, verified) with business rules',
+            'bank': 'BankTransfer(account, routing) with approval workflow'
+        };
+        return patterns[method] || 'Unknown pattern';
+    }
+
+    function getAmountContext(method, amount) {
+        if (method === 'creditcard' && amount > 1000) {
+            return 'trigger the high-value guard condition';
+        } else if (method === 'bank' && amount >= 5000) {
+            return 'require manager approval for large transfer';
+        } else {
+            return 'use standard processing';
+        }
+    }
+
+    // Debug info
+    console.log('🎯 Simple demo JavaScript loaded successfully!');
+    console.log('🔧 All functions available globally');
+</script>
+
+<!-- Also try loading external JS as backup -->
+<!-- TRY BOTH PATH FORMATS TO SEE WHICH WORKS -->
+<!-- Option 1: Relative path from demos/ folder -->
+<script src="../js/simple-demo.js"></script>
+
+<!-- Option 2: If above doesn't work, try absolute path -->
+<!-- <script src="/js/simple-demo.js"></script> -->
+
+</body>
+</html>
