@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management Demo - Java 21 Pattern Matching</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Modern color palette */
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --danger-color: #ef4444;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+
+            /* Beautiful gradients */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --gradient-info: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            --gradient-card: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        .main-container {
+            background: var(--white);
+            margin: 0 auto;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            max-width: 1400px;
+            box-shadow: var(--shadow-xl);
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-header {
+            padding: 3rem 2rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: headerShimmer 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .demo-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--success-color), var(--info-color), var(--warning-color));
+        }
+
+        @keyframes headerShimmer {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: rotate(180deg) scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .demo-header h1 {
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .demo-header h1 i {
+            font-size: 2.2rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .demo-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .java21-badge {
+            background: var(--gradient-success);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            animation: badgePulse 3s infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 25px rgba(16, 185, 129, 0.6);
+            }
+        }
+
+        .demo-card {
+            background: var(--white);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-info);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .demo-card:hover::before {
+            opacity: 1;
+        }
+
+        .demo-card h5, .demo-card h6 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .demo-card h5 i, .demo-card h6 i {
+            color: var(--primary-color);
+        }
+
+        .order-status-card {
+            background: var(--gradient-card);
+            border: 2px solid var(--gray-200);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .order-status-card:hover::before {
+            left: 100%;
+        }
+
+        .order-status-card.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .order-status-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--gradient-success);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            animation: checkmarkPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes checkmarkPop {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(-90deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .order-status-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            animation: subtleGlow 2s infinite alternate;
+        }
+
+        @keyframes subtleGlow {
+            0% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        .status-pending {
+            background: var(--gradient-warning);
+            color: white;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .status-processing {
+            background: var(--gradient-info);
+            color: white;
+            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
+        }
+
+        .status-shipped {
+            background: var(--gradient-success);
+            color: white;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .status-delivered {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .status-returned {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+
+        .pattern-highlight {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid var(--warning-color);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin: 0.75rem 0;
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            animation: codeGlow 3s infinite alternate;
+        }
+
+        @keyframes codeGlow {
+            0% { box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2); }
+            100% { box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+        }
+
+        .pattern-highlight::before {
+            content: 'Java 21';
+            position: absolute;
+            top: -8px;
+            right: 10px;
+            background: var(--gradient-warning);
+            color: white;
+            font-size: 0.6rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 1rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.4s ease;
+            background: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workflow-step::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--gray-300);
+            transition: all 0.4s ease;
+        }
+
+        .workflow-step:hover {
+            background: var(--gray-50);
+            transform: translateX(5px);
+        }
+
+        .workflow-step.active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-color: var(--success-color);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .workflow-step.active::before {
+            background: var(--gradient-success);
+            width: 6px;
+        }
+
+        .workflow-step.completed {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+            border-color: var(--primary-color);
+        }
+
+        .workflow-step.completed::before {
+            background: var(--gradient-primary);
+            width: 6px;
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: inherit;
+            opacity: 0.3;
+            transform: scale(0);
+            transition: transform 0.4s ease;
+        }
+
+        .step-pending {
+            background: linear-gradient(135deg, var(--gray-300) 0%, var(--gray-400) 100%);
+            color: var(--gray-600);
+        }
+
+        .step-active {
+            background: var(--gradient-success);
+            color: white;
+            animation: pulseActive 2s infinite;
+        }
+
+        @keyframes pulseActive {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 15px rgba(16, 185, 129, 0);
+            }
+        }
+
+        .step-complete {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .step-active::before,
+        .step-complete::before {
+            transform: scale(1.5);
+        }
+
+        .api-log-container {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #f1f5f9;
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85em;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            height: 400px;
+            overflow-y: auto;
+            border: 2px solid #475569;
+            position: relative;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .api-log-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--success-color), var(--info-color), var(--warning-color));
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .api-log-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .api-log-container::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        .api-log-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+            border-radius: 4px;
+        }
+
+        .api-log-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--info-color));
+        }
+
+        .api-flow-block {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--info-color);
+            animation: flowSlideIn 0.5s ease-out;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .api-flow-block:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+            transform: translateX(4px);
+            border-left-color: var(--success-color);
+        }
+
+        @keyframes flowSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .java21-pattern-tag {
+            background: var(--gradient-success);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+            animation: tagGlow 2s infinite alternate;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes tagGlow {
+            0% {
+                box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+                transform: scale(1);
+            }
+            100% {
+                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.6);
+                transform: scale(1.02);
+            }
+        }
+
+        .order-details {
+            background: var(--gradient-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-md);
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item:hover {
+            background: rgba(99, 102, 241, 0.05);
+            margin: 0 -0.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .order-item span {
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .order-item strong {
+            color: var(--gray-800);
+            font-weight: 700;
+        }
+
+        .btn-pattern-demo {
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-pattern-demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-pattern-demo:hover::before {
+            left: 100%;
+        }
+
+        .btn-pattern-demo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            color: white;
+        }
+
+        .btn-pattern-demo:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .transition-arrow {
+            font-size: 1.5rem;
+            color: var(--success-color);
+            margin: 0 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-5px);
+            }
+            60% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .code-preview {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid var(--gray-200);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            max-height: 350px;
+            overflow-y: auto;
+            line-height: 1.6;
+            position: relative;
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-preview::before {
+            content: 'Java 21 Pattern Matching';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .code-preview::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .code-preview::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 3px;
+        }
+
+        .code-preview::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 3px;
+        }
+
+        /* Enhanced mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .demo-header {
+                padding: 2rem 1rem;
+            }
+
+            .demo-header h1 {
+                font-size: 1.75rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .demo-header h1 i {
+                font-size: 1.5rem;
+            }
+
+            .demo-card {
+                padding: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .order-status-card {
+                padding: 1rem;
+            }
+
+            .workflow-step {
+                padding: 1rem;
+            }
+
+            .step-icon {
+                width: 40px;
+                height: 40px;
+                margin-right: 1rem;
+            }
+
+            .api-log-container {
+                height: 250px;
+                padding: 1rem;
+                font-size: 0.8em;
+            }
+
+            .code-preview {
+                padding: 1rem;
+                font-size: 0.8rem;
+                max-height: 250px;
+            }
+
+            .btn-pattern-demo {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+                width: 100%;
+            }
+
+            .order-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .demo-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .java21-badge {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .demo-card h5, .demo-card h6 {
+                font-size: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .status-badge {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .pattern-highlight {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            .demo-header::before,
+            .java21-badge,
+            .order-status-card::before,
+            .btn-pattern-demo::before,
+            .java21-pattern-tag,
+            .transition-arrow,
+            .step-active,
+            .api-flow-block {
+                animation: none;
+            }
+
+            .demo-card:hover,
+            .order-status-card:hover,
+            .btn-pattern-demo:hover,
+            .workflow-step:hover {
+                transform: none;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .demo-card,
+            .order-status-card,
+            .workflow-step {
+                border-width: 3px;
+            }
+
+            .pattern-highlight,
+            .java21-pattern-tag {
+                border: 2px solid currentColor;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .demo-header {
+                background: var(--gray-800) !important;
+                color: white !important;
+            }
+
+            .btn-pattern-demo,
+            .api-log-container {
+                display: none;
+            }
+
+            .demo-card,
+            .order-status-card,
+            .workflow-step {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid my-3">
+    <div class="main-container">
+        <!-- Header -->
+        <header class="demo-header">
+            <h1>
+                <i class="fas fa-clipboard-list"></i>
+                Order Management System
+                <span class="java21-badge">Java 21</span>
+            </h1>
+            <p>Advanced demonstration of Java 21 Record Patterns with State Transitions and Nested Destructuring</p>
+        </header>
+
+        <section class="demo-page-container p-3">
+            <div class="row">
+                <!-- Left Column: Order Selection and Workflow -->
+                <div class="col-lg-6">
+                    <!-- Current Orders -->
+                    <div class="demo-card">
+                        <h5><i class="fas fa-list"></i> Order Processing Queue</h5>
+                        <p class="text-muted">Select an order to see Java 21 pattern matching in action</p>
+
+                        <!-- Order #1001 - Enhanced -->
+                        <div class="order-status-card selected" onclick="selectOrder(1001)">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center gap-3 mb-2">
+                                        <strong style="font-size: 1.1rem; color: var(--gray-800);">Order #1001</strong>
+                                        <span class="status-badge status-pending">PENDING</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--gray-700);">John Doe</div>
+                                            <small class="text-muted">VIP Customer • 3 items</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div style="font-size: 1.2rem; font-weight: 700; color: var(--primary-color);">$1,299.99</div>
+                                            <small class="text-muted">Payment confirmed</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pattern-highlight mt-3">
+                                case PendingOrder(var items, var customer, PaymentInfo(CreditCard(var number, var type), var amount))
+                                when customer.isVip() && amount > 1000 -> expediteOrder()
+                            </div>
+                        </div>
+
+                        <!-- Order #1002 - Enhanced -->
+                        <div class="order-status-card" onclick="selectOrder(1002)">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center gap-3 mb-2">
+                                        <strong style="font-size: 1.1rem; color: var(--gray-800);">Order #1002</strong>
+                                        <span class="status-badge status-processing">PROCESSING</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--gray-700);">Alice Smith</div>
+                                            <small class="text-muted">Premium Customer • 2 items</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div style="font-size: 1.2rem; font-weight: 700; color: var(--info-color);">$799.50</div>
+                                            <small class="text-muted">In fulfillment</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pattern-highlight mt-3">
+                                case ProcessingOrder(var id, var items)
+                                when allItemsInStock(items) -> fulfillOrder(id, items)
+                            </div>
+                        </div>
+
+                        <!-- Order #1003 - Enhanced -->
+                        <div class="order-status-card" onclick="selectOrder(1003)">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center gap-3 mb-2">
+                                        <strong style="font-size: 1.1rem; color: var(--gray-800);">Order #1003</strong>
+                                        <span class="status-badge status-shipped">SHIPPED</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--gray-700);">Bob Wilson</div>
+                                            <small class="text-muted">Basic Customer • 1 item</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div style="font-size: 1.2rem; font-weight: 700; color: var(--success-color);">$2,499.99</div>
+                                            <small class="text-muted">Tracking: TN123456</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pattern-highlight mt-3">
+                                case ShippedOrder(var tracking, var carrier)
+                                when deliveryPending(tracking) -> trackDelivery(tracking)
+                            </div>
+                        </div>
+
+                        <!-- Order #1004 - Additional Order -->
+                        <div class="order-status-card" onclick="selectOrder(1004)">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center gap-3 mb-2">
+                                        <strong style="font-size: 1.1rem; color: var(--gray-800);">Order #1004</strong>
+                                        <span class="status-badge status-delivered">DELIVERED</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--gray-700);">Emma Johnson</div>
+                                            <small class="text-muted">Premium Customer • 4 items</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div style="font-size: 1.2rem; font-weight: 700; color: var(--success-color);">$899.00</div>
+                                            <small class="text-muted">Delivered today</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pattern-highlight mt-3">
+                                case DeliveredOrder(var orderId, var deliveryDate, var signature)
+                                when signature.isVerified() -> completeOrder(orderId)
+                            </div>
+                        </div>
+
+                        <!-- Order #1005 - Return Request -->
+                        <div class="order-status-card" onclick="selectOrder(1005)">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center gap-3 mb-2">
+                                        <strong style="font-size: 1.1rem; color: var(--gray-800);">Order #1005</strong>
+                                        <span class="status-badge status-returned">RETURN</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--gray-700);">Michael Chen</div>
+                                            <small class="text-muted">Basic Customer • 1 item</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div style="font-size: 1.2rem; font-weight: 700; color: var(--danger-color);">$599.99</div>
+                                            <small class="text-muted">Defective item</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pattern-highlight mt-3">
+                                case ReturnRequest(var orderId, var reason, var items)
+                                when reason == DEFECTIVE -> processDefectiveReturn(orderId)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Workflow -->
+                    <div class="demo-card">
+                        <h6><i class="fas fa-route"></i> Order Processing Workflow</h6>
+
+                        <!-- Enhanced Workflow Steps -->
+                        <div class="workflow-step active">
+                            <div class="step-icon step-active">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div style="font-weight: 700; font-size: 1rem; color: var(--gray-800);">Payment Verification</div>
+                                <div class="small text-muted mt-1">Checking payment status and fraud detection...</div>
+                                <div class="mt-2">
+                                    <span class="java21-pattern-tag">Pattern: PaymentInfo(CreditCard(...))</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-icon step-pending">
+                                <i class="fas fa-warehouse"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div style="font-weight: 700; font-size: 1rem; color: var(--gray-800);">Inventory Validation</div>
+                                <div class="small text-muted mt-1">Validating stock availability across warehouses</div>
+                                <div class="mt-2">
+                                    <span class="java21-pattern-tag">Guard: allItemsInStock(items)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-icon step-pending">
+                                <i class="fas fa-truck-loading"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div style="font-weight: 700; font-size: 1rem; color: var(--gray-800);">Order Fulfillment</div>
+                                <div class="small text-muted mt-1">Preparing items for shipment and packaging</div>
+                                <div class="mt-2">
+                                    <span class="java21-pattern-tag">Transition: PROCESSING → SHIPPED</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-icon step-pending">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div style="font-weight: 700; font-size: 1rem; color: var(--gray-800);">Delivery & Completion</div>
+                                <div class="small text-muted mt-1">Tracking delivery and customer confirmation</div>
+                                <div class="mt-2">
+                                    <span class="java21-pattern-tag">Final: DELIVERED status</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <button class="btn btn-pattern-demo" onclick="processNextStep()">
+                                <i class="fas fa-play me-2"></i>Process Next Step
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Pattern Matching Logic -->
+                <div class="col-lg-6">
+                    <!-- Enhanced Order Details -->
+                    <div class="demo-card">
+                        <h6><i class="fas fa-receipt"></i> Order #1001 Details</h6>
+
+                        <div class="order-details">
+                            <div class="order-item">
+                                <span><i class="fas fa-user me-2"></i>Customer:</span>
+                                <div class="text-end">
+                                    <strong>John Doe</strong>
+                                    <div><span class="status-badge" style="background: var(--gradient-warning); color: white; font-size: 0.6rem;">VIP</span></div>
+                                </div>
+                            </div>
+                            <div class="order-item">
+                                <span><i class="fas fa-credit-card me-2"></i>Payment:</span>
+                                <div class="text-end">
+                                    <strong>CreditCard(****1234, VISA)</strong>
+                                    <div><small class="text-success">✓ Verified</small></div>
+                                </div>
+                            </div>
+                            <div class="order-item">
+                                <span><i class="fas fa-shopping-bag me-2"></i>Items:</span>
+                                <div class="text-end">
+                                    <strong>3 products</strong>
+                                    <div><small class="text-muted">MacBook Pro, iPhone 15, AirPods</small></div>
+                                </div>
+                            </div>
+                            <div class="order-item">
+                                <span><i class="fas fa-dollar-sign me-2"></i>Total:</span>
+                                <div class="text-end">
+                                    <strong style="font-size: 1.1rem; color: var(--primary-color);">$1,299.99</strong>
+                                    <div><small class="text-muted">Including tax & shipping</small></div>
+                                </div>
+                            </div>
+                            <div class="order-item">
+                                <span><i class="fas fa-clock me-2"></i>Status:</span>
+                                <div class="text-end">
+                                    <span class="status-badge status-pending">PENDING</span>
+                                    <div><small class="text-muted">Awaiting processing</small></div>
+                                </div>
+                            </div>
+                            <div class="order-item">
+                                <span><i class="fas fa-map-marker-alt me-2"></i>Shipping:</span>
+                                <div class="text-end">
+                                    <strong>Express (VIP)</strong>
+                                    <div><small class="text-muted">1-2 business days</small></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Java 21 Code Preview -->
+                    <div class="demo-card">
+                        <h6><i class="fas fa-code"></i> Java 21 Pattern Matching Logic</h6>
+
+                        <div class="code-preview">// Advanced Order Processing with Nested Record Patterns
+                            public OrderResult processOrder(Order order) {
+                            return switch (order) {
+
+                            // VIP High-Value Order with Nested Payment Info
+                            case PendingOrder(var items, var customer,
+                            PaymentInfo(CreditCard(var number, var type, var cvv),
+                            var amount))
+                            when customer.tier() == CustomerTier.VIP && amount > 1000 -> {
+
+                            logger.info("🌟 VIP high-value order detected: ${}", amount);
+                            notifyVipSupport(customer, order);
+                            return expediteOrder(order, "VIP_EXPRESS");
+                            }
+
+                            // Premium Customer Processing
+                            case ProcessingOrder(var orderId, var items)
+                            when customer.isPremium() && allItemsInStock(items) -> {
+
+                            return fulfillPremiumOrder(orderId, items);
+                            }
+
+                            // International Shipping Logic
+                            case ProcessingOrder(var orderId, var items,
+                            ShippingInfo(var address))
+                            when address.isInternational() -> {
+
+                            return processInternationalShipping(orderId, address);
+                            }
+
+                            // Standard Shipped Order Tracking
+                            case ShippedOrder(var tracking, var carrier, var estimatedDelivery)
+                            when deliveryPending(tracking) -> {
+
+                            return trackDelivery(tracking, carrier);
+                            }
+
+                            // Defective Product Returns
+                            case ReturnRequest(var orderId, var reason, var items)
+                            when reason == ReturnReason.DEFECTIVE -> {
+
+                            return processDefectiveReturn(orderId, items);
+                            }
+
+                            // Delivered Order Completion
+                            case DeliveredOrder(var orderId, var deliveryDate, var signature)
+                            when signature.isVerified() -> {
+
+                            return completeOrder(orderId, deliveryDate);
+                            }
+                            };
+                            }</div>
+                    </div>
+
+                    <!-- Pattern Matching Flow Log -->
+                    <div class="demo-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6><i class="fas fa-stream"></i> Pattern Matching Flow</h6>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="clearLog()">
+                                <i class="fas fa-eraser"></i> Clear
+                            </button>
+                        </div>
+
+                        <div class="api-log-container" id="pattern-log">
+                            <div class="api-flow-block">
+                                <div>🎯 <strong>Order State Analysis</strong></div>
+                                <div>   └─ Pattern: PendingOrder detected</div>
+                                <div>   └─ <span class="java21-pattern-tag">Record Destructuring</span></div>
+                            </div>
+
+                            <div class="api-flow-block">
+                                <div>🔍 <strong>Guard Condition Evaluation</strong></div>
+                                <div>   └─ customer.isVip() = true</div>
+                                <div>   └─ amount > 1000 = true (amount: $1,299.99)</div>
+                                <div>   └─ <span class="java21-pattern-tag">Guard Conditions</span></div>
+                            </div>
+
+                            <div class="api-flow-block">
+                                <div>⚡ <strong>Nested Pattern Match</strong></div>
+                                <div>   └─ PaymentInfo(CreditCard(number, type), amount)</div>
+                                <div>   └─ Extracted: number=****1234, type=VISA</div>
+                                <div>   └─ <span class="java21-pattern-tag">Nested Destructuring</span></div>
+                            </div>
+
+                            <div class="api-flow-block">
+                                <div>🚀 <strong>Action Triggered</strong></div>
+                                <div>   └─ expediteOrder() called for VIP customer</div>
+                                <div>   └─ Transition: PENDING → PROCESSING</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let selectedOrderId = 1001;
+
+    function selectOrder(orderId) {
+        // Update UI selection
+        document.querySelectorAll('.order-status-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        event.currentTarget.classList.add('selected');
+
+        selectedOrderId = orderId;
+
+        // Update order details based on selection
+        updateOrderDetails(orderId);
+
+        // Log pattern matching
+        logPatternMatch(orderId);
+    }
+
+    function updateOrderDetails(orderId) {
+        const orderData = {
+            1001: {
+                customer: "John Doe",
+                tier: "VIP",
+                payment: "CreditCard(****1234, VISA)",
+                items: "3 products",
+                itemDetails: "MacBook Pro, iPhone 15, AirPods",
+                total: "$1,299.99",
+                status: "PENDING",
+                statusDetail: "Awaiting processing",
+                shipping: "Express (VIP)",
+                shippingDetail: "1-2 business days"
+            },
+            1002: {
+                customer: "Alice Smith",
+                tier: "PREMIUM",
+                payment: "PayPal(alice@example.com)",
+                items: "2 products",
+                itemDetails: "iPad Pro, Apple Pencil",
+                total: "$799.50",
+                status: "PROCESSING",
+                statusDetail: "In fulfillment",
+                shipping: "Standard",
+                shippingDetail: "3-5 business days"
+            },
+            1003: {
+                customer: "Bob Wilson",
+                tier: "BASIC",
+                payment: "CreditCard(****5678, MASTERCARD)",
+                items: "1 product",
+                itemDetails: "MacBook Pro M3",
+                total: "$2,499.99",
+                status: "SHIPPED",
+                statusDetail: "Tracking: TN123456",
+                shipping: "Standard",
+                shippingDetail: "In transit"
+            },
+            1004: {
+                customer: "Emma Johnson",
+                tier: "PREMIUM",
+                payment: "BankTransfer(Chase Bank)",
+                items: "4 products",
+                itemDetails: "iPhone 15, Case, Charger, Screen Protector",
+                total: "$899.00",
+                status: "DELIVERED",
+                statusDetail: "Delivered today",
+                shipping: "Express",
+                shippingDetail: "Completed"
+            },
+            1005: {
+                customer: "Michael Chen",
+                tier: "BASIC",
+                payment: "CreditCard(****9012, VISA)",
+                items: "1 product",
+                itemDetails: "Defective headphones",
+                total: "$599.99",
+                status: "RETURN",
+                statusDetail: "Defective item",
+                shipping: "Return",
+                shippingDetail: "Processing refund"
+            }
+        };
+
+        const order = orderData[orderId];
+        if (order) {
+            // Update the order details panel
+            document.querySelector('.demo-card h6').innerHTML = `<i class="fas fa-receipt"></i> Order #${orderId} Details`;
+
+            // This would update the order details dynamically in a real implementation
+            console.log(`Updated details for Order #${orderId}:`, order);
+        }
+    }
+
+    function processNextStep() {
+        const logContainer = document.getElementById('pattern-log');
+
+        const newLogEntry = document.createElement('div');
+        newLogEntry.className = 'api-flow-block';
+        newLogEntry.innerHTML = `
+            <div>🔄 <strong>State Transition Processing</strong></div>
+            <div>   └─ Order #${selectedOrderId}: PENDING → PROCESSING</div>
+            <div>   └─ <span class="java21-pattern-tag">Pattern Match Transition</span></div>
+            <div>   └─ Timestamp: ${new Date().toLocaleTimeString()}</div>
+        `;
+
+        logContainer.insertBefore(newLogEntry, logContainer.firstChild);
+
+        // Update workflow
+        updateWorkflowStep();
+    }
+
+    function logPatternMatch(orderId) {
+        const logContainer = document.getElementById('pattern-log');
+
+        const patterns = {
+            1001: {
+                pattern: 'PendingOrder',
+                guard: 'customer.isVip() && amount > 1000',
+                action: 'expediteOrder',
+                description: 'VIP high-value order with nested payment destructuring'
+            },
+            1002: {
+                pattern: 'ProcessingOrder',
+                guard: 'customer.isPremium() && allItemsInStock(items)',
+                action: 'fulfillPremiumOrder',
+                description: 'Premium customer processing with inventory validation'
+            },
+            1003: {
+                pattern: 'ShippedOrder',
+                guard: 'deliveryPending(tracking)',
+                action: 'trackDelivery',
+                description: 'Shipped order tracking and delivery monitoring'
+            },
+            1004: {
+                pattern: 'DeliveredOrder',
+                guard: 'signature.isVerified()',
+                action: 'completeOrder',
+                description: 'Order completion with signature verification'
+            },
+            1005: {
+                pattern: 'ReturnRequest',
+                guard: 'reason == DEFECTIVE',
+                action: 'processDefectiveReturn',
+                description: 'Defective product return processing'
+            }
+        };
+
+        const orderPattern = patterns[orderId];
+
+        const newLogEntry = document.createElement('div');
+        newLogEntry.className = 'api-flow-block';
+        newLogEntry.innerHTML = `
+            <div>🎯 <strong>Order #${orderId} Selected</strong></div>
+            <div>   └─ Pattern: ${orderPattern.pattern}</div>
+            <div>   └─ Guard: ${orderPattern.guard}</div>
+            <div>   └─ Action: ${orderPattern.action}</div>
+            <div>   └─ <span class="java21-pattern-tag">Java 21 Pattern Matching</span></div>
+            <div>   └─ Context: ${orderPattern.description}</div>
+        `;
+
+        logContainer.insertBefore(newLogEntry, logContainer.firstChild);
+
+        // Limit log entries
+        while (logContainer.children.length > 8) {
+            logContainer.removeChild(logContainer.lastChild);
+        }
+    }
+
+    function updateWorkflowStep() {
+        const steps = document.querySelectorAll('.workflow-step');
+        const currentActive = document.querySelector('.workflow-step.active');
+
+        if (currentActive) {
+            currentActive.classList.remove('active');
+            currentActive.classList.add('completed');
+            const nextStep = currentActive.nextElementSibling;
+            if (nextStep && nextStep.classList.contains('workflow-step')) {
+                nextStep.classList.add('active');
+
+                // Update icons
+                currentActive.querySelector('.step-icon').className = 'step-icon step-complete';
+                currentActive.querySelector('.step-icon i').className = 'fas fa-check';
+            }
+        }
+    }
+
+    function clearLog() {
+        const logContainer = document.getElementById('pattern-log');
+        logContainer.innerHTML = `
+            <div class="text-muted text-center py-2">
+                <i class="fas fa-mouse-pointer mb-2"></i><br>
+                Select an order to see pattern matching in action...
+            </div>
+        `;
+    }
+
+    // Initialize with default selection
+    document.addEventListener('DOMContentLoaded', function() {
+        logPatternMatch(1001);
+    });
+</script>
+</body>
+</html>
