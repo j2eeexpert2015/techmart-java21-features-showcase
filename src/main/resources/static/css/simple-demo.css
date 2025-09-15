@@ -1,382 +1,326 @@
-/* Simple Payment Demo - Full Page Layout */
-
-/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%; /* Ensure html and body take full height */
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
     color: #333;
+    padding: 20px;
 }
 
-/* Full Width Header */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%; /* Use min-height to allow content to expand */
+    background: rgba(255, 255, 255, 0.95); /* Move the white background here */
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Prevent gradient from bleeding at corners */
+}
+
+
+/* Simple Header */
 .header {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 20px;
+    background: transparent; /* Header is now part of the white wrapper */
+    padding: 15px;
     text-align: center;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid #e5e7eb; /* Add a subtle separator */
 }
 
 .header h1 {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #667eea;
 }
 
-.header p {
-    font-size: 18px;
-    color: #666;
-    font-weight: 500;
-}
-
-/* Main Container - Full Width Left/Right Layout */
-.main-container {
+/* Main Container */
+.container {
     display: flex;
-    min-height: calc(100vh - 100px);
-    gap: 0;
+    gap: 20px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    align-items: flex-start;
+    flex: 1; /* Allow container to grow and fill available space */
 }
 
-/* Left Panel - Payment Form */
-.left-panel {
+/* Left Side */
+.left-side {
+    flex: 2;
+    background: transparent; /* No background needed, inherits from wrapper */
+}
+
+/* Right Side */
+.right-side {
     flex: 1;
-    padding: 30px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    overflow-y: auto;
-}
-
-/* Right Panel - API Log */
-.right-panel {
-    width: 400px;
     background: rgba(0, 0, 0, 0.9);
     color: white;
-    display: flex;
-    flex-direction: column;
+    border-radius: 8px;
+    padding: 20px;
 }
 
-/* Card Styles */
+/* Cards */
 .card {
     background: white;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Softer shadow */
+    border: 1px solid #e5e7eb; /* Subtle border */
 }
+
 
 .card h3 {
+    margin-bottom: 10px;
+    font-size: 16px;
     color: #333;
-    margin-bottom: 20px;
-    font-size: 20px;
-    font-weight: 600;
 }
 
-/* Payment Methods - 3 Column Grid */
+/* Top Row Layout */
+.top-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.step1-card {
+    flex: 1;
+}
+
+.instructions-card {
+    flex: 1;
+    background: linear-gradient(135deg, #e8f4fd 0%, #f0f9ff 100%);
+    border: 1px solid #3b82f6;
+}
+
+.instructions-card h3 {
+    color: #1e40af;
+    font-size: 14px;
+}
+
+/* Payment Methods */
 .payment-methods {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
+    display: flex;
+    gap: 8px;
 }
 
 .payment-card {
+    flex: 1;
     border: 2px solid #e5e7eb;
-    padding: 20px;
+    padding: 8px;
     text-align: center;
-    border-radius: 12px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
     background: #fafafa;
 }
 
-.payment-card:hover {
-    border-color: #667eea;
-    background: #f8faff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
-}
-
 .payment-card.selected {
     border-color: #667eea;
-    background: linear-gradient(135deg, #f8faff 0%, #e8f2ff 100%);
+    background: #f0f4ff;
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+
 .payment-card h4 {
-    margin-bottom: 8px;
-    color: #333;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 2px;
 }
 
 .payment-card p {
+    font-size: 10px;
     color: #666;
-    font-size: 14px;
     margin: 0;
 }
 
-/* Amount Section */
+/* Instructions Grid */
+.instructions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 11px;
+}
+
+.instruction-item {
+    background: white;
+    padding: 6px;
+    border-radius: 4px;
+    border-left: 2px solid #3b82f6;
+}
+
+.step-num {
+    background: #3b82f6;
+    color: white;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+/* Amount Buttons */
 .amount-section {
     background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
     border: 1px solid #e0e7ff;
 }
 
-.amount-section p {
-    font-size: 18px;
-    margin-bottom: 16px;
-}
-
-.amount-section #current-amount {
-    color: #667eea;
-    font-size: 24px;
-    font-weight: 700;
-}
-
 .amount-buttons {
     display: flex;
-    gap: 12px;
+    gap: 8px;
 }
 
-/* Button Styles */
-.btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    outline: none;
-}
-
-.btn:hover {
-    transform: translateY(-1px);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: 1px solid transparent;
-}
-
-.btn-primary:hover {
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-}
-
-.btn-large {
-    width: 100%;
-    font-size: 18px;
-    padding: 16px 24px;
-}
-
-.btn-outline {
+.amount-btn {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #667eea;
     background: white;
     color: #667eea;
-    border: 2px solid #667eea;
-    flex: 1;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
-.btn-outline:hover {
+.amount-btn:hover {
     background: #667eea;
     color: white;
 }
 
-.btn-small {
-    padding: 6px 12px;
-    font-size: 12px;
-    background: rgba(255, 255, 255, 0.1);
+.amount-btn small {
+    display: block;
+    font-size: 9px;
+    margin-top: 2px;
+}
+
+/* Process Button */
+.process-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.btn-small:hover {
-    background: rgba(255, 255, 255, 0.2);
+.process-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-/* Result Section */
-.result-section {
+/* Result */
+.result-card {
     background: linear-gradient(135deg, #f0f9f0 0%, #e8f5e8 100%);
     border: 1px solid #c3e6cb;
     display: none;
 }
 
-.result-section h3 {
-    color: #155724;
-    margin-bottom: 16px;
-}
-
-/* Right Panel Components */
-.pattern-info-card {
-    background: rgba(255, 255, 255, 0.1);
-    margin: 20px;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.pattern-info-card h3 {
+/* Right Side Content */
+.features-section h3 {
     color: #fbbf24;
-    margin-bottom: 16px;
-}
-
-.feature-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 14px;
 }
 
 .feature-item {
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    border-left: 3px solid #fbbf24;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    border-left: 2px solid #fbbf24;
 }
 
 .feature-item strong {
     display: block;
     color: #f3f4f6;
-    margin-bottom: 4px;
-    font-size: 14px;
+    font-size: 11px;
+    margin-bottom: 3px;
 }
 
 .feature-item code {
     color: #34d399;
-    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Consolas', monospace;
-    font-size: 12px;
+    font-family: monospace;
+    font-size: 10px;
     background: rgba(0, 0, 0, 0.3);
-    padding: 2px 6px;
-    border-radius: 4px;
+    padding: 2px 4px;
+    border-radius: 2px;
 }
 
-/* Log Card */
-.log-card {
-    flex: 1;
-    margin: 0 20px 20px 20px;
-    padding: 0;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    flex-direction: column;
+/* Log Section */
+.log-section {
+    background: #0f1419;
+    color: #00ff41;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 11px;
+    height: 250px;
+    overflow-y: auto;
+    margin-top: 15px;
 }
 
 .log-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
 }
 
 .log-header h3 {
     color: #34d399;
+    font-size: 12px;
     margin: 0;
-    font-size: 18px;
 }
 
-.log-section {
-    flex: 1;
-    background: #0f1419;
-    color: #00ff41;
-    padding: 16px;
-    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Consolas', monospace;
-    font-size: 13px;
-    overflow-y: auto;
-    line-height: 1.5;
-    border-radius: 0 0 12px 12px;
+.clear-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    cursor: pointer;
 }
 
-.log-section div {
-    margin-bottom: 8px;
-    padding: 2px 0;
+.java21-highlight {
+    background: rgba(52, 211, 153, 0.2);
+    padding: 2px 4px;
+    border-left: 2px solid #34d399;
+    border-radius: 2px;
 }
 
-/* Scrollbar for log */
-.log-section::-webkit-scrollbar {
-    width: 8px;
-}
-
-.log-section::-webkit-scrollbar-track {
-    background: #1f2937;
-    border-radius: 4px;
-}
-
-.log-section::-webkit-scrollbar-thumb {
-    background: #374151;
-    border-radius: 4px;
-}
-
-.log-section::-webkit-scrollbar-thumb:hover {
-    background: #4b5563;
-}
-
-/* Mobile Responsive */
-@media (max-width: 1024px) {
-    .main-container {
-        flex-direction: column;
-    }
-
-    .right-panel {
-        width: 100%;
-        height: 400px;
-    }
-
-    .payment-methods {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .amount-buttons {
-        flex-direction: column;
-    }
-
-    .left-panel {
-        padding: 20px;
-    }
-
-    .log-card {
-        margin: 20px;
-    }
-}
-
+/* Mobile */
 @media (max-width: 768px) {
-    .header h1 {
-        font-size: 24px;
+    body {
+        padding: 10px; /* Reduce padding on mobile */
     }
 
-    .header p {
-        font-size: 16px;
+    .container {
+        flex-direction: column;
     }
-
-    .left-panel {
-        padding: 16px;
+    .top-row {
+        flex-direction: column;
     }
-
-    .card {
-        padding: 20px;
-        margin-bottom: 16px;
+    .instructions-grid {
+        grid-template-columns: 1fr;
     }
-
-    .payment-card {
-        padding: 16px;
-    }
-
-    .btn {
-        padding: 12px 20px;
-    }
-
-    .right-panel {
-        height: 300px;
+    .right-side {
+        margin-top: 15px;
     }
 }

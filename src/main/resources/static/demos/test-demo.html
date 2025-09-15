@@ -5,573 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Java 21 Pattern Matching Demo</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            padding: 20px;
-        }
-
-        /* Simple Header */
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-            color: #667eea;
-        }
-
-        /* Main Container */
-        .container {
-            display: flex;
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            align-items: flex-start;
-        }
-
-        /* Left Side */
-        .left-side {
-            flex: 2;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        /* Right Side */
-        .right-side {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        /* Cards */
-        .card {
-            background: white;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .card h3 {
-            margin-bottom: 10px;
-            font-size: 16px;
-            color: #333;
-        }
-
-        /* Top Row Layout */
-        .top-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .step1-card {
-            flex: 1;
-        }
-
-        .instructions-card {
-            flex: 1;
-            background: linear-gradient(135deg, #e8f4fd 0%, #f0f9ff 100%);
-            border: 1px solid #3b82f6;
-        }
-
-        .instructions-card h3 {
-            color: #1e40af;
-            font-size: 14px;
-        }
-
-        /* Payment Methods */
-        .payment-methods {
-            display: flex;
-            gap: 8px;
-        }
-
-        .payment-card {
-            flex: 1;
-            border: 2px solid #e5e7eb;
-            padding: 8px;
-            text-align: center;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #fafafa;
-        }
-
-        .payment-card.selected {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        .payment-card h4 {
-            font-size: 12px;
-            margin-bottom: 2px;
-        }
-
-        .payment-card p {
-            font-size: 10px;
-            color: #666;
-            margin: 0;
-        }
-
-        /* Instructions Grid */
-        .instructions-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            font-size: 11px;
-        }
-
-        .instruction-item {
-            background: white;
-            padding: 6px;
-            border-radius: 4px;
-            border-left: 2px solid #3b82f6;
-        }
-
-        .step-num {
-            background: #3b82f6;
-            color: white;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            margin-right: 5px;
-        }
-
-        /* Amount Buttons */
-        .amount-section {
-            background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
-            border: 1px solid #e0e7ff;
-        }
-
-        .amount-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .amount-btn {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .amount-btn:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .amount-btn small {
-            display: block;
-            font-size: 9px;
-            margin-top: 2px;
-        }
-
-        /* Process Button */
-        .process-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .process-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        /* Result */
-        .result-card {
-            background: linear-gradient(135deg, #f0f9f0 0%, #e8f5e8 100%);
-            border: 1px solid #c3e6cb;
-            display: none;
-        }
-
-        /* Right Side Content */
-        .features-section h3 {
-            color: #fbbf24;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .feature-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            border-left: 2px solid #fbbf24;
-        }
-
-        .feature-item strong {
-            display: block;
-            color: #f3f4f6;
-            font-size: 11px;
-            margin-bottom: 3px;
-        }
-
-        .feature-item code {
-            color: #34d399;
-            font-family: monospace;
-            font-size: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 4px;
-            border-radius: 2px;
-        }
-
-        /* Log Section */
-        .log-section {
-            background: #0f1419;
-            color: #00ff41;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 11px;
-            height: 250px;
-            overflow-y: auto;
-            margin-top: 15px;
-        }
-
-        .log-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .log-header h3 {
-            color: #34d399;
-            font-size: 12px;
-            margin: 0;
-        }
-
-        .clear-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 4px 8px;
-            border-radius: 3px;
-            font-size: 10px;
-            cursor: pointer;
-        }
-
-        .java21-highlight {
-            background: rgba(52, 211, 153, 0.2);
-            padding: 2px 4px;
-            border-left: 2px solid #34d399;
-            border-radius: 2px;
-        }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            .top-row {
-                flex-direction: column;
-            }
-            .instructions-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/css/simple-demo.css">
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-    <h1>🚀 Java 21 Pattern Matching Demo</h1>
-    <p>Simple Interactive Learning</p>
-</div>
+<div class="page-wrapper">
+    <div class="header">
+        <h1>🚀 Java 21 Pattern Matching Demo</h1>
+        <p>Simple Interactive Learning</p>
+    </div>
 
-<!-- Main Container -->
-<div class="container">
-    <!-- Left Side -->
-    <div class="left-side">
-        <!-- Top Row: Step 1 and Instructions -->
-        <div class="top-row">
-            <!-- Step 1 -->
-            <div class="card step1-card">
-                <h3>Step 1: Select Payment Method</h3>
-                <div class="payment-methods">
-                    <div class="payment-card selected" data-method="creditcard">
-                        <h4>💳 Credit Card</h4>
-                        <p>Visa, MC</p>
+    <div class="container">
+        <div class="left-side">
+            <div class="top-row">
+                <div class="card step1-card">
+                    <h3>Step 1: Select Payment Method</h3>
+                    <div class="payment-methods">
+                        <div class="payment-card selected" data-method="creditcard">
+                            <h4>💳 Credit Card</h4>
+                            <p>Visa, MC</p>
+                        </div>
+                        <div class="payment-card" data-method="paypal">
+                            <h4>🟦 PayPal</h4>
+                            <p>Account</p>
+                        </div>
+                        <div class="payment-card" data-method="bank">
+                            <h4>🏦 Bank</h4>
+                            <p>Transfer</p>
+                        </div>
                     </div>
-                    <div class="payment-card" data-method="paypal">
-                        <h4>🟦 PayPal</h4>
-                        <p>Account</p>
-                    </div>
-                    <div class="payment-card" data-method="bank">
-                        <h4>🏦 Bank</h4>
-                        <p>Transfer</p>
+                </div>
+
+                <div class="card instructions-card">
+                    <h3>📋 Demo Steps</h3>
+                    <div class="instructions-grid">
+                        <div class="instruction-item">
+                            <span class="step-num">1</span>Select method
+                        </div>
+                        <div class="instruction-item">
+                            <span class="step-num">2</span>Choose amount
+                        </div>
+                        <div class="instruction-item">
+                            <span class="step-num">3</span>Process payment
+                        </div>
+                        <div class="instruction-item">
+                            <span class="step-num">4</span>See results
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Instructions -->
-            <div class="card instructions-card">
-                <h3>📋 Demo Steps</h3>
-                <div class="instructions-grid">
-                    <div class="instruction-item">
-                        <span class="step-num">1</span>Select method
-                    </div>
-                    <div class="instruction-item">
-                        <span class="step-num">2</span>Choose amount
-                    </div>
-                    <div class="instruction-item">
-                        <span class="step-num">3</span>Process payment
-                    </div>
-                    <div class="instruction-item">
-                        <span class="step-num">4</span>See results
-                    </div>
+            <div class="card amount-section">
+                <h3>Step 2: Select Amount</h3>
+                <p style="margin-bottom: 8px; font-size: 14px;">Amount: <strong id="current-amount">$500</strong></p>
+                <div class="amount-buttons">
+                    <button class="amount-btn" onclick="setAmount(500)">
+                        $500<br><small>Standard</small>
+                    </button>
+                    <button class="amount-btn" onclick="setAmount(1500)">
+                        $1,500<br><small>⚡ Guards</small>
+                    </button>
+                    <button class="amount-btn" onclick="setAmount(5000)">
+                        $5,000<br><small>⚡ High</small>
+                    </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Step 2: Amount -->
-        <div class="card amount-section">
-            <h3>Step 2: Select Amount</h3>
-            <p style="margin-bottom: 8px; font-size: 14px;">Amount: <strong id="current-amount">$500</strong></p>
-            <div class="amount-buttons">
-                <button class="amount-btn" onclick="setAmount(500)">
-                    $500<br><small>Standard</small>
-                </button>
-                <button class="amount-btn" onclick="setAmount(1500)">
-                    $1,500<br><small>⚡ Guards</small>
-                </button>
-                <button class="amount-btn" onclick="setAmount(5000)">
-                    $5,000<br><small>⚡ High</small>
+            <div class="card">
+                <h3>Step 3: Process Payment</h3>
+                <button class="process-btn" onclick="processPayment()">
+                    🔒 Process with Java 21
                 </button>
             </div>
-        </div>
 
-        <!-- Step 3: Process -->
-        <div class="card">
-            <h3>Step 3: Process Payment</h3>
-            <button class="process-btn" onclick="processPayment()">
-                🔒 Process with Java 21
-            </button>
-        </div>
-
-        <!-- Step 4: Results -->
-        <div class="card result-card" id="result-section">
-            <h3>✅ Result</h3>
-            <div id="result-content"></div>
-        </div>
-    </div>
-
-    <!-- Right Side -->
-    <div class="right-side">
-        <!-- Features -->
-        <div class="features-section">
-            <h3>🔥 Java 21 Features</h3>
-            <div class="feature-item">
-                <strong>Pattern Matching</strong>
-                <code>switch(method) { case CreditCard(...) }</code>
-            </div>
-            <div class="feature-item">
-                <strong>Guard Conditions</strong>
-                <code>when amount > 1000</code>
-            </div>
-            <div class="feature-item">
-                <strong>Sealed Interfaces</strong>
-                <code>No default case needed</code>
+            <div class="card result-card" id="result-section">
+                <h3>✅ Result</h3>
+                <div id="result-content"></div>
             </div>
         </div>
 
-        <!-- Log -->
-        <div class="log-header">
-            <h3>📊 Execution Log</h3>
-            <button class="clear-btn" onclick="clearLog()">Clear</button>
-        </div>
-        <div class="log-section" id="api-log">
-            <div class="java21-highlight">Java 21 Pattern Matching Ready!</div>
-            <div>Select a payment method to begin...</div>
-            <div></div>
-            <div>🎯 You'll see:</div>
-            <div>  • Pattern matching decisions</div>
-            <div>  • Guard condition evaluations</div>
-            <div>  • Backend responses</div>
+        <div class="right-side">
+            <div class="features-section">
+                <h3>🔥 Java 21 Features</h3>
+                <div class="feature-item">
+                    <strong>Pattern Matching</strong>
+                    <code>switch(method) { case CreditCard(...) }</code>
+                </div>
+                <div class="feature-item">
+                    <strong>Guard Conditions</strong>
+                    <code>when amount > 1000</code>
+                </div>
+                <div class="feature-item">
+                    <strong>Sealed Interfaces</strong>
+                    <code>No default case needed</code>
+                </div>
+            </div>
+
+            <div class="log-header">
+                <h3>📊 Execution Log</h3>
+                <button class="clear-btn" onclick="clearLog()">Clear</button>
+            </div>
+            <div class="log-section" id="api-log">
+                <div class="java21-highlight">Java 21 Pattern Matching Ready!</div>
+                <div>Select a payment method to begin...</div>
+                <div></div>
+                <div>🎯 You'll see:</div>
+                <div>  • Pattern matching decisions</div>
+                <div>  • Guard condition evaluations</div>
+                <div>  • Backend responses</div>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-    let currentMethod = 'creditcard';
-    let currentAmount = 500;
-
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeDemo();
-    });
-
-    function initializeDemo() {
-        setupPaymentMethodSelection();
-        addLog('🚀 Java 21 Demo ready');
-    }
-
-    function setupPaymentMethodSelection() {
-        const paymentCards = document.querySelectorAll('.payment-card');
-        paymentCards.forEach(card => {
-            card.addEventListener('click', function() {
-                selectPaymentMethod(this);
-            });
-        });
-    }
-
-    function selectPaymentMethod(selectedCard) {
-        document.querySelectorAll('.payment-card').forEach(card => {
-            card.classList.remove('selected');
-        });
-        selectedCard.classList.add('selected');
-        currentMethod = selectedCard.dataset.method;
-
-        addLog(`🎯 PATTERN: ${getMethodName(currentMethod)}`);
-        addLog(`   switch(${currentMethod}) {...}`);
-    }
-
-    function setAmount(amount) {
-        currentAmount = amount;
-        document.getElementById('current-amount').textContent = `$${amount.toLocaleString()}`;
-
-        addLog(`💰 Amount: $${amount.toLocaleString()}`);
-
-        if (willTriggerGuard()) {
-            addLog(`⚡ GUARD ACTIVE: when amount > threshold`);
-        } else {
-            addLog(`✅ Standard processing`);
-        }
-    }
-
-    function willTriggerGuard() {
-        return (currentMethod === 'creditcard' && currentAmount > 1000) ||
-               (currentMethod === 'bank' && currentAmount >= 5000);
-    }
-
-    function processPayment() {
-        addLog('🔥 PROCESSING...');
-        addLog(`Method: ${getMethodName(currentMethod)}`);
-        addLog(`Amount: $${currentAmount.toLocaleString()}`);
-
-        const payload = { method: currentMethod, amount: currentAmount };
-
-        fetch('/api/simple/payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        })
-        .then(response => response.json())
-        .then(data => {
-            addLog('✅ BACKEND RESPONSE:');
-            addLog(`Status: ${data.status}`);
-            showResult(data);
-        })
-        .catch(error => {
-            addLog('⚠️ Simulating...');
-            const result = simulateResponse();
-            showResult(result);
-        });
-    }
-
-    function simulateResponse() {
-        if (willTriggerGuard()) {
-            return {
-                status: currentMethod === 'bank' ? 'REQUIRES_APPROVAL' : 'REQUIRES_VERIFICATION',
-                message: 'Guard condition triggered',
-                java21_feature: 'Pattern Matching with Guards'
-            };
-        }
-        return {
-            status: 'APPROVED',
-            message: 'Standard processing',
-            java21_feature: 'Basic Pattern Matching'
-        };
-    }
-
-    function showResult(result) {
-        const section = document.getElementById('result-section');
-        const content = document.getElementById('result-content');
-
-        const color = result.status.includes('APPROVED') ? '#10b981' : '#f59e0b';
-
-        content.innerHTML = `
-            <div style="border-left: 3px solid ${color}; padding-left: 10px;">
-                <h4 style="color: ${color}; margin: 0 0 5px 0; font-size: 14px;">${result.status}</h4>
-                <p style="margin: 0 0 5px 0; font-size: 12px;">${result.message}</p>
-                <code style="background: ${color}20; padding: 3px 6px; border-radius: 3px; font-size: 10px;">
-                    ${result.java21_feature}
-                </code>
-            </div>
-        `;
-
-        section.style.display = 'block';
-        addLog(`Result: ${result.status}`);
-    }
-
-    function addLog(message) {
-        const log = document.getElementById('api-log');
-        const timestamp = new Date().toLocaleTimeString();
-        const logEntry = document.createElement('div');
-
-        if (message.includes('PATTERN') || message.includes('GUARD')) {
-            logEntry.className = 'java21-highlight';
-        }
-
-        logEntry.innerHTML = `[${timestamp}] ${message}`;
-        log.appendChild(logEntry);
-        log.scrollTop = log.scrollHeight;
-
-        while (log.children.length > 20) {
-            log.removeChild(log.firstChild);
-        }
-    }
-
-    function clearLog() {
-        document.getElementById('api-log').innerHTML =
-            '<div class="java21-highlight">Log cleared</div>';
-    }
-
-    function getMethodName(method) {
-        const names = {
-            'creditcard': 'Credit Card',
-            'paypal': 'PayPal',
-            'bank': 'Bank Transfer'
-        };
-        return names[method] || method;
-    }
-</script>
+<script src="/js/simple-demo.js"></script>
 
 </body>
 </html>
