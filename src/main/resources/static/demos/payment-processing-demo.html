@@ -6,167 +6,458 @@
     <title>TechMart - Payment Processing Demo | Java 21 Pattern Matching</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/payment-processing-demo.css">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --danger-color: #dc3545;
+            --white: #ffffff;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        .main-container {
+            background: var(--white);
+            margin: 0 auto;
+            border-radius: 1rem;
+            overflow: hidden;
+            max-width: 1200px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--white);
+            text-align: center;
+            position: relative;
+        }
+
+        .demo-header h1 {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .java21-badge {
+            background: linear-gradient(45deg, #10b981, #06b6d4);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .demo-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-card h5, .demo-card h6 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .payment-method-card {
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--white);
+            text-align: center;
+            position: relative;
+        }
+
+        .payment-method-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .payment-method-card.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.05) 0%, rgba(0, 123, 255, 0.02) 100%);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.25);
+        }
+
+        .payment-method-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: var(--success-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .amount-test-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .amount-test-buttons .btn {
+            font-size: 0.85rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .amount-test-buttons .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .customer-type-selector {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .customer-type-selector h6 {
+            color: var(--info-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .customer-type-selector .btn-check:checked + .btn {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-process-payment {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-process-payment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+            color: white;
+        }
+
+        .api-reference-table {
+            font-size: 0.9rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .api-reference-table td,
+        .api-reference-table th {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-color: var(--border-color);
+        }
+
+        .api-reference-table code {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: var(--primary-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+
+        .api-reference-table tr.pattern-highlight {
+            background-color: #fff3cd !important;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .api-reference-table tr.pattern-highlight > * {
+            background-color: #fff3cd !important;
+            border-top: 2px solid var(--warning-color);
+            border-bottom: 2px solid var(--warning-color);
+        }
+
+        .api-reference-table tr.pattern-highlight > *:first-child {
+            border-left: 2px solid var(--warning-color);
+        }
+
+        .api-reference-table tr.pattern-highlight > *:last-child {
+            border-right: 2px solid var(--warning-color);
+        }
+
+        .api-log-container {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            color: #f3f4f6;
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85em;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            height: 350px;
+            overflow-y: auto;
+            border: 2px solid #4b5563;
+        }
+
+        .api-log-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .api-log-container::-webkit-scrollbar-track {
+            background: #374151;
+            border-radius: 3px;
+        }
+
+        .api-log-container::-webkit-scrollbar-thumb {
+            background: #6b7280;
+            border-radius: 3px;
+        }
+
+        .api-flow-block {
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--info-color);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .api-flow-child {
+            padding-left: 1rem;
+            position: relative;
+            margin-top: 0.25rem;
+            opacity: 0.9;
+        }
+
+        .api-flow-child::before {
+            content: '└──';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--info-color);
+            font-weight: bold;
+        }
+
+        .java21-pattern-tag {
+            background: linear-gradient(45deg, var(--success-color), #38c172);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .processing-status {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .status-step {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-step:last-child {
+            border-bottom: none;
+        }
+
+        .status-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .status-complete {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .status-pending {
+            background: var(--text-muted);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .demo-header {
+                padding: 1.5rem 1rem;
+            }
+
+            .demo-header h1 {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .demo-card {
+                padding: 1rem;
+            }
+
+            .amount-test-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .amount-test-buttons .btn {
+                width: 100%;
+            }
+
+            .api-log-container {
+                height: 250px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="container-fluid my-3">
     <div class="main-container">
-        <!-- Enhanced Header matching shopping cart style -->
+        <!-- Header -->
         <header class="demo-header">
             <h1>
                 <i class="fas fa-credit-card"></i>
-                Payment Processing Engine
+                Payment Processing Demo
                 <span class="java21-badge">Java 21</span>
             </h1>
-            <p>Interactive demonstration of Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy</p>
+            <p>Interactive demonstration of Java 21 Pattern Matching with Sealed Payment Hierarchy</p>
         </header>
 
-        <!-- NEW: Demo Instructions Panel -->
-        <section class="demo-instructions-panel">
-            <div class="instructions-content">
-                <h6><i class="fas fa-lightbulb text-warning"></i> Demo Instructions</h6>
-                <div class="instructions-steps">
-                    <div class="instruction-step">
-                        <span class="step-number">1</span>
-                        <span class="step-text">Select different payment methods to see Java 21 pattern matching in action</span>
-                    </div>
-                    <div class="instruction-step">
-                        <span class="step-number">2</span>
-                        <span class="step-text">Try changing amounts using quick test buttons to trigger guard conditions</span>
-                    </div>
-                    <div class="instruction-step">
-                        <span class="step-number">3</span>
-                        <span class="step-text">Watch the Visual Flow Inspector to see real-time pattern matching decisions</span>
-                    </div>
-                    <div class="instruction-step">
-                        <span class="step-number">4</span>
-                        <span class="step-text">Observe API Reference highlighting when patterns are matched</span>
-                    </div>
-                </div>
-                <button class="btn btn-sm btn-outline-primary ms-3" onclick="toggleInstructions()">
-                    <i class="fas fa-eye-slash"></i> Hide
-                </button>
-            </div>
-        </section>
-
-        <section class="demo-page-container">
+        <section class="demo-page-container p-3">
             <div class="row">
                 <!-- Left Column: Payment Form -->
                 <div class="col-lg-7">
-                    <!-- Order Summary with Quick Test Buttons -->
+                    <!-- Order Summary -->
                     <div class="demo-card">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5><i class="fas fa-shopping-cart"></i> Order Summary</h5>
                             <div class="amount-test-buttons">
-                                <small class="text-muted me-2">Quick Tests:</small>
-                                <button class="btn btn-sm btn-outline-primary me-1" onclick="testWithAmount(500)" data-bs-toggle="tooltip" title="Test small amount - standard processing">
-                                    $500
-                                </button>
-                                <button class="btn btn-sm btn-outline-warning me-1" onclick="testWithAmount(1500)" data-bs-toggle="tooltip" title="Test high value - triggers guard conditions">
-                                    $1,500
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="testWithAmount(6000)" data-bs-toggle="tooltip" title="Test very high value - manager approval required">
-                                    $6,000
-                                </button>
+                                <small class="text-muted me-2">Test Amounts:</small>
+                                <button class="btn btn-sm btn-outline-primary" onclick="setAmount(500)">$500</button>
+                                <button class="btn btn-sm btn-outline-warning" onclick="setAmount(1500)">$1,500</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="setAmount(6000)">$6,000</button>
                             </div>
                         </div>
-                        <div class="cart-summary" id="order-summary">
-                            <div class="cart-item">
-                                <div>
-                                    <strong>iPhone 15 Pro</strong>
-                                    <div class="text-muted">Quantity: 1</div>
-                                </div>
-                                <div class="text-end">$999.00</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Sample TechMart Order</strong>
+                                <div class="text-muted">Multiple items</div>
                             </div>
-                            <div class="cart-item">
-                                <div>
-                                    <strong>MacBook Pro M3</strong>
-                                    <div class="text-muted">Quantity: 1</div>
-                                </div>
-                                <div class="text-end">$2,499.00</div>
-                            </div>
-                            <div class="cart-item">
-                                <div>
-                                    <strong>AirPods Pro</strong>
-                                    <div class="text-muted">Quantity: 2</div>
-                                </div>
-                                <div class="text-end">$498.00</div>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <strong>Total Amount:</strong>
-                                <strong class="total-amount" id="total-amount">$3,996.00</strong>
+                            <div class="text-end">
+                                <strong class="fs-4 text-primary" id="order-total">$1,500.00</strong>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Payment Method Selection with Enhanced Guidance -->
+                    <!-- Payment Method Selection -->
                     <div class="demo-card">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5><i class="fas fa-credit-card"></i> Select Payment Method</h5>
-                            <div class="demo-hint">
-                                <i class="fas fa-info-circle text-primary"></i>
-                                <small class="text-muted">Click different methods to see pattern matching</small>
-                            </div>
-                        </div>
-
+                        <h5><i class="fas fa-credit-card"></i> Select Payment Method</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
-                                <div class="payment-method-card selected" data-method="creditcard" data-bs-toggle="tooltip" data-bs-placement="top" title="Try this with high amounts to see guard conditions">
-                                    <div class="payment-method-icon">
-                                        <i class="fab fa-cc-visa"></i>
+                                <div class="payment-method-card selected" data-method="creditcard">
+                                    <div class="mb-2">
+                                        <i class="fab fa-cc-visa fa-2x text-primary"></i>
                                     </div>
                                     <h6>Credit Card</h6>
                                     <small class="text-muted">Visa, MasterCard, Amex</small>
-                                    <div class="pattern-info">
+                                    <div class="mt-2">
                                         <small class="text-primary">Pattern: CreditCard(...)</small>
                                     </div>
-                                    <div class="form-check mt-3">
-                                        <input class="form-check-input" type="radio" name="paymentMethod" value="creditcard" checked>
-                                        <label class="form-check-label">Select</label>
-                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
-                                <div class="payment-method-card" data-method="paypal" data-bs-toggle="tooltip" data-bs-placement="top" title="Premium customers get expedited processing">
-                                    <div class="payment-method-icon">
-                                        <i class="fab fa-paypal"></i>
+                                <div class="payment-method-card" data-method="paypal">
+                                    <div class="mb-2">
+                                        <i class="fab fa-paypal fa-2x text-info"></i>
                                     </div>
                                     <h6>PayPal</h6>
-                                    <small class="text-muted">Pay with PayPal account</small>
-                                    <div class="pattern-info">
+                                    <small class="text-muted">PayPal account</small>
+                                    <div class="mt-2">
                                         <small class="text-primary">Pattern: PayPal(...)</small>
-                                    </div>
-                                    <div class="form-check mt-3">
-                                        <input class="form-check-input" type="radio" name="paymentMethod" value="paypal">
-                                        <label class="form-check-label">Select</label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
-                                <div class="payment-method-card" data-method="banktransfer" data-bs-toggle="tooltip" data-bs-placement="top" title="Large amounts require manager approval">
-                                    <div class="payment-method-icon">
-                                        <i class="fas fa-university"></i>
+                                <div class="payment-method-card" data-method="banktransfer">
+                                    <div class="mb-2">
+                                        <i class="fas fa-university fa-2x text-success"></i>
                                     </div>
                                     <h6>Bank Transfer</h6>
-                                    <small class="text-muted">Direct bank transfer</small>
-                                    <div class="pattern-info">
+                                    <small class="text-muted">Direct transfer</small>
+                                    <div class="mt-2">
                                         <small class="text-primary">Pattern: BankTransfer(...)</small>
-                                    </div>
-                                    <div class="form-check mt-3">
-                                        <input class="form-check-input" type="radio" name="paymentMethod" value="banktransfer">
-                                        <label class="form-check-label">Select</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Customer Type Selector for Demo -->
-                        <div class="customer-type-selector mb-4">
-                            <h6><i class="fas fa-user"></i> Customer Type (Demo Setting)</h6>
-                            <div class="btn-group" role="group" aria-label="Customer type">
+                        <!-- Customer Type Selector -->
+                        <div class="customer-type-selector">
+                            <h6><i class="fas fa-user"></i> Customer Type</h6>
+                            <div class="btn-group w-100" role="group">
                                 <input type="radio" class="btn-check" name="customerType" id="customer-basic" value="basic" checked>
                                 <label class="btn btn-outline-secondary" for="customer-basic">Basic</label>
 
@@ -176,189 +467,80 @@
                                 <input type="radio" class="btn-check" name="customerType" id="customer-vip" value="vip">
                                 <label class="btn btn-outline-warning" for="customer-vip">VIP</label>
                             </div>
-                            <small class="text-muted d-block mt-2">Different customer types trigger different pattern matching logic</small>
+                            <small class="text-muted d-block mt-2">Different tiers trigger different pattern matching logic</small>
                         </div>
 
-                        <!-- Dynamic Payment Form -->
-                        <div class="dynamic-form" id="payment-form">
-                            <h6>
-                                <i class="fas fa-credit-card text-primary"></i>Credit Card Details
-                                <span class="pattern-matching-indicator ms-2">Pattern: CreditCard</span>
-                            </h6>
-
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label class="form-label">Card Number</label>
-                                    <input type="text" class="form-control" placeholder="1234 5678 9012 3456" id="card-number">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">CVV</label>
-                                    <input type="text" class="form-control" placeholder="123" maxlength="4" id="card-cvv">
-                                </div>
-                            </div>
-
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Expiry Month</label>
-                                    <select class="form-control" id="expiry-month">
-                                        <option value="">Select Month</option>
-                                        <option value="01">01 - January</option>
-                                        <option value="02">02 - February</option>
-                                        <option value="12">12 - December</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Expiry Year</label>
-                                    <select class="form-control" id="expiry-year">
-                                        <option value="">Select Year</option>
-                                        <option value="2025">2025</option>
-                                        <option value="2026">2026</option>
-                                        <option value="2027">2027</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- International Card Toggle -->
-                            <div class="mt-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="international-card">
-                                    <label class="form-check-label" for="international-card">
-                                        International Card (triggers additional guard conditions)
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Guard Condition Warning -->
-                            <div class="validation-feedback" id="guard-condition-warning" style="display: none;">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                <strong>High-Value International Transaction Detected</strong><br>
-                                Amount > $1,000 with international card requires additional verification.
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="mt-4">
-                            <button class="btn btn-primary-custom btn-lg w-100" onclick="processPayment()">
-                                <i class="fas fa-lock me-2"></i>Process Payment - <span id="button-amount">$3,996.00</span>
+                        <!-- Process Button -->
+                        <div class="text-center mt-4">
+                            <button class="btn btn-process-payment btn-lg" onclick="processPayment()">
+                                <i class="fas fa-lock me-2"></i>Process Payment - <span id="button-amount">$1,500.00</span>
                             </button>
-                            <div class="demo-action-buttons mt-3">
-                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="resetDemo()">
-                                    <i class="fas fa-undo"></i> Reset Demo
-                                </button>
-                                <button class="btn btn-outline-info btn-sm" onclick="showDemoScenarios()">
-                                    <i class="fas fa-play"></i> Run Scenarios
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Column: Pattern Matching Logic -->
                 <div class="col-lg-5">
-                    <!-- Java 21 API Reference with Enhanced Highlighting -->
+                    <!-- Java 21 API Reference -->
                     <div class="demo-card">
                         <h6><i class="fas fa-book"></i> Java 21 Pattern Matching Reference</h6>
                         <table class="table table-sm table-bordered api-reference-table mb-0">
                             <tbody>
-                            <tr id="pattern-switch"><td><code>switch (payment)</code></td><td>Pattern matching switch expression</td></tr>
-                            <tr id="pattern-creditcard"><td><code>case CreditCard(...)</code></td><td>Record pattern with destructuring</td></tr>
-                            <tr id="pattern-guard"><td><code>when amount > 1000</code></td><td>Guard condition for business rules</td></tr>
-                            <tr id="pattern-paypal"><td><code>case PayPal(...)</code></td><td>Alternative payment method pattern</td></tr>
-                            <tr id="pattern-banktransfer"><td><code>case BankTransfer(...)</code></td><td>Bank transfer pattern matching</td></tr>
-                            <tr id="pattern-sealed"><td><code>sealed interface</code></td><td>Sealed hierarchy for type safety</td></tr>
+                            <tr id="pattern-switch"><td><code>switch (payment)</code></td><td>Pattern matching switch</td></tr>
+                            <tr id="pattern-creditcard"><td><code>case CreditCard(...)</code></td><td>Record pattern destructuring</td></tr>
+                            <tr id="pattern-guard"><td><code>when amount > 1000</code></td><td>Guard condition</td></tr>
+                            <tr id="pattern-paypal"><td><code>case PayPal(...)</code></td><td>PayPal pattern match</td></tr>
+                            <tr id="pattern-banktransfer"><td><code>case BankTransfer(...)</code></td><td>Bank transfer pattern</td></tr>
+                            <tr id="pattern-sealed"><td><code>sealed interface</code></td><td>Exhaustive matching</td></tr>
                             </tbody>
                         </table>
-                        <div class="api-help-text mt-2">
-                            <small class="text-muted">
-                                <i class="fas fa-info-circle"></i>
-                                Rows will highlight when corresponding patterns are matched
-                            </small>
-                        </div>
                     </div>
 
-                    <!-- Pattern Matching Logic Display -->
+                    <!-- Processing Status -->
                     <div class="demo-card">
-                        <h6><i class="fas fa-cogs"></i> Pattern Matching Logic</h6>
-
+                        <h6><i class="fas fa-cogs"></i> Pattern Matching Status</h6>
                         <div class="processing-status" id="pattern-status">
                             <div class="status-step">
                                 <div class="status-icon status-complete">
                                     <i class="fas fa-check"></i>
                                 </div>
                                 <div>
-                                    <div><strong>Payment Method Detection</strong></div>
-                                    <small class="text-muted">Pattern: CreditCard identified</small>
+                                    <div><strong>Payment Method</strong></div>
+                                    <small class="text-muted">CreditCard pattern detected</small>
                                 </div>
                             </div>
-
                             <div class="status-step">
                                 <div class="status-icon status-active">
-                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <i class="fas fa-shield-alt"></i>
                                 </div>
                                 <div>
-                                    <div><strong>Guard Condition Check</strong></div>
-                                    <small class="text-muted">Amount > $1,000 → Additional verification</small>
+                                    <div><strong>Guard Conditions</strong></div>
+                                    <small class="text-muted">Amount > $1000 - verification required</small>
                                 </div>
                             </div>
-
                             <div class="status-step">
                                 <div class="status-icon status-pending">
                                     <i class="fas fa-clock"></i>
                                 </div>
                                 <div>
-                                    <div><strong>Validation</strong></div>
-                                    <small class="text-muted">Pending form completion</small>
+                                    <div><strong>Ready to Process</strong></div>
+                                    <small class="text-muted">Click process to execute pattern matching</small>
                                 </div>
                             </div>
-
-                            <div class="status-step">
-                                <div class="status-icon status-pending">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div>
-                                    <div><strong>Payment Processing</strong></div>
-                                    <small class="text-muted">Ready to process</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Java 21 Code Preview -->
-                    <div class="demo-card">
-                        <h6><i class="fas fa-code"></i> Java 21 Pattern Matching Code</h6>
-                        <div class="code-preview" id="code-preview">
-<pre>switch (paymentMethod) {
-  case CreditCard(var number, var type, var cvv)
-       when amount > 1000 && isInternational(number) ->
-    requireAdditionalVerification();
-
-  case PayPal(var email)
-       when isPremiumCustomer(customer) ->
-    processExpedited(email);
-
-  case BankTransfer(var account, var routing) ->
-    processBankTransfer(account, routing);
-}</pre>
                         </div>
                     </div>
 
                     <!-- Visual Flow Inspector -->
-                    <div class="demo-card h-100">
+                    <div class="demo-card">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h6><i class="fas fa-stream"></i> Visual Flow Inspector</h6>
-                            <div>
-                                <button class="btn btn-sm btn-outline-info me-1" onclick="showFlowHelp()">
-                                    <i class="fas fa-question"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary clear-log-btn" onclick="clearInspectorLog()">
-                                    <i class="fas fa-eraser"></i> Clear
-                                </button>
-                            </div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="clearLog()">
+                                <i class="fas fa-eraser"></i> Clear
+                            </button>
                         </div>
-                        <div id="api-log" class="api-log-container" aria-live="polite">
-                            <div class="text-muted text-center py-2">
-                                <i class="fas fa-mouse-pointer mb-2"></i><br>
-                                Select a payment method to see pattern matching in action...
+                        <div id="api-log" class="api-log-container">
+                            <div class="text-muted text-center py-3">
+                                Select payment method and amount to see pattern matching in action...
                             </div>
                         </div>
                     </div>
@@ -368,43 +550,289 @@
     </div>
 </div>
 
-<!-- Demo Scenarios Modal -->
-<div class="modal fade" id="scenariosModal" tabindex="-1" aria-labelledby="scenariosModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="scenariosModalLabel">
-                    <i class="fas fa-play-circle"></i> Automated Demo Scenarios
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Choose a scenario to see automated pattern matching demonstrations:</p>
-                <div class="scenario-buttons">
-                    <button class="btn btn-primary mb-2 w-100" onclick="runScenario('high-value-international')">
-                        <i class="fas fa-globe"></i> High-Value International Transaction
-                        <small class="d-block">CreditCard + amount > $1000 + international</small>
-                    </button>
-                    <button class="btn btn-warning mb-2 w-100" onclick="runScenario('premium-paypal')">
-                        <i class="fas fa-star"></i> Premium Customer PayPal
-                        <small class="d-block">PayPal + premium customer tier</small>
-                    </button>
-                    <button class="btn btn-danger mb-2 w-100" onclick="runScenario('large-bank-transfer')">
-                        <i class="fas fa-university"></i> Large Bank Transfer
-                        <small class="d-block">BankTransfer + amount > $5000</small>
-                    </button>
-                    <button class="btn btn-info mb-2 w-100" onclick="runScenario('all-patterns')">
-                        <i class="fas fa-list"></i> Test All Patterns
-                        <small class="d-block">Cycle through all payment methods</small>
-                    </button>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Simplified Payment Processing Demo JavaScript
+    // Focus on core pattern matching demonstration
+
+    let currentPaymentMethod = 'creditcard';
+    let currentAmount = 1500;
+    let customerType = 'basic';
+
+    // Initialize demo
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        updatePatternMatching();
+        logAction('Demo Initialized', 'Payment pattern matching ready');
+    });
+
+    // Setup event listeners
+    function setupEventListeners() {
+        // Payment method selection
+        document.querySelectorAll('.payment-method-card').forEach(card => {
+            card.addEventListener('click', function() {
+                selectPaymentMethod(this.dataset.method);
+            });
+        });
+
+        // Customer type selection
+        document.querySelectorAll('input[name="customerType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                customerType = this.value;
+                updatePatternMatching();
+                logAction('Customer Type Changed', `Selected: ${customerType.toUpperCase()}`);
+            });
+        });
+    }
+
+    // Select payment method
+    function selectPaymentMethod(method) {
+        currentPaymentMethod = method;
+
+        // Update UI selection
+        document.querySelectorAll('.payment-method-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        document.querySelector(`[data-method="${method}"]`).classList.add('selected');
+
+        updatePatternMatching();
+        highlightPattern(method);
+        logAction('Payment Method Selected', `Pattern: ${method}`);
+    }
+
+    // Set test amount
+    function setAmount(amount) {
+        currentAmount = amount;
+        document.getElementById('order-total').textContent = `$${amount.toLocaleString()}`;
+        document.getElementById('button-amount').textContent = `$${amount.toLocaleString()}`;
+
+        updatePatternMatching();
+        logAction('Amount Updated', `Testing with $${amount.toLocaleString()}`);
+    }
+
+    // Update pattern matching preview
+    function updatePatternMatching() {
+        const statusContainer = document.getElementById('pattern-status');
+        const guardTriggered = checkGuardConditions();
+
+        let statusHtml = `
+            <div class="status-step">
+                <div class="status-icon status-complete">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div>
+                    <div><strong>Payment Method</strong></div>
+                    <small class="text-muted">${getPatternName(currentPaymentMethod)} pattern detected</small>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+        `;
 
-<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../js/payment-processing-demo.js"></script>
+        if (guardTriggered.triggered) {
+            statusHtml += `
+                <div class="status-step">
+                    <div class="status-icon status-active">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <div><strong>Guard Condition</strong></div>
+                        <small class="text-muted">${guardTriggered.condition} - ${guardTriggered.action}</small>
+                    </div>
+                </div>
+            `;
+        } else {
+            statusHtml += `
+                <div class="status-step">
+                    <div class="status-icon status-complete">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div>
+                        <div><strong>Standard Processing</strong></div>
+                        <small class="text-muted">No guard conditions triggered</small>
+                    </div>
+                </div>
+            `;
+        }
+
+        statusHtml += `
+            <div class="status-step">
+                <div class="status-icon status-pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <div><strong>Ready to Process</strong></div>
+                    <small class="text-muted">Click process to execute pattern matching</small>
+                </div>
+            </div>
+        `;
+
+        statusContainer.innerHTML = statusHtml;
+    }
+
+    // Check guard conditions
+    function checkGuardConditions() {
+        if (currentPaymentMethod === 'creditcard' && currentAmount > 1000) {
+            return {
+                triggered: true,
+                condition: `amount > $1000`,
+                action: 'verification required'
+            };
+        }
+        if (currentPaymentMethod === 'paypal' && customerType !== 'basic') {
+            return {
+                triggered: true,
+                condition: 'isPremiumCustomer',
+                action: 'expedited processing'
+            };
+        }
+        if (currentPaymentMethod === 'banktransfer' && currentAmount >= 5000) {
+            return {
+                triggered: true,
+                condition: 'amount >= $5000',
+                action: 'manager approval required'
+            };
+        }
+        return { triggered: false };
+    }
+
+    // Process payment - call backend
+    async function processPayment() {
+        logAction('Processing Payment', `Method: ${currentPaymentMethod}, Amount: $${currentAmount}`);
+
+        try {
+            const response = await fetch('/api/payment/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    paymentType: mapPaymentType(currentPaymentMethod),
+                    amount: currentAmount,
+                    customerTier: customerType.toUpperCase(),
+                    isInternational: false
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const result = await response.json();
+            handlePaymentResult(result);
+
+        } catch (error) {
+            console.error('Payment processing error:', error);
+            logAction('❌ Backend Error', 'Could not connect to Spring Boot application');
+            showNotification('Failed to connect to backend. Is the Java application running?', 'danger');
+        }
+    }
+
+    // Handle payment result
+    function handlePaymentResult(result) {
+        logAction('✅ Payment Processed', `Status: ${result.status}`);
+        logAction('🎯 Pattern Matched', result.patternMatched || 'Unknown');
+        logAction('⚡ Guard Condition', result.guardCondition || 'none');
+        logAction('🔄 Processing Action', result.processingAction || 'standard');
+
+        if (result.java21_features_used) {
+            logAction('🔥 Java 21 Features', result.java21_features_used.join(', '));
+        }
+
+        const statusClass = result.successful ? 'success' :
+                           result.requiresAdditionalAction ? 'warning' : 'danger';
+        showNotification(`Payment ${result.status}: ${result.statusMessage || 'Processed'}`, statusClass);
+    }
+
+    // Highlight pattern in reference table
+    function highlightPattern(method) {
+        // Clear previous highlights
+        document.querySelectorAll('.api-reference-table tr').forEach(row => {
+            row.classList.remove('pattern-highlight');
+        });
+
+        // Highlight relevant patterns
+        document.getElementById('pattern-switch').classList.add('pattern-highlight');
+        document.getElementById(`pattern-${method}`).classList.add('pattern-highlight');
+
+        if (checkGuardConditions().triggered) {
+            document.getElementById('pattern-guard').classList.add('pattern-highlight');
+        }
+
+        // Auto-remove highlights after 3 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.pattern-highlight').forEach(row => {
+                row.classList.remove('pattern-highlight');
+            });
+        }, 3000);
+    }
+
+    // Log action to visual inspector
+    function logAction(action, details) {
+        const logContainer = document.getElementById('api-log');
+
+        // Clear initial message
+        if (logContainer.querySelector('.text-muted')) {
+            logContainer.innerHTML = '';
+        }
+
+        const logEntry = document.createElement('div');
+        logEntry.className = 'api-flow-block';
+        logEntry.innerHTML = `
+            <div>👤 <strong>${action}</strong></div>
+            <div class="api-flow-child">📋 ${details}</div>
+            <div class="api-flow-child">⏰ ${new Date().toLocaleTimeString()}</div>
+            <div class="api-flow-child">🔥 Java 21: <span class="java21-pattern-tag">Pattern Matching</span></div>
+        `;
+
+        logContainer.insertBefore(logEntry, logContainer.firstChild);
+
+        // Limit log entries
+        while (logContainer.children.length > 8) {
+            logContainer.removeChild(logContainer.lastChild);
+        }
+
+        logContainer.scrollTop = 0;
+    }
+
+    // Clear log
+    function clearLog() {
+        document.getElementById('api-log').innerHTML = `
+            <div class="text-muted text-center py-3">
+                Log cleared. Select payment methods to see pattern matching...
+            </div>
+        `;
+    }
+
+    // Show notification
+    function showNotification(message, type = 'info') {
+        // Simple alert for now - could be enhanced with toast notifications
+        const alertClass = `alert-${type}`;
+        console.log(`${type.toUpperCase()}: ${message}`);
+
+        // You could add a toast notification system here if desired
+    }
+
+    // Helper functions
+    function getPatternName(method) {
+        const names = {
+            'creditcard': 'CreditCard',
+            'paypal': 'PayPal',
+            'banktransfer': 'BankTransfer'
+        };
+        return names[method] || method;
+    }
+
+    // Map frontend payment method to backend expected values
+    function mapPaymentType(method) {
+        const mapping = {
+            'creditcard': 'CREDIT_CARD',
+            'paypal': 'PAYPAL',
+            'banktransfer': 'BANK_TRANSFER'
+        };
+        return mapping[method] || method.toUpperCase();
+    }
+
+    console.log('🚀 Simplified Payment Processing Demo Loaded');
+    console.log('✅ Core features: Pattern matching, guard conditions, backend integration');
+</script>
 </body>
 </html>
