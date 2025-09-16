@@ -4,15 +4,280 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Java 21 Pattern Matching Demo</title>
-
     <link rel="stylesheet" href="/css/simple-demo.css">
+    <style>
+        /* Enhanced logging styles for better visual flow inspector */
+        .log-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #f1f5f9;
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 11px;
+            height: 280px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border: 2px solid #475569;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+        }
+
+        .log-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #06b6d4, #f59e0b);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .api-flow-block {
+            margin-bottom: 8px;
+            padding: 8px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+            border-radius: 6px;
+            border-left: 3px solid #06b6d4;
+            animation: flowSlideIn 0.4s ease-out;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .api-flow-block:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+            transform: translateX(3px);
+            border-left-color: #10b981;
+        }
+
+        @keyframes flowSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .api-flow-child {
+            padding-left: 15px;
+            position: relative;
+            margin-top: 3px;
+            opacity: 0.9;
+            font-size: 10px;
+        }
+
+        .api-flow-child::before {
+            content: '└──';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #06b6d4;
+            font-weight: bold;
+        }
+
+        .java21-pattern-tag {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+            animation: tagGlow 2s infinite alternate;
+            display: inline-block;
+        }
+
+        @keyframes tagGlow {
+            0% {
+                box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+            }
+            100% {
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
+            }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: statusPulse 2s infinite;
+        }
+
+        .status-processing {
+            background: #f59e0b;
+        }
+
+        .status-success {
+            background: #10b981;
+        }
+
+        .status-error {
+            background: #ef4444;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.2);
+            }
+        }
+
+        .pattern-flow-separator {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 8px 0;
+            position: relative;
+        }
+
+        .pattern-flow-separator::before {
+            content: '⚡ Pattern Matching Flow ⚡';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            padding: 0 8px;
+            font-size: 9px;
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        /* Enhanced button styles for better interaction feedback */
+        .process-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .process-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Enhanced payment card selection feedback */
+        .payment-card.selected {
+            position: relative;
+        }
+
+        .payment-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            background: #10b981;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            animation: checkmarkPop 0.3s ease-out;
+        }
+
+        @keyframes checkmarkPop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Improved scrollbar for log section */
+        .log-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .log-section::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+
+        .log-section::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            border-radius: 3px;
+        }
+
+        .log-section::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #0891b2, #0e7490);
+        }
+
+        /* Enhanced result card styling */
+        .result-card {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            animation: resultSlideIn 0.5s ease-out;
+        }
+
+        @keyframes resultSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Pattern matching highlight for educational purposes */
+        .pattern-highlight {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 6px;
+            padding: 8px;
+            margin: 8px 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 10px;
+            position: relative;
+        }
+
+        .pattern-highlight::before {
+            content: 'Java 21';
+            position: absolute;
+            top: -6px;
+            right: 8px;
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            color: white;
+            font-size: 8px;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
 <div class="page-wrapper">
     <div class="header">
         <h1>🚀 Java 21 Pattern Matching Demo</h1>
-        <p>Simple Interactive Learning</p>
+        <p>Simple Interactive Learning with Enhanced Logging</p>
     </div>
 
     <div class="container">
@@ -33,6 +298,11 @@
                             <h4>🏦 Bank</h4>
                             <p>Transfer</p>
                         </div>
+                    </div>
+
+                    <!-- Pattern matching preview -->
+                    <div class="pattern-highlight" id="pattern-preview">
+                        case "creditcard" -> processStandardCard();
                     </div>
                 </div>
 
@@ -76,6 +346,12 @@
                 <button class="process-btn" onclick="processPayment()">
                     🔒 Process with Java 21
                 </button>
+
+                <!-- Real-time status indicator -->
+                <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                    Status: <span class="status-indicator status-success"></span>
+                    <span id="processing-status">Ready to process</span>
+                </div>
             </div>
 
             <div class="card result-card" id="result-section">
@@ -89,7 +365,7 @@
                 <h3>🔥 Java 21 Features</h3>
                 <div class="feature-item">
                     <strong>Pattern Matching</strong>
-                    <code>switch(method) { case CreditCard(...) }</code>
+                    <code>switch(method) { case "creditcard" -> ... }</code>
                 </div>
                 <div class="feature-item">
                     <strong>Guard Conditions</strong>
@@ -102,17 +378,24 @@
             </div>
 
             <div class="log-header">
-                <h3>📊 Execution Log</h3>
+                <h3>📊 Visual Flow Inspector</h3>
                 <button class="clear-btn" onclick="clearLog()">Clear</button>
             </div>
             <div class="log-section" id="api-log">
-                <div class="java21-highlight">Java 21 Pattern Matching Ready!</div>
-                <div>Select a payment method to begin...</div>
-                <div></div>
-                <div>🎯 You'll see:</div>
-                <div>  • Pattern matching decisions</div>
-                <div>  • Guard condition evaluations</div>
-                <div>  • Backend responses</div>
+                <div class="api-flow-block">
+                    <div><span class="status-indicator status-success"></span><strong>Simple Pattern Demo Ready!</strong></div>
+                    <div class="api-flow-child">🎯 Java 21 Features: Pattern Matching for Switch</div>
+                    <div class="api-flow-child">🔥 Language Features: <span class="java21-pattern-tag">Enhanced Switch</span></div>
+                </div>
+
+                <div class="pattern-flow-separator"></div>
+
+                <div class="api-flow-block">
+                    <div><span class="status-indicator status-processing"></span><strong>Waiting for User Action</strong></div>
+                    <div class="api-flow-child">👤 Select a payment method to begin</div>
+                    <div class="api-flow-child">💡 Try different amounts to see guard conditions</div>
+                    <div class="api-flow-child">🚀 Click process to see backend pattern matching</div>
+                </div>
             </div>
         </div>
     </div>
