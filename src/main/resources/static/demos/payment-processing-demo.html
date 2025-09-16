@@ -302,12 +302,31 @@
         .status-step {
             display: flex;
             align-items: center;
-            padding: 0.75rem 0;
+            padding: 0.75rem;
             border-bottom: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            background: var(--white);
         }
 
         .status-step:last-child {
             border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .status-step.status-highlighted {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+            border: 2px solid var(--warning-color);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+            transform: translateX(4px);
+        }
+
+        .status-step.status-active-highlight {
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(0, 123, 255, 0.05) 100%);
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+            transform: translateX(4px);
         }
 
         .status-icon {
@@ -610,13 +629,20 @@
         logAction('Amount Updated', `Testing with $${amount.toLocaleString()}`);
     }
 
-    // Update pattern matching preview
+    // Update pattern matching preview with visual highlighting
     function updatePatternMatching() {
         const statusContainer = document.getElementById('pattern-status');
         const guardTriggered = checkGuardConditions();
 
+        // Clear any existing highlights first
+        setTimeout(() => {
+            document.querySelectorAll('.status-step').forEach(step => {
+                step.classList.remove('status-highlighted', 'status-active-highlight');
+            });
+        }, 100);
+
         let statusHtml = `
-            <div class="status-step">
+            <div class="status-step status-method-step">
                 <div class="status-icon status-complete">
                     <i class="fas fa-check"></i>
                 </div>
@@ -629,7 +655,7 @@
 
         if (guardTriggered.triggered) {
             statusHtml += `
-                <div class="status-step">
+                <div class="status-step status-guard-step">
                     <div class="status-icon status-active">
                         <i class="fas fa-shield-alt"></i>
                     </div>
@@ -641,7 +667,7 @@
             `;
         } else {
             statusHtml += `
-                <div class="status-step">
+                <div class="status-step status-standard-step">
                     <div class="status-icon status-complete">
                         <i class="fas fa-check"></i>
                     </div>
@@ -654,7 +680,7 @@
         }
 
         statusHtml += `
-            <div class="status-step">
+            <div class="status-step status-ready-step">
                 <div class="status-icon status-pending">
                     <i class="fas fa-clock"></i>
                 </div>
@@ -666,6 +692,35 @@
         `;
 
         statusContainer.innerHTML = statusHtml;
+
+        // Add highlighting after a brief delay to show the change
+        setTimeout(() => {
+            // Always highlight the method step
+            const methodStep = document.querySelector('.status-method-step');
+            if (methodStep) {
+                methodStep.classList.add('status-active-highlight');
+            }
+
+            // Highlight guard or standard step
+            if (guardTriggered.triggered) {
+                const guardStep = document.querySelector('.status-guard-step');
+                if (guardStep) {
+                    guardStep.classList.add('status-highlighted');
+                }
+            } else {
+                const standardStep = document.querySelector('.status-standard-step');
+                if (standardStep) {
+                    standardStep.classList.add('status-active-highlight');
+                }
+            }
+
+            // Auto-remove highlights after 3 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.status-step').forEach(step => {
+                    step.classList.remove('status-highlighted', 'status-active-highlight');
+                });
+            }, 3000);
+        }, 200);
     }
 
     // Check guard conditions
