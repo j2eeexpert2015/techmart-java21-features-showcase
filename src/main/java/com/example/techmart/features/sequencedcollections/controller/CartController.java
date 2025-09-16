@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * REST controller for the Sequenced Collections shopping cart demo.
  *
- * FIXED: Accurate reporting of Java 21 methods actually used per operation
+ * UPDATED: Clear service method tracking and Java 21 method documentation
  */
 @RestController
 @RequestMapping("/api/cart")
@@ -37,33 +37,49 @@ public class CartController {
 
     @GetMapping("/{customerId}")
     public ResponseEntity<Map<String, Object>> getCart(@PathVariable Long customerId) {
-        // 1. Get cart items - NO Java 21 methods used here
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        // === SERVICE CALL 1: Get basic cart data (no Java 21 methods) ===
         List<CartItem> items = cartService.getCartItems(customerId);
         BigDecimal total = cartService.calculateCartTotal(customerId);
 
-        Map<String, Object> response = new LinkedHashMap<>();
         response.put("customerId", customerId);
         response.put("items", items);
         response.put("itemCount", items.size());
         response.put("total", total);
         response.put("isEmpty", items.isEmpty());
 
-        // 2. Get oldest item - USES getFirst() in service
+        // === SERVICE CALL 2: Get oldest item using Java 21 getFirst() ===
+        // Method: ShoppingCartService.getOldestItem() → uses cart.getFirst()
         cartService.getOldestItem(customerId).ifPresent(oldest ->
-                response.put("oldestItem", Map.of("id", oldest.id(), "name", oldest.product().name(), "addedAt", oldest.addedAt()))
+                response.put("oldestItem", Map.of(
+                        "id", oldest.id(),
+                        "name", oldest.product().name(),
+                        "addedAt", oldest.addedAt()
+                ))
         );
 
-        // 3. Get newest item - USES getLast() in service
+        // === SERVICE CALL 3: Get newest item using Java 21 getLast() ===
+        // Method: ShoppingCartService.getNewestItem() → uses cart.getLast()
         cartService.getNewestItem(customerId).ifPresent(newest ->
-                response.put("newestItem", Map.of("id", newest.id(), "name", newest.product().name(), "addedAt", newest.addedAt()))
+                response.put("newestItem", Map.of(
+                        "id", newest.id(),
+                        "name", newest.product().name(),
+                        "addedAt", newest.addedAt()
+                ))
         );
 
-        // FIXED: Accurate educational metadata - reports actual methods used
-        addEducationalMetadata(response,
+        // === EDUCATIONAL METADATA: Track all service methods called ===
+        Map<String, List<String>> serviceMethodsUsed = new LinkedHashMap<>();
+        serviceMethodsUsed.put("ShoppingCartService.getCartItems", Arrays.asList()); // No Java 21 methods
+        serviceMethodsUsed.put("ShoppingCartService.calculateCartTotal", Arrays.asList()); // No Java 21 methods
+        serviceMethodsUsed.put("ShoppingCartService.getOldestItem", Arrays.asList("getFirst")); // Java 21: getFirst()
+        serviceMethodsUsed.put("ShoppingCartService.getNewestItem", Arrays.asList("getLast")); // Java 21: getLast()
+
+        addMultiServiceEducationalMetadata(response,
                 "CartController.getCart",
-                "Multiple service calls with different Java 21 methods",
-                Arrays.asList("getFirst", "getLast"),  // Only these are actually used
-                "Direct access to sequence endpoints without iteration"
+                serviceMethodsUsed,
+                "Initial cart load: basic data + sequence endpoints using getFirst()/getLast()"
         );
 
         return ResponseEntity.ok(response);
@@ -77,19 +93,20 @@ public class CartController {
         Customer customer = createDemoCustomer(customerId);
         Product product = createDemoProduct(request.productId(), request.productName(), request.price());
 
-        // USES addLast() in service
+        // === SERVICE CALL: Add item using Java 21 addLast() ===
+        // Method: ShoppingCartService.addToCart() → uses cart.addLast()
         CartItem addedItem = cartService.addToCart(customer, product, request.quantity());
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("addedItem", addedItem);
         response.put("cartSize", cartService.getCartSize(customerId));
 
-        // FIXED: Accurate metadata reporting
+        // === EDUCATIONAL METADATA: Single service method with Java 21 ===
         addEducationalMetadata(response,
                 "CartController.addToCart",
                 "ShoppingCartService.addToCart",
-                Arrays.asList("addLast"),  // Only addLast is actually used
-                "Item added to end of sequence maintaining insertion order"
+                Arrays.asList("addLast"),
+                "Item added to end of sequence using addLast() - maintains insertion order"
         );
 
         return ResponseEntity.ok(response);
@@ -103,19 +120,20 @@ public class CartController {
         Customer vipCustomer = createDemoVipCustomer(customerId);
         Product product = createDemoProduct(request.productId(), request.productName(), request.price());
 
-        // USES addFirst() in service
+        // === SERVICE CALL: Add priority item using Java 21 addFirst() ===
+        // Method: ShoppingCartService.addPriorityItem() → uses cart.addFirst()
         CartItem priorityItem = cartService.addPriorityItem(vipCustomer, product, request.quantity());
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("priorityItem", priorityItem);
         response.put("cartSize", cartService.getCartSize(customerId));
 
-        // FIXED: Accurate metadata reporting
+        // === EDUCATIONAL METADATA: VIP priority placement ===
         addEducationalMetadata(response,
                 "CartController.addPriorityItem",
                 "ShoppingCartService.addPriorityItem",
-                Arrays.asList("addFirst"),  // Only addFirst is actually used
-                "Priority item added to front of sequence for VIP customers"
+                Arrays.asList("addFirst"),
+                "Priority item added to front of sequence using addFirst() - VIP customer benefit"
         );
 
         return ResponseEntity.ok(response);
@@ -124,7 +142,8 @@ public class CartController {
     @PostMapping("/{customerId}/undo")
     public ResponseEntity<Map<String, Object>> undoLastAction(@PathVariable Long customerId) {
 
-        // USES removeLast() in service
+        // === SERVICE CALL: Undo using Java 21 removeLast() ===
+        // Method: ShoppingCartService.undoLastAddition() → uses cart.removeLast()
         Optional<CartItem> removedItem = cartService.undoLastAddition(customerId);
 
         if (removedItem.isEmpty()) {
@@ -137,12 +156,12 @@ public class CartController {
         response.put("undoneItem", removedItem.get());
         response.put("cartSize", cartService.getCartSize(customerId));
 
-        // FIXED: Accurate metadata reporting
+        // === EDUCATIONAL METADATA: Undo functionality ===
         addEducationalMetadata(response,
                 "CartController.undoLastAction",
                 "ShoppingCartService.undoLastAddition",
-                Arrays.asList("removeLast"),  // Only removeLast is actually used
-                "Last item removed from sequence end implementing undo functionality"
+                Arrays.asList("removeLast"),
+                "Undo functionality: removed last item using removeLast() - O(1) operation"
         );
 
         return ResponseEntity.ok(response);
@@ -153,7 +172,8 @@ public class CartController {
             @PathVariable Long customerId,
             @PathVariable Long itemId) {
 
-        // USES remove() in service - not a Java 21 specific method
+        // === SERVICE CALL: Remove specific item (standard Collection method) ===
+        // Method: ShoppingCartService.removeCartItem() → uses cart.remove()
         Optional<CartItem> removedItem = cartService.removeCartItem(customerId, itemId);
 
         if (removedItem.isEmpty()) {
@@ -166,12 +186,12 @@ public class CartController {
         response.put("removedItem", removedItem.get());
         response.put("cartSize", cartService.getCartSize(customerId));
 
-        // FIXED: Accurate metadata - no Java 21 specific methods used
+        // === EDUCATIONAL METADATA: Standard Collection operation ===
         addEducationalMetadata(response,
                 "CartController.removeCartItem",
                 "ShoppingCartService.removeCartItem",
-                Arrays.asList(),  // No Java 21 specific methods used
-                "Specific item removed from sequence while maintaining order"
+                Arrays.asList(), // No Java 21 specific methods - uses standard remove()
+                "Specific item removed using standard Collection.remove() while maintaining sequence order"
         );
 
         return ResponseEntity.ok(response);
@@ -181,7 +201,8 @@ public class CartController {
     public ResponseEntity<Map<String, Object>> clearCart(@PathVariable Long customerId) {
         int itemCount = cartService.getCartSize(customerId);
 
-        // USES clear() - standard Collection method, not Java 21 specific
+        // === SERVICE CALL: Clear cart (standard Collection method) ===
+        // Method: ShoppingCartService.clearCart() → uses cart.clear()
         cartService.clearCart(customerId);
         historyService.clearHistory(customerId);
 
@@ -189,24 +210,29 @@ public class CartController {
         response.put("status", "cleared");
         response.put("itemsRemoved", itemCount);
 
-        // FIXED: Accurate metadata - no Java 21 specific methods
+        // === EDUCATIONAL METADATA: Bulk operation ===
         addEducationalMetadata(response,
                 "CartController.clearCart",
-                "ShoppingCartService.clearCart",
-                Arrays.asList(),  // No Java 21 specific methods used
-                "All items removed from collection using standard clear()"
+                "ShoppingCartService.clearCart + CartHistoryService.clearHistory",
+                Arrays.asList(), // No Java 21 specific methods - uses standard clear()
+                "All items and history removed using standard Collection.clear()"
         );
 
         return ResponseEntity.ok(response);
     }
 
     // ============================================================================
-    // GENERIC EDUCATIONAL METADATA METHODS - REUSABLE
+    // EDUCATIONAL METADATA METHODS - Clear Service Method Tracking
     // ============================================================================
 
     /**
-     * Generic method to add educational metadata to responses
-     * REUSABLE across all controller methods
+     * Add educational metadata for single service method calls
+     *
+     * @param response The response map to enhance
+     * @param controllerMethod The controller method name (e.g., "CartController.getCart")
+     * @param serviceMethod The exact service method called (e.g., "ShoppingCartService.getOldestItem")
+     * @param java21MethodsUsed List of Java 21 methods used (e.g., ["getFirst", "getLast"])
+     * @param operationDescription Human-readable description of what happened
      */
     private void addEducationalMetadata(Map<String, Object> response,
                                         String controllerMethod,
@@ -214,28 +240,36 @@ public class CartController {
                                         List<String> java21MethodsUsed,
                                         String operationDescription) {
 
-        // Controller method with class name
+        // === CONTROLLER LAYER ===
         response.put("controller_method", controllerMethod);
 
-        // Service method called
+        // === SERVICE LAYER ===
         response.put("service_method", serviceMethod);
 
-        // Actual Java 21 methods used (empty list if none)
+        // === JAVA 21 METHODS ACTUALLY USED ===
         response.put("java21_methods_used", java21MethodsUsed);
 
-        // Description of what happened
+        // === OPERATION DESCRIPTION ===
         response.put("operation_description", operationDescription);
 
-        // Java 21 feature category (only if methods were actually used)
+        // === FEATURE CLASSIFICATION ===
         if (!java21MethodsUsed.isEmpty()) {
             response.put("java21_feature", "Sequenced Collections");
             response.put("jep_reference", "JEP 431: Sequenced Collections");
+            response.put("performance_benefit", getPerformanceBenefit(java21MethodsUsed));
+        } else {
+            response.put("collection_method", "Standard Collection API");
         }
     }
 
     /**
-     * Generic method to add educational metadata for multiple service calls
+     * Add educational metadata for multiple service method calls
      * Used when one controller method calls multiple service methods
+     *
+     * @param response The response map to enhance
+     * @param controllerMethod The controller method name
+     * @param serviceMethodsAndJava21Methods Map of service methods to their Java 21 methods used
+     * @param operationDescription Description of the overall operation
      */
     private void addMultiServiceEducationalMetadata(Map<String, Object> response,
                                                     String controllerMethod,
@@ -246,7 +280,7 @@ public class CartController {
         response.put("service_calls", serviceMethodsAndJava21Methods);
         response.put("operation_description", operationDescription);
 
-        // Aggregate all Java 21 methods used
+        // === AGGREGATE ALL JAVA 21 METHODS USED ===
         List<String> allJava21Methods = serviceMethodsAndJava21Methods.values().stream()
                 .flatMap(List::stream)
                 .distinct()
@@ -257,11 +291,26 @@ public class CartController {
         if (!allJava21Methods.isEmpty()) {
             response.put("java21_feature", "Sequenced Collections");
             response.put("jep_reference", "JEP 431: Sequenced Collections");
+            response.put("methods_count", allJava21Methods.size());
         }
     }
 
     /**
-     * Generic error response with educational metadata
+     * Get performance benefit description for Java 21 methods
+     */
+    private String getPerformanceBenefit(List<String> java21Methods) {
+        if (java21Methods.contains("getFirst") || java21Methods.contains("getLast")) {
+            return "O(1) direct access to sequence endpoints - no iteration required";
+        } else if (java21Methods.contains("addFirst") || java21Methods.contains("addLast")) {
+            return "O(1) insertion at sequence endpoints - maintains order efficiently";
+        } else if (java21Methods.contains("removeLast")) {
+            return "O(1) removal from sequence end - efficient undo implementation";
+        }
+        return "Efficient sequence operations with maintained ordering";
+    }
+
+    /**
+     * Create error response with educational metadata
      */
     private Map<String, Object> createErrorResponse(String errorMessage, String controllerMethod) {
         Map<String, Object> response = new LinkedHashMap<>();
@@ -269,61 +318,12 @@ public class CartController {
 
         addEducationalMetadata(response,
                 controllerMethod,
-                "None - validation failed",
+                "None - validation failed before service call",
                 Arrays.asList(),
-                "Request validation failed before service call"
+                "Request validation failed - no service methods executed"
         );
 
         return response;
-    }
-
-    // ============================================================================
-    // ALTERNATIVE: Enhanced getCart with detailed service call tracking
-    // ============================================================================
-
-    /**
-     * ALTERNATIVE IMPLEMENTATION: More detailed tracking of multiple service calls
-     */
-    public ResponseEntity<Map<String, Object>> getCartDetailed(@PathVariable Long customerId) {
-        Map<String, Object> response = new LinkedHashMap<>();
-
-        // Track each service call separately
-        Map<String, List<String>> serviceCalls = new LinkedHashMap<>();
-
-        // Service call 1: Get items (no Java 21 methods)
-        List<CartItem> items = cartService.getCartItems(customerId);
-        serviceCalls.put("ShoppingCartService.getCartItems", Arrays.asList());
-
-        // Service call 2: Calculate total (no Java 21 methods)
-        BigDecimal total = cartService.calculateCartTotal(customerId);
-        serviceCalls.put("ShoppingCartService.calculateCartTotal", Arrays.asList());
-
-        // Service call 3: Get oldest item (uses getFirst)
-        Optional<CartItem> oldestItem = cartService.getOldestItem(customerId);
-        serviceCalls.put("ShoppingCartService.getOldestItem", Arrays.asList("getFirst"));
-
-        // Service call 4: Get newest item (uses getLast)
-        Optional<CartItem> newestItem = cartService.getNewestItem(customerId);
-        serviceCalls.put("ShoppingCartService.getNewestItem", Arrays.asList("getLast"));
-
-        // Build response
-        response.put("customerId", customerId);
-        response.put("items", items);
-        response.put("total", total);
-
-        oldestItem.ifPresent(oldest -> response.put("oldestItem",
-                Map.of("id", oldest.id(), "name", oldest.product().name())));
-        newestItem.ifPresent(newest -> response.put("newestItem",
-                Map.of("id", newest.id(), "name", newest.product().name())));
-
-        // Detailed educational metadata
-        addMultiServiceEducationalMetadata(response,
-                "CartController.getCart",
-                serviceCalls,
-                "Multiple service calls: getCartItems (no Java 21), getOldestItem (getFirst), getNewestItem (getLast)"
-        );
-
-        return ResponseEntity.ok(response);
     }
 
     // ============================================================================

@@ -1,5 +1,7 @@
 /**
- * TechMart Shopping Cart Demo - Final Polished JavaScript
+ * TechMart Shopping Cart Demo - Updated JavaScript for Enhanced API Responses
+ *
+ * UPDATED: Handles new detailed service method tracking from CartController
  */
 
 const DEMO_CONFIG = { customerId: 1, baseUrl: '' };
@@ -12,7 +14,6 @@ function undoLastAction() { apiCall('POST', `/api/cart/${DEMO_CONFIG.customerId}
 function clearCart() { apiCall('DELETE', `/api/cart/${DEMO_CONFIG.customerId}`, null, 'Clear Cart'); }
 function removeCartItem(itemId, itemName) { apiCall('DELETE', `/api/cart/${DEMO_CONFIG.customerId}/items/${itemId}`, null, `Remove ${itemName}`);}
 function redoLastAction() { showNotification('Redo functionality is not implemented in this demo.', 'info'); }
-
 
 // --- Core API Caller ---
 async function apiCall(method, endpoint, body = null, userAction) {
@@ -49,6 +50,9 @@ function createFlowLog(userAction, method, endpoint) {
     return logId;
 }
 
+/**
+ * UPDATED: Enhanced updateFlowLog to handle new detailed service method tracking
+ */
 function updateFlowLog(logId, responseData) {
     const flowBlock = document.getElementById(logId);
     if (!flowBlock) return;
@@ -59,13 +63,45 @@ function updateFlowLog(logId, responseData) {
     }
 
     let html = `🔴 Controller: <strong>${responseData.controller_method}</strong>`;
-    if (responseData.service_method) {
-        html += `<div class="api-flow-child">🟣 Service: <strong>${responseData.service_method}</strong></div>`;
+
+    // === HANDLE MULTIPLE SERVICE CALLS (like getCart) ===
+    if (responseData.service_calls && typeof responseData.service_calls === 'object') {
+        html += `<div class="api-flow-child">🟣 Service Layer: Multiple methods called</div>`;
+
+        // Show each service method call
+        Object.entries(responseData.service_calls).forEach(([serviceMethod, java21Methods]) => {
+            if (java21Methods && java21Methods.length > 0) {
+                html += `<div class="api-flow-child">  └─ <strong>${serviceMethod}</strong> → <span class="java21-method-tag">${java21Methods.join(', ')}</span></div>`;
+                // Highlight corresponding methods in API reference
+                java21Methods.forEach(method => highlightJavaMethod(method));
+            } else {
+                html += `<div class="api-flow-child">  └─ <strong>${serviceMethod}</strong> → Standard Collection API</div>`;
+            }
+        });
     }
-    if (responseData.java21_method_used || responseData.java21_methods_used) {
-        const methods = Array.isArray(responseData.java21_methods_used) ? responseData.java21_methods_used : [responseData.java21_method_used];
-        html += `<div class="api-flow-child">🔥 Java 21 Method: <span class="java21-method-tag">${methods.join(', ')}</span></div>`;
-        methods.forEach(highlightJavaMethod);
+    // === HANDLE SINGLE SERVICE CALL ===
+    else if (responseData.service_method) {
+        html += `<div class="api-flow-child">🟣 Service: <strong>${responseData.service_method}</strong></div>`;
+
+        if (responseData.java21_methods_used && responseData.java21_methods_used.length > 0) {
+            html += `<div class="api-flow-child">🔥 Java 21 Method: <span class="java21-method-tag">${responseData.java21_methods_used.join(', ')}</span></div>`;
+            responseData.java21_methods_used.forEach(method => highlightJavaMethod(method));
+        }
+    }
+
+    // === ADD OPERATION DESCRIPTION ===
+    if (responseData.operation_description) {
+        html += `<div class="api-flow-child">💡 Operation: ${responseData.operation_description}</div>`;
+    }
+
+    // === ADD PERFORMANCE BENEFIT ===
+    if (responseData.performance_benefit) {
+        html += `<div class="api-flow-child">⚡ Performance: ${responseData.performance_benefit}</div>`;
+    }
+
+    // === ADD JAVA 21 FEATURE INFO ===
+    if (responseData.java21_feature) {
+        html += `<div class="api-flow-child">🎯 Feature: ${responseData.java21_feature}</div>`;
     }
 
     flowBlock.querySelector('[data-role="controller"]').innerHTML = html;
@@ -104,12 +140,26 @@ function updateCartUI(cartData) {
         const isFirst = index === 0 && cartData.items.length > 1;
         const isLast = index === cartData.items.length - 1 && cartData.items.length > 1;
 
+        // === ENHANCED: Show which items are first/last from Java 21 methods ===
+        let badges = '';
+        if (cartData.oldestItem && item.id === cartData.oldestItem.id) {
+            badges += '<span class="badge bg-success ms-2" title="Retrieved via getFirst()">First Added (getFirst)</span>';
+        }
+        if (cartData.newestItem && item.id === cartData.newestItem.id) {
+            badges += '<span class="badge bg-primary ms-2" title="Retrieved via getLast()">Last Added (getLast)</span>';
+        }
+
+        // Fallback badges if oldestItem/newestItem not in response
+        if (!badges) {
+            if (isFirst) badges += '<span class="badge bg-success ms-2">First Added</span>';
+            if (isLast) badges += '<span class="badge bg-primary ms-2">Last Added</span>';
+        }
+
         const itemHtml = `
             <div class="cart-item-row">
               <div class="item-details">
                   <strong>${index + 1}. ${item.product.name}</strong> - $${item.unitPrice.toLocaleString()}
-                  ${isFirst ? '<span class="badge bg-success ms-2">First Added</span>' : ''}
-                  ${isLast ? '<span class="badge bg-primary ms-2">Last Added</span>' : ''}
+                  ${badges}
               </div>
               <button class="btn btn-sm btn-outline-danger remove-btn" onclick="removeCartItem(${item.id}, '${item.product.name}')">
                   Remove
@@ -117,71 +167,81 @@ function updateCartUI(cartData) {
             </div>`;
         container.innerHTML += itemHtml;
     });
+
+    // === SHOW CART METADATA FROM JAVA 21 METHODS ===
+    if (cartData.oldestItem || cartData.newestItem) {
+        let metadataHtml = '<div class="cart-metadata mt-3 p-2" style="background: #f8f9fa; border-radius: 6px; font-size: 0.85rem;">';
+        metadataHtml += '<strong>🔍 Java 21 Sequenced Collections Metadata:</strong><br>';
+
+        if (cartData.oldestItem) {
+            metadataHtml += `📅 <strong>Oldest Item</strong> (via getFirst()): ${cartData.oldestItem.name}<br>`;
+        }
+        if (cartData.newestItem) {
+            metadataHtml += `🆕 <strong>Newest Item</strong> (via getLast()): ${cartData.newestItem.name}<br>`;
+        }
+
+        metadataHtml += '</div>';
+        container.innerHTML += metadataHtml;
+    }
 }
 
-/**
- * Highlight the API reference row for 2s.
- * Uses a CSS class that is Bootstrap-compatible (see CSS above).
- */
 /**
  * Bullet-proof highlight: paint cells inline with !important, then clean up.
  */
 function highlightJavaMethod(methodName) {
-  // Normalize method names like "addLast()" -> "addLast"
-  const safe = String(methodName || '').replace(/\(\)$/, '');
+    // Normalize method names like "addLast()" -> "addLast"
+    const safe = String(methodName || '').replace(/\(\)$/, '');
 
-  // 1) Clear any previous inline highlight we applied
-  document.querySelectorAll('tr[data-highlight="1"]').forEach(r => {
-    [...r.cells].forEach(c => {
-      c.style.removeProperty('box-shadow');
-      c.style.removeProperty('background-color');
-      c.style.removeProperty('border-top');
-      c.style.removeProperty('border-bottom');
-      c.style.removeProperty('border-left');
-      c.style.removeProperty('border-right');
+    // 1) Clear any previous inline highlight we applied
+    document.querySelectorAll('tr[data-highlight="1"]').forEach(r => {
+        [...r.cells].forEach(c => {
+            c.style.removeProperty('box-shadow');
+            c.style.removeProperty('background-color');
+            c.style.removeProperty('border-top');
+            c.style.removeProperty('border-bottom');
+            c.style.removeProperty('border-left');
+            c.style.removeProperty('border-right');
+        });
+        r.removeAttribute('data-highlight');
     });
-    r.removeAttribute('data-highlight');
-  });
 
-  // 2) Find the target row
-  const row = document.getElementById(`code-${safe}`);
-  if (!row) return;
+    // 2) Find the target row
+    const row = document.getElementById(`code-${safe}`);
+    if (!row) return;
 
-  // 3) Paint each cell using inline !important so nothing can override it
-  const cells = [...row.cells];
-  cells.forEach((cell, i) => {
-    // Use CSS variables if present; fall back to hard-coded colors
-    const bg = getComputedStyle(document.documentElement)
-      .getPropertyValue('--method-highlight-bg').trim() || '#fffbea';
-    const border = getComputedStyle(document.documentElement)
-      .getPropertyValue('--method-highlight-border').trim() || '#ffc107';
+    // 3) Paint each cell using inline !important so nothing can override it
+    const cells = [...row.cells];
+    cells.forEach((cell, i) => {
+        // Use CSS variables if present; fall back to hard-coded colors
+        const bg = getComputedStyle(document.documentElement)
+            .getPropertyValue('--method-highlight-bg').trim() || '#fffbea';
+        const border = getComputedStyle(document.documentElement)
+            .getPropertyValue('--method-highlight-border').trim() || '#ffc107';
 
-    cell.style.setProperty('box-shadow', `inset 0 0 0 9999px ${bg}`, 'important');
-    cell.style.setProperty('background-color', 'transparent', 'important');
-    cell.style.setProperty('border-top', `2px solid ${border}`, 'important');
-    cell.style.setProperty('border-bottom', `2px solid ${border}`, 'important');
-    if (i === 0) cell.style.setProperty('border-left', `2px solid ${border}`, 'important');
-    if (i === cells.length - 1) cell.style.setProperty('border-right', `2px solid ${border}`, 'important');
-  });
-
-  row.setAttribute('data-highlight', '1');
-
-  // 4) Auto-remove after 2 seconds
-  setTimeout(() => {
-    if (!row.isConnected) return;
-    cells.forEach(cell => {
-      cell.style.removeProperty('box-shadow');
-      cell.style.removeProperty('background-color');
-      cell.style.removeProperty('border-top');
-      cell.style.removeProperty('border-bottom');
-      cell.style.removeProperty('border-left');
-      cell.style.removeProperty('border-right');
+        cell.style.setProperty('box-shadow', `inset 0 0 0 9999px ${bg}`, 'important');
+        cell.style.setProperty('background-color', 'transparent', 'important');
+        cell.style.setProperty('border-top', `2px solid ${border}`, 'important');
+        cell.style.setProperty('border-bottom', `2px solid ${border}`, 'important');
+        if (i === 0) cell.style.setProperty('border-left', `2px solid ${border}`, 'important');
+        if (i === cells.length - 1) cell.style.setProperty('border-right', `2px solid ${border}`, 'important');
     });
-    row.removeAttribute('data-highlight');
-  }, 2000);
+
+    row.setAttribute('data-highlight', '1');
+
+    // 4) Auto-remove after 2 seconds
+    setTimeout(() => {
+        if (!row.isConnected) return;
+        cells.forEach(cell => {
+            cell.style.removeProperty('box-shadow');
+            cell.style.removeProperty('background-color');
+            cell.style.removeProperty('border-top');
+            cell.style.removeProperty('border-bottom');
+            cell.style.removeProperty('border-left');
+            cell.style.removeProperty('border-right');
+        });
+        row.removeAttribute('data-highlight');
+    }, 2000);
 }
-
-
 
 function clearInspectorLog() {
     const logContainer = document.getElementById('api-log');

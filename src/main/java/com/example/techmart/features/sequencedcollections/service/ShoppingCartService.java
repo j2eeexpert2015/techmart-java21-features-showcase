@@ -18,8 +18,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Service layer for managing shopping cart operations. This class contains the
- * core business logic and is where the Java 21 Sequenced Collections features are demonstrated.
+ * Service layer for managing shopping cart operations.
+ *
+ * UPDATED: Clear documentation of Java 21 Sequenced Collections usage
+ *
+ * This service demonstrates Java 21 Sequenced Collections features:
+ * - LinkedHashSet<CartItem> implements SequencedSet in Java 21
+ * - Direct access to sequence endpoints with getFirst()/getLast()
+ * - Efficient insertion at sequence ends with addFirst()/addLast()
+ * - Order-preserving operations throughout
  */
 @Service
 public class ShoppingCartService {
@@ -28,19 +35,28 @@ public class ShoppingCartService {
     private static final int MAX_CART_SIZE = 50;
 
     // Use ConcurrentHashMap to allow safe concurrent access to different customer carts.
-    // The value is a LinkedHashSet, which is a SequencedSet, to maintain insertion order.
+    // The value is a LinkedHashSet, which implements SequencedSet in Java 21
     private final Map<Long, LinkedHashSet<CartItem>> customerCarts = new ConcurrentHashMap<>();
     private final AtomicLong cartItemIdGenerator = new AtomicLong(1);
 
-    // Standard behavior: add a new item to the end of the cart.
+    // ============================================================================
+    // JAVA 21 SEQUENCED COLLECTIONS: INSERTION METHODS
+    // ============================================================================
+
+    /**
+     * Add item to cart using Java 21 addLast() - Standard cart behavior
+     *
+     * SERVICE METHOD: addToCart
+     * JAVA 21 METHOD USED: addLast()
+     * PERFORMANCE: O(1) insertion at sequence end
+     * BUSINESS LOGIC: Items added in chronological order (FIFO)
+     */
     public CartItem addToCart(Customer customer, Product product, int quantity) {
         validateAddToCart(customer, product, quantity);
 
         LinkedHashSet<CartItem> cart = getOrCreateCart(customer.id());
         CartItem newItem;
 
-        // Synchronize on the specific cart to prevent race conditions if multiple requests
-        // for the same customer arrive at the same time.
         synchronized (cart) {
             if (cart.size() >= MAX_CART_SIZE) {
                 throw new ValidationException("Cart is full.");
@@ -52,15 +68,27 @@ public class ShoppingCartService {
                     product.price(),
                     LocalDateTime.now()
             );
-            // Java 21: addLast() is the explicit way to add to the end of a sequenced collection.
+
+            // === JAVA 21 FEATURE: addLast() ===
+            // Explicitly adds to the END of the sequence
+            // Alternative to add() with clear semantic intent
             cart.addLast(newItem);
+
+            logger.info("✅ Java 21: addLast() - Added {} to END of cart for customer {}",
+                    product.name(), customer.username());
         }
 
-        logger.info("Added {} x {} to cart for customer {}", quantity, product.name(), customer.username());
         return newItem;
     }
 
-    // Special behavior for VIPs: add a priority item to the front of the cart.
+    /**
+     * Add priority item using Java 21 addFirst() - VIP customer benefit
+     *
+     * SERVICE METHOD: addPriorityItem
+     * JAVA 21 METHOD USED: addFirst()
+     * PERFORMANCE: O(1) insertion at sequence start
+     * BUSINESS LOGIC: VIP items get front-of-line placement
+     */
     public CartItem addPriorityItem(Customer customer, Product product, int quantity) {
         validateAddToCart(customer, product, quantity);
         if (!customer.isVip()) {
@@ -78,32 +106,58 @@ public class ShoppingCartService {
                     product.price(),
                     LocalDateTime.now()
             );
-            // Java 21: addFirst() places the item at the beginning of the sequence.
+
+            // === JAVA 21 FEATURE: addFirst() ===
+            // Places item at the BEGINNING of the sequence
+            // Provides VIP priority positioning
             cart.addFirst(priorityItem);
+
+            logger.info("⭐ Java 21: addFirst() - Added {} to FRONT of cart for VIP customer {}",
+                    product.name(), customer.username());
         }
 
-        logger.info("Added priority item {} to front of cart for VIP customer {}", product.name(), customer.username());
         return priorityItem;
     }
 
-    // Implements the "Undo" feature by removing the most recently added item.
+    // ============================================================================
+    // JAVA 21 SEQUENCED COLLECTIONS: REMOVAL METHODS
+    // ============================================================================
+
+    /**
+     * Undo last addition using Java 21 removeLast() - Efficient undo functionality
+     *
+     * SERVICE METHOD: undoLastAddition
+     * JAVA 21 METHOD USED: removeLast()
+     * PERFORMANCE: O(1) removal from sequence end
+     * BUSINESS LOGIC: LIFO undo behavior (remove most recent addition)
+     */
     public Optional<CartItem> undoLastAddition(Long customerId) {
         LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
         if (cart == null || cart.isEmpty()) {
             return Optional.empty();
         }
+
         synchronized (cart) {
             if (cart.isEmpty()) return Optional.empty();
-            // Java 21: removeLast() makes implementing undo functionality trivial.
+
+            // === JAVA 21 FEATURE: removeLast() ===
+            // Directly removes the LAST item in sequence
+            // No iteration required - O(1) operation
             CartItem removedItem = cart.removeLast();
-            logger.info("Undid last addition: removed {}", removedItem.product().name());
+
+            logger.info("🔄 Java 21: removeLast() - Undid last addition: removed {}",
+                    removedItem.product().name());
             return Optional.of(removedItem);
         }
     }
 
     /**
-     * NEW: Remove specific cart item by ID
-     * Demonstrates targeted removal from Java 21 Sequenced Collections
+     * Remove specific cart item by ID - Standard Collection method
+     *
+     * SERVICE METHOD: removeCartItem
+     * JAVA 21 METHOD USED: None (uses standard remove())
+     * PERFORMANCE: O(n) search + O(1) removal
+     * BUSINESS LOGIC: Targeted item removal while preserving sequence order
      */
     public Optional<CartItem> removeCartItem(Long customerId, Long itemId) {
         LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
@@ -120,25 +174,163 @@ public class ShoppingCartService {
             if (itemToRemove.isPresent()) {
                 CartItem removedItem = itemToRemove.get();
 
-                // Java 21: remove() method works on SequencedSet while maintaining order
+                // === STANDARD COLLECTION METHOD: remove() ===
+                // Not a Java 21 specific method, but works on SequencedSet
+                // Maintains insertion order of remaining items
                 boolean removed = cart.remove(removedItem);
 
                 if (removed) {
-                    logger.info("Removed item {} (ID: {}) from cart for customer {}",
+                    logger.info("❌ Standard: remove() - Removed item {} (ID: {}) from cart for customer {}",
                             removedItem.product().name(), itemId, customerId);
                     return Optional.of(removedItem);
                 }
             }
 
-            logger.warn("Attempted to remove non-existent item {} from cart for customer {}",
+            logger.warn("⚠️  Attempted to remove non-existent item {} from cart for customer {}",
                     itemId, customerId);
             return Optional.empty();
         }
     }
 
+    // ============================================================================
+    // JAVA 21 SEQUENCED COLLECTIONS: ACCESS METHODS
+    // ============================================================================
+
     /**
-     * NEW: Find cart item by ID
-     * Helper method for finding specific items in the sequenced collection
+     * Get newest (most recently added) item using Java 21 getLast()
+     *
+     * SERVICE METHOD: getNewestItem
+     * JAVA 21 METHOD USED: getLast()
+     * PERFORMANCE: O(1) direct access to sequence end
+     * BUSINESS LOGIC: Shows most recent customer addition
+     * UI PURPOSE: Can display "Last Added" badge in frontend
+     */
+    public Optional<CartItem> getNewestItem(Long customerId) {
+        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
+        if (cart == null || cart.isEmpty()) return Optional.empty();
+
+        // === JAVA 21 FEATURE: getLast() ===
+        // Direct O(1) access to the LAST element in sequence
+        // No iteration through collection required
+        CartItem newestItem = cart.getLast();
+
+        logger.debug("🔍 Java 21: getLast() - Retrieved newest item: {} for customer {}",
+                newestItem.product().name(), customerId);
+
+        return Optional.of(newestItem);
+    }
+
+    /**
+     * Get oldest (first added) item using Java 21 getFirst()
+     *
+     * SERVICE METHOD: getOldestItem
+     * JAVA 21 METHOD USED: getFirst()
+     * PERFORMANCE: O(1) direct access to sequence start
+     * BUSINESS LOGIC: Shows first customer addition
+     * UI PURPOSE: Can display "First Added" badge in frontend
+     */
+    public Optional<CartItem> getOldestItem(Long customerId) {
+        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
+        if (cart == null || cart.isEmpty()) return Optional.empty();
+
+        // === JAVA 21 FEATURE: getFirst() ===
+        // Direct O(1) access to the FIRST element in sequence
+        // Replaces iterator().next() pattern
+        CartItem oldestItem = cart.getFirst();
+
+        logger.debug("🔍 Java 21: getFirst() - Retrieved oldest item: {} for customer {}",
+                oldestItem.product().name(), customerId);
+
+        return Optional.of(oldestItem);
+    }
+
+    // ============================================================================
+    // STANDARD COLLECTION METHODS (No Java 21 specific features)
+    // ============================================================================
+
+    /**
+     * Get all cart items in insertion order - Standard Collection method
+     *
+     * SERVICE METHOD: getCartItems
+     * JAVA 21 METHOD USED: None (uses standard iteration)
+     * PERFORMANCE: O(n) to create immutable copy
+     * BUSINESS LOGIC: Returns all items preserving insertion order
+     */
+    public List<CartItem> getCartItems(Long customerId) {
+        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
+
+        // === STANDARD COLLECTION: List.copyOf() ===
+        // Creates immutable copy preserving SequencedSet ordering
+        List<CartItem> items = cart != null ? List.copyOf(cart) : List.of();
+
+        logger.debug("📋 Standard: List.copyOf() - Retrieved {} items for customer {}",
+                items.size(), customerId);
+
+        return items;
+    }
+
+    /**
+     * Calculate cart total - Standard Collection method
+     *
+     * SERVICE METHOD: calculateCartTotal
+     * JAVA 21 METHOD USED: None (uses Stream API)
+     * PERFORMANCE: O(n) iteration for calculation
+     */
+    public BigDecimal calculateCartTotal(Long customerId) {
+        BigDecimal total = getCartItems(customerId).stream()
+                .map(CartItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        logger.debug("💰 Standard: Stream.reduce() - Calculated total ${} for customer {}",
+                total, customerId);
+
+        return total;
+    }
+
+    /**
+     * Get cart size - Standard Collection method
+     *
+     * SERVICE METHOD: getCartSize
+     * JAVA 21 METHOD USED: None (uses standard size())
+     */
+    public int getCartSize(Long customerId) {
+        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
+        int size = cart != null ? cart.size() : 0;
+
+        logger.debug("📊 Standard: size() - Cart size {} for customer {}", size, customerId);
+
+        return size;
+    }
+
+    /**
+     * Clear cart - Standard Collection method
+     *
+     * SERVICE METHOD: clearCart
+     * JAVA 21 METHOD USED: None (uses standard clear())
+     */
+    public void clearCart(Long customerId) {
+        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
+        if (cart != null) {
+            int itemCount = cart.size();
+
+            // === STANDARD COLLECTION: clear() ===
+            // Removes all elements but preserves SequencedSet structure
+            cart.clear();
+
+            logger.info("🧹 Standard: clear() - Cleared {} items from cart for customer {}",
+                    itemCount, customerId);
+        }
+    }
+
+    // ============================================================================
+    // HELPER METHODS FOR ITEM OPERATIONS
+    // ============================================================================
+
+    /**
+     * Find cart item by ID - Standard Collection method
+     *
+     * SERVICE METHOD: findCartItem
+     * JAVA 21 METHOD USED: None (uses Stream API)
      */
     public Optional<CartItem> findCartItem(Long customerId, Long itemId) {
         LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
@@ -152,64 +344,35 @@ public class ShoppingCartService {
     }
 
     /**
-     * NEW: Check if item exists in cart
-     * Useful for validation before removal operations
+     * Check if item exists in cart - Standard Collection method
+     *
+     * SERVICE METHOD: hasCartItem
+     * JAVA 21 METHOD USED: None (delegates to findCartItem)
      */
     public boolean hasCartItem(Long customerId, Long itemId) {
         return findCartItem(customerId, itemId).isPresent();
     }
 
-    // Efficiently get the newest item without iterating through the collection.
-    public Optional<CartItem> getNewestItem(Long customerId) {
-        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
-        if (cart == null || cart.isEmpty()) return Optional.empty();
-        // Java 21: getLast() provides direct O(1) access to the last element.
-        return Optional.of(cart.getLast());
-    }
+    // ============================================================================
+    // PRIVATE HELPER METHODS
+    // ============================================================================
 
-    // Efficiently get the oldest item.
-    public Optional<CartItem> getOldestItem(Long customerId) {
-        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
-        if (cart == null || cart.isEmpty()) return Optional.empty();
-        // Java 21: getFirst() provides direct O(1) access to the first element.
-        return Optional.of(cart.getFirst());
-    }
-
-    // Returns an immutable copy of the cart items, preserving their order.
-    public List<CartItem> getCartItems(Long customerId) {
-        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
-        return cart != null ? List.copyOf(cart) : List.of();
-    }
-
-    // Calculates the total price of all items in the cart.
-    public BigDecimal calculateCartTotal(Long customerId) {
-        return getCartItems(customerId).stream()
-                .map(CartItem::getTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public int getCartSize(Long customerId) {
-        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
-        return cart != null ? cart.size() : 0;
-    }
-
-    // Clears all items from a customer's cart.
-    public void clearCart(Long customerId) {
-        LinkedHashSet<CartItem> cart = customerCarts.get(customerId);
-        if (cart != null) {
-            // clear() is a standard Collection method, but it works as expected on Sequenced Collections.
-            cart.clear();
-            logger.info("Cleared cart for customer {}", customerId);
-        }
-    }
-
-    // A helper to safely get a cart for a customer, creating one if it doesn't exist.
+    /**
+     * Get or create cart for customer - uses LinkedHashSet (SequencedSet in Java 21)
+     */
     private LinkedHashSet<CartItem> getOrCreateCart(Long customerId) {
-        // computeIfAbsent is a thread-safe way to perform this check-and-create operation.
-        return customerCarts.computeIfAbsent(customerId, k -> new LinkedHashSet<>());
+        // === CREATES JAVA 21 SEQUENCEDSET ===
+        // LinkedHashSet implements SequencedSet interface in Java 21
+        // Provides both Set uniqueness and sequence ordering
+        return customerCarts.computeIfAbsent(customerId, k -> {
+            logger.info("🆕 Creating new SequencedSet cart for customer {}", customerId);
+            return new LinkedHashSet<>();
+        });
     }
 
-    // Centralized validation logic for adding items to the cart.
+    /**
+     * Centralized validation logic for adding items to cart
+     */
     private void validateAddToCart(Customer customer, Product product, int quantity) {
         if (customer == null) throw new ValidationException("Customer cannot be null.");
         if (product == null) throw new ValidationException("Product cannot be null.");
