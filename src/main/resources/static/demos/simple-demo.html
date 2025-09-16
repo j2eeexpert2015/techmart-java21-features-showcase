@@ -3,22 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Java 21 Pattern Matching Demo - Enhanced</title>
-    <link rel="stylesheet" href="/css/simple-demo.css">
+    <title>Java 21 Pattern Matching Demo</title>
     <style>
-        /* Enhanced logging styles while keeping existing layout */
+        /* ================================
+           CSS STYLES - CLEAN LAYOUT
+           ================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+        }
+
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 40px);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: transparent;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #667eea;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        /* Left Side */
+        .left-side {
+            flex: 2;
+            background: transparent;
+        }
+
+        /* Right Side - FIXED LAYOUT */
+        .right-side {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            max-height: calc(100vh - 140px);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* Top Row Layout */
+        .top-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .step1-card {
+            flex: 1;
+        }
+
+        .instructions-card {
+            flex: 1;
+            background: linear-gradient(135deg, #e8f4fd 0%, #f0f9ff 100%);
+            border: 1px solid #3b82f6;
+        }
+
+        .instructions-card h3 {
+            color: #1e40af;
+            font-size: 14px;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            gap: 8px;
+        }
+
+        .payment-card {
+            flex: 1;
+            border: 2px solid #e5e7eb;
+            padding: 8px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            position: relative;
+        }
+
+        .payment-card.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            background: #10b981;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            animation: checkmarkPop 0.3s ease-out;
+        }
+
+        @keyframes checkmarkPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .payment-card h4 {
+            font-size: 12px;
+            margin-bottom: 2px;
+        }
+
+        .payment-card p {
+            font-size: 10px;
+            color: #666;
+            margin: 0;
+        }
+
+        /* Instructions Grid */
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 11px;
+        }
+
+        .instruction-item {
+            background: white;
+            padding: 6px;
+            border-radius: 4px;
+            border-left: 2px solid #3b82f6;
+        }
+
+        .step-num {
+            background: #3b82f6;
+            color: white;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            margin-right: 5px;
+        }
+
+        /* Amount Buttons */
+        .amount-section {
+            background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+            border: 1px solid #e0e7ff;
+        }
+
+        .amount-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .amount-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .amount-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .amount-btn small {
+            display: block;
+            font-size: 9px;
+            margin-top: 2px;
+        }
+
+        /* Process Button */
+        .process-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .process-btn:hover::before {
+            left: 100%;
+        }
+
+        .process-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Result */
+        .result-card {
+            background: linear-gradient(135deg, #f0f9f0 0%, #e8f5e8 100%);
+            border: 1px solid #c3e6cb;
+            display: none;
+            border-left: 4px solid #10b981;
+            animation: resultSlideIn 0.5s ease-out;
+        }
+
+        @keyframes resultSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Right Side Content */
+        .features-section h3 {
+            color: #fbbf24;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border-left: 2px solid #fbbf24;
+        }
+
+        .feature-item strong {
+            display: block;
+            color: #f3f4f6;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .feature-item code {
+            color: #34d399;
+            font-family: monospace;
+            font-size: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        /* FIXED LOG SECTION - Like Shopping Cart */
         .log-section {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
             color: #f1f5f9;
             font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
             font-size: 11px;
-            height: 280px;
+            height: 300px;
             overflow-y: auto;
             margin-top: 15px;
             border: 2px solid #475569;
             position: relative;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             border-radius: 8px;
+            padding: 10px;
         }
 
         .log-section::before {
@@ -32,6 +349,30 @@
             border-radius: 8px 8px 0 0;
         }
 
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .log-header h3 {
+            color: #34d399;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .clear-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        /* ENHANCED API FLOW BLOCKS - Like Shopping Cart */
         .api-flow-block {
             margin-bottom: 8px;
             padding: 8px;
@@ -50,14 +391,8 @@
         }
 
         @keyframes flowSlideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .api-flow-child {
@@ -92,12 +427,8 @@
         }
 
         @keyframes tagGlow {
-            0% {
-                box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
-            }
-            100% {
-                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
-            }
+            0% { box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3); }
+            100% { box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5); }
         }
 
         .status-indicator {
@@ -109,27 +440,13 @@
             animation: statusPulse 2s infinite;
         }
 
-        .status-processing {
-            background: #f59e0b;
-        }
-
-        .status-success {
-            background: #10b981;
-        }
-
-        .status-error {
-            background: #ef4444;
-        }
+        .status-processing { background: #f59e0b; }
+        .status-success { background: #10b981; }
+        .status-error { background: #ef4444; }
 
         @keyframes statusPulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.7;
-                transform: scale(1.2);
-            }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
         }
 
         .pattern-flow-separator {
@@ -151,65 +468,7 @@
             font-weight: bold;
         }
 
-        /* Enhanced button feedback */
-        .process-btn {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .process-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .process-btn:hover::before {
-            left: 100%;
-        }
-
-        /* Enhanced payment card selection */
-        .payment-card.selected {
-            position: relative;
-        }
-
-        .payment-card.selected::after {
-            content: '✓';
-            position: absolute;
-            top: 5px;
-            right: 8px;
-            background: #10b981;
-            color: white;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: bold;
-            animation: checkmarkPop 0.3s ease-out;
-        }
-
-        @keyframes checkmarkPop {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        /* Enhanced scrollbar */
+        /* Improved scrollbar */
         .log-section::-webkit-scrollbar {
             width: 6px;
         }
@@ -228,91 +487,14 @@
             background: linear-gradient(135deg, #0891b2, #0e7490);
         }
 
-        /* Enhanced result card styling */
-        .result-card {
-            border-left: 4px solid #10b981;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            animation: resultSlideIn 0.5s ease-out;
-        }
-
-        @keyframes resultSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Pattern matching highlight */
-        .pattern-highlight {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 6px;
-            padding: 8px;
-            margin: 8px 0;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 10px;
-            position: relative;
-        }
-
-        .pattern-highlight::before {
-            content: 'Java 21';
-            position: absolute;
-            top: -6px;
-            right: 8px;
-            background: linear-gradient(45deg, #f59e0b, #d97706);
-            color: white;
-            font-size: 8px;
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-
-        /* Enhanced status indicator in result */
-        .result-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .result-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            animation: resultPulse 2s infinite;
-        }
-
-        .result-icon.success {
-            background: #10b981;
-            color: white;
-        }
-
-        .result-icon.warning {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .result-icon.error {
-            background: #ef4444;
-            color: white;
-        }
-
-        @keyframes resultPulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { flex-direction: column; }
+            .top-row { flex-direction: column; }
+            .instructions-grid { grid-template-columns: 1fr; }
+            .right-side { margin-top: 15px; max-height: none; }
+            .log-section { height: 250px; }
         }
     </style>
 </head>
@@ -321,7 +503,7 @@
 <div class="page-wrapper">
     <div class="header">
         <h1>🚀 Java 21 Pattern Matching Demo</h1>
-        <p>Enhanced Interactive Learning with Detailed API Tracking</p>
+        <p>Simple Interactive Learning with Enhanced Visual Flow Inspector</p>
     </div>
 
     <div class="container">
@@ -342,11 +524,6 @@
                             <h4>🏦 Bank</h4>
                             <p>Transfer</p>
                         </div>
-                    </div>
-
-                    <!-- Pattern matching preview -->
-                    <div class="pattern-highlight" id="pattern-preview">
-                        case "creditcard" -> processStandardCard();
                     </div>
                 </div>
 
@@ -390,25 +567,11 @@
                 <button class="process-btn" onclick="processPayment()">
                     🔒 Process with Java 21
                 </button>
-
-                <!-- Real-time status indicator -->
-                <div style="margin-top: 10px; font-size: 12px; color: #666;">
-                    Status: <span class="status-indicator status-success"></span>
-                    <span id="processing-status">Ready to process</span>
-                </div>
             </div>
 
             <div class="card result-card" id="result-section">
                 <h3>✅ Result</h3>
-                <div id="result-content">
-                    <div class="result-status">
-                        <div class="result-icon success">?</div>
-                        <div>
-                            <strong>Ready</strong><br>
-                            <small>Select payment method and process to see Java 21 pattern matching</small>
-                        </div>
-                    </div>
-                </div>
+                <div id="result-content"></div>
             </div>
         </div>
 
@@ -424,42 +587,389 @@
                     <code>when amount > 1000</code>
                 </div>
                 <div class="feature-item">
-                    <strong>Yield Expressions</strong>
-                    <code>yield "APPROVED - Processing";</code>
-                </div>
-                <div class="feature-item">
-                    <strong>Enhanced Switch</strong>
-                    <code>No fall-through, cleaner syntax</code>
+                    <strong>Sealed Interfaces</strong>
+                    <code>No default case needed</code>
                 </div>
             </div>
 
             <div class="log-header">
-                <h3>📊 Enhanced Visual Flow Inspector</h3>
+                <h3>📊 Visual Flow Inspector</h3>
                 <button class="clear-btn" onclick="clearLog()">Clear</button>
             </div>
             <div class="log-section" id="api-log">
+                <!-- Clean initial state -->
                 <div class="api-flow-block">
-                    <div><span class="status-indicator status-success"></span><strong>Enhanced Java 21 Pattern Demo Ready!</strong></div>
-                    <div class="api-flow-child">🎯 Features: Pattern Matching for Switch with Comprehensive API Tracking</div>
-                    <div class="api-flow-child">🔥 Language: <span class="java21-pattern-tag">Java 21</span></div>
-                    <div class="api-flow-child">💡 Select payment method → Choose amount → Process to see detailed flow</div>
-                </div>
-
-                <div class="pattern-flow-separator"></div>
-
-                <div class="api-flow-block">
-                    <div><span class="status-indicator status-processing"></span><strong>Waiting for User Action</strong></div>
-                    <div class="api-flow-child">👤 Select a payment method to begin pattern matching</div>
-                    <div class="api-flow-child">💰 Try different amounts to trigger guard conditions</div>
-                    <div class="api-flow-child">🚀 Process to see enhanced backend tracking</div>
-                    <div class="api-flow-child">📊 Watch for service method details and Java 21 method usage</div>
+                    <div><span class="status-indicator status-success"></span><strong>Simple Pattern Demo Ready!</strong></div>
+                    <div class="api-flow-child">🎯 Java 21 Features: Pattern Matching for Switch</div>
+                    <div class="api-flow-child">🔥 Language Features: <span class="java21-pattern-tag">Enhanced Switch</span></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="/js/simple-demo.js"></script>
+<script>
+    /**
+     * Enhanced Simple Payment Demo JavaScript
+     * Location: Embedded in simple-demo.html
+     * Purpose: Clean Visual Flow Inspector like Shopping Cart Demo
+     */
+
+    // Global Variables
+    let currentMethod = 'creditcard';
+    let currentAmount = 500;
+    let demoStartTime = Date.now();
+    let logEntryCount = 0;
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Enhanced Simple Demo Initializing...');
+        initializeDemo();
+    });
+
+    /**
+     * Initialize the demo with clean state
+     */
+    function initializeDemo() {
+        setupPaymentMethodSelection();
+        clearLog(); // Start with clean log
+
+        // Add welcome messages
+        logFlowEntry('🚀 Demo Ready', 'Simple Pattern Matching Demo initialized');
+        logFlowEntry('🎯 Java 21 Features', 'Enhanced switch expressions loaded');
+        logFlowEntry('💡 Instructions', 'Select payment method → Choose amount → Process');
+
+        console.log('✅ Enhanced demo ready');
+    }
+
+    /**
+     * Setup payment method selection with enhanced feedback
+     */
+    function setupPaymentMethodSelection() {
+        const paymentCards = document.querySelectorAll('.payment-card');
+
+        paymentCards.forEach(card => {
+            card.addEventListener('click', function() {
+                selectPaymentMethod(this);
+            });
+        });
+    }
+
+    /**
+     * Handle payment method selection with Visual Flow Inspector logging
+     */
+    function selectPaymentMethod(selectedCard) {
+        const method = selectedCard.dataset.method;
+
+        // Remove selected from all cards
+        document.querySelectorAll('.payment-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+
+        // Add selected to clicked card
+        selectedCard.classList.add('selected');
+
+        // Update global state
+        currentMethod = method;
+
+        // Enhanced logging like shopping cart
+        logFlowSeparator('Payment Method Selection');
+        logFlowEntry('👤 User Action', `Selected ${getMethodName(method)} payment method`);
+        logFlowEntry('🎯 Pattern Match', `switch(paymentMethod) → case "${method}"`);
+        logFlowEntry('🔥 Java 21 Feature', 'Pattern Matching for Switch', 'java21');
+        logFlowEntry('📊 Business Logic', getPatternDescription(method));
+    }
+
+    /**
+     * Set amount with guard condition analysis
+     */
+    function setAmount(amount) {
+        const previousAmount = currentAmount;
+        currentAmount = amount;
+
+        // Update UI
+        const amountElement = document.getElementById('current-amount');
+        if (amountElement) {
+            amountElement.textContent = `$${amount.toLocaleString()}`;
+        }
+
+        // Enhanced logging with guard analysis
+        logFlowSeparator('Amount Configuration');
+        logFlowEntry('💰 Amount Updated', `From $${previousAmount.toLocaleString()} to $${amount.toLocaleString()}`);
+
+        const guardAnalysis = analyzeGuardConditions(currentMethod, amount);
+        if (guardAnalysis.triggered) {
+            logFlowEntry('⚡ Guard Triggered', `${guardAnalysis.condition} = TRUE`, 'guard');
+            logFlowEntry('🔀 Processing Route', guardAnalysis.action, 'warning');
+        } else {
+            logFlowEntry('✅ Standard Route', 'No guard conditions triggered');
+        }
+    }
+
+    /**
+     * Process payment with comprehensive API logging
+     */
+    function processPayment() {
+        console.log('Processing payment:', { method: currentMethod, amount: currentAmount });
+
+        // Pre-processing logging
+        logFlowSeparator('Payment Processing Started');
+        logFlowEntry('🚀 API Request', `POST /api/simple/payment`);
+        logFlowEntry('📋 Payload', `{ method: "${currentMethod}", amount: ${currentAmount} }`);
+        logFlowEntry('⏱️ Backend Call', 'Sending request to Spring Boot...');
+
+        const processingStartTime = performance.now();
+
+        const payload = {
+            method: currentMethod,
+            amount: currentAmount
+        };
+
+        fetch('/api/simple/payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
+        .then(response => {
+            const processingTime = Math.round(performance.now() - processingStartTime);
+
+            logFlowEntry('📡 Response Received', `HTTP ${response.status} (${processingTime}ms)`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const totalTime = Math.round(performance.now() - processingStartTime);
+
+            // Success logging like shopping cart
+            logFlowSeparator('Backend Processing Complete');
+            logFlowEntry('✅ Processing Result', `Status: ${data.status}`);
+            logFlowEntry('💬 Message', data.message);
+            logFlowEntry('🔥 Java 21 Feature', data.java21_feature, 'java21');
+            logFlowEntry('⏱️ Total Time', `${totalTime}ms end-to-end`);
+
+            const result = {
+                status: data.status,
+                message: data.message,
+                pattern: data.java21_feature,
+                color: data.status.includes('APPROVED') ? '#10b981' :
+                       data.status.includes('ERROR') ? '#ef4444' : '#f59e0b',
+                processingTime: totalTime
+            };
+
+            showResult(result);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+
+            // Error logging
+            logFlowSeparator('Processing Error');
+            logFlowEntry('❌ Backend Error', 'Connection failed to Spring Boot', 'error');
+            logFlowEntry('🔧 Check Backend', 'Ensure application running on :8080', 'error');
+
+            const result = {
+                status: 'CONNECTION_ERROR',
+                message: 'Backend connection failed. Check Spring Boot application.',
+                pattern: 'N/A',
+                color: '#ef4444',
+                processingTime: 0
+            };
+
+            showResult(result);
+        });
+    }
+
+    /**
+     * Show result with clean styling
+     */
+    function showResult(result) {
+        const resultSection = document.getElementById('result-section');
+        const resultContent = document.getElementById('result-content');
+
+        if (!resultSection || !resultContent) return;
+
+        resultContent.innerHTML = `
+            <div style="border-left: 4px solid ${result.color}; padding-left: 15px;">
+                <h4 style="color: ${result.color}; margin: 0 0 10px 0;">
+                    ${result.status}
+                </h4>
+                <p style="margin: 0 0 10px 0;">${result.message}</p>
+                <div style="background: rgba(0,0,0,0.05); padding: 10px; border-radius: 6px;">
+                    <small style="color: #666;">
+                        <strong>Java 21:</strong> ${result.pattern}
+                        ${result.processingTime > 0 ? `<br><strong>Time:</strong> ${result.processingTime}ms` : ''}
+                    </small>
+                </div>
+            </div>
+        `;
+
+        resultSection.style.display = 'block';
+
+        // Final logging
+        logFlowEntry('🎉 Demo Complete', `Result: ${result.status}`);
+    }
+
+    /**
+     * Enhanced logging with visual flow like shopping cart
+     */
+    function logFlowEntry(action, details, type = 'info') {
+        const log = document.getElementById('api-log');
+        if (!log) return;
+
+        const timestamp = new Date().toLocaleTimeString();
+        logEntryCount++;
+
+        const logEntry = document.createElement('div');
+        logEntry.className = 'api-flow-block';
+
+        let statusIcon = '';
+        let specialStyle = '';
+
+        switch(type) {
+            case 'java21':
+                statusIcon = '<span class="status-indicator status-success"></span>';
+                specialStyle = ' style="border-left-color: #10b981;"';
+                break;
+            case 'guard':
+                statusIcon = '<span class="status-indicator status-processing"></span>';
+                specialStyle = ' style="border-left-color: #f59e0b;"';
+                break;
+            case 'warning':
+                statusIcon = '<span class="status-indicator status-processing"></span>';
+                specialStyle = ' style="border-left-color: #f59e0b;"';
+                break;
+            case 'error':
+                statusIcon = '<span class="status-indicator status-error"></span>';
+                specialStyle = ' style="border-left-color: #ef4444;"';
+                break;
+            default:
+                statusIcon = '<span class="status-indicator status-success"></span>';
+        }
+
+        logEntry.innerHTML = `
+            <div${specialStyle}>${statusIcon}<strong>${action}</strong></div>
+            <div class="api-flow-child">📋 ${details}</div>
+            <div class="api-flow-child">⏰ ${timestamp}</div>
+            ${type === 'java21' ? '<div class="api-flow-child">🔥 Feature: <span class="java21-pattern-tag">Java 21</span></div>' : ''}
+        `;
+
+        // Insert at top (newest first)
+        log.insertBefore(logEntry, log.firstChild);
+
+        // Limit entries
+        while (log.children.length > 12) {
+            log.removeChild(log.lastChild);
+        }
+
+        // Auto scroll to top
+        log.scrollTop = 0;
+    }
+
+    /**
+     * Add flow separator for visual organization
+     */
+    function logFlowSeparator(title) {
+        const log = document.getElementById('api-log');
+        if (!log) return;
+
+        const separator = document.createElement('div');
+        separator.className = 'pattern-flow-separator';
+        separator.innerHTML = `<div style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 8px 0; position: relative;"><div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: #1e293b; padding: 0 8px; font-size: 9px; color: #f59e0b; font-weight: bold;">⚡ ${title} ⚡</div></div>`;
+
+        log.insertBefore(separator, log.firstChild);
+    }
+
+    /**
+     * Analyze guard conditions for educational feedback
+     */
+    function analyzeGuardConditions(method, amount) {
+        switch(method) {
+            case 'creditcard':
+                if (amount > 1000) {
+                    return {
+                        triggered: true,
+                        condition: 'amount > $1000',
+                        action: 'requiresVerification()',
+                        description: 'High-value transaction verification'
+                    };
+                }
+                break;
+            case 'bank':
+                if (amount >= 5000) {
+                    return {
+                        triggered: true,
+                        condition: 'amount >= $5000',
+                        action: 'requiresManagerApproval()',
+                        description: 'Large transfer needs approval'
+                    };
+                }
+                break;
+        }
+
+        return {
+            triggered: false,
+            condition: 'none',
+            action: 'processStandard()',
+            description: 'Standard processing'
+        };
+    }
+
+    /**
+     * Clear the Visual Flow Inspector log
+     */
+    function clearLog() {
+        const log = document.getElementById('api-log');
+        if (log) {
+            log.innerHTML = '';
+            logEntryCount = 0;
+            demoStartTime = Date.now();
+        }
+    }
+
+    /**
+     * Get user-friendly method names
+     */
+    function getMethodName(method) {
+        const names = {
+            'creditcard': 'Credit Card',
+            'paypal': 'PayPal',
+            'bank': 'Bank Transfer'
+        };
+        return names[method] || method;
+    }
+
+    /**
+     * Get pattern descriptions for education
+     */
+    function getPatternDescription(method) {
+        const patterns = {
+            'creditcard': 'CreditCard pattern with amount guards',
+            'paypal': 'PayPal pattern with account verification',
+            'bank': 'BankTransfer pattern with approval workflow'
+        };
+        return patterns[method] || 'Unknown pattern';
+    }
+
+    // Export for console debugging
+    window.DemoControls = {
+        setAmount,
+        selectPaymentMethodByName: (methodName) => {
+            const card = document.querySelector(`[data-method="${methodName}"]`);
+            if (card) selectPaymentMethod(card);
+        },
+        processPayment,
+        clearLog,
+        currentState: () => ({ method: currentMethod, amount: currentAmount })
+    };
+
+    console.log('🚀 Enhanced Simple Demo loaded successfully');
+    console.log('🎮 Try: DemoControls.setAmount(1500) or DemoControls.clearLog()');
+
+</script>
 
 </body>
 </html>
