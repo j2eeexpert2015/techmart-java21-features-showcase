@@ -3,35 +3,27 @@ package com.example.techmart.features.recordpatterns.domain;
 import java.math.BigDecimal;
 
 /**
- * TechMart Payment Method - Sealed Interface for Java 21 Pattern Matching Demo
+ * Payment Method - Sealed Interface for Java 21 Pattern Matching Demo
  *
- * This sealed interface demonstrates Java 21's pattern matching capabilities with a realistic
- * payment processing hierarchy. Each implementation represents a different payment method
- * with its own validation rules and processing requirements.
+ * This sealed interface demonstrates Java 21's enhanced pattern matching capabilities.
+ * The 'sealed' keyword restricts which classes can implement this interface,
+ * enabling exhaustive pattern matching without default cases.
  *
- * Business Rules Demonstrated:
- * - Credit Card: International + high value requires additional verification
- * - PayPal: Premium customers get expedited processing
- * - Bank Transfer: Large amounts require manager approval
+ * Java 21 Benefits:
+ * - Compiler guarantees all payment types are handled in switch expressions
+ * - No default case needed - sealed interface ensures exhaustiveness
+ * - Type-safe pattern matching with automatic casting
+ * - Clear, maintainable code for business logic
  */
 public sealed interface PaymentMethod
         permits CreditCard, PayPal, BankTransfer {
 
-    /**
-     * Get the payment method type for logging and analytics
-     */
+    // Basic contract that all payment methods must implement
     String getType();
 
-    /**
-     * Validate payment method details
-     * @return true if payment method is valid for processing
-     */
+    // Simple validation - just enough for demo purposes
     boolean isValid();
 
-    /**
-     * Get processing fee for this payment method
-     * @param amount Transaction amount
-     * @return Processing fee amount
-     */
+    // Basic processing fee calculation for business logic demonstration
     BigDecimal getProcessingFee(BigDecimal amount);
 }

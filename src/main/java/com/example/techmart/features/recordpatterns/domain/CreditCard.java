@@ -5,10 +5,16 @@ import java.time.LocalDateTime;
 
 /**
  * Credit Card Payment Method Record
- * Supports Visa, MasterCard, American Express, etc.
  *
- * This record implements the PaymentMethod sealed interface and demonstrates
- * Java 21 record patterns with complex business validation logic.
+ * This record demonstrates Java 21's record pattern matching capabilities.
+ * Records provide automatic implementation of equals, hashCode, toString,
+ * and enable pattern matching with destructuring.
+ *
+ * Java 21 Features Demonstrated:
+ * - Record pattern matching: case CreditCard(var number, var type, var international) -> ...
+ * - Automatic destructuring of record components in switch expressions
+ * - Compact constructor for validation
+ * - Immutable data with clean syntax
  */
 public record CreditCard(
         String cardNumber,
@@ -21,26 +27,23 @@ public record CreditCard(
         LocalDateTime createdAt
 ) implements PaymentMethod {
 
-    /**
-     * Compact constructor with validation and normalization
-     */
+    // Compact constructor - validates input and provides defaults
+    // This runs before the record's automatic constructor
     public CreditCard {
+        // Basic validation for demo purposes
         if (cardNumber == null || cardNumber.isBlank()) {
-            throw new IllegalArgumentException("Card number cannot be null or blank");
+            throw new IllegalArgumentException("Card number cannot be empty");
         }
 
-        // Normalize card number (remove spaces)
+        // Remove spaces from card number for processing
         cardNumber = cardNumber.replaceAll("\\s+", "");
 
+        // Auto-detect card type if not provided (simplified logic for demo)
         if (cardType == null || cardType.isBlank()) {
-            // Auto-detect card type from number
             cardType = detectCardType(cardNumber);
         }
 
-        if (cvv == null || !cvv.matches("\\d{3,4}")) {
-            throw new IllegalArgumentException("CVV must be 3 or 4 digits");
-        }
-
+        // Set creation time if not provided
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
@@ -51,21 +54,25 @@ public record CreditCard(
         return "CreditCard";
     }
 
-
     @Override
     public boolean isValid() {
-        return isValidCardNumber(cardNumber) &&
-                isValidExpiryDate(expiryMonth, expiryYear) &&
-                cvv != null && cvv.matches("\\d{3,4}");
+        // Simplified validation for demo - just check basic requirements
+        return cardNumber != null &&
+                cardNumber.length() >= 13 &&
+                cardNumber.length() <= 19 &&
+                cvv != null &&
+                cvv.matches("\\d{3,4}") &&
+                isValidExpiryDate();
     }
 
     @Override
     public BigDecimal getProcessingFee(BigDecimal amount) {
-        // Credit card processing fee: 2.9% + $0.30
+        // Basic fee calculation for demo
+        // Standard credit card fee: 2.9% + $0.30
         BigDecimal percentageFee = amount.multiply(BigDecimal.valueOf(0.029));
         BigDecimal fixedFee = BigDecimal.valueOf(0.30);
 
-        // International cards have additional 1.5% fee
+        // International cards have additional 1.5% fee (for guard condition demo)
         if (isInternational) {
             BigDecimal internationalFee = amount.multiply(BigDecimal.valueOf(0.015));
             return percentageFee.add(fixedFee).add(internationalFee);
@@ -74,35 +81,16 @@ public record CreditCard(
         return percentageFee.add(fixedFee);
     }
 
-    /**
-     * Get masked card number for display (e.g., "**** **** **** 1234")
-     */
+    // Helper method: Get masked card number for display (security best practice)
     public String getMaskedCardNumber() {
         if (cardNumber == null || cardNumber.length() < 4) {
             return "****";
         }
-
         String lastFour = cardNumber.substring(cardNumber.length() - 4);
         return "**** **** **** " + lastFour;
     }
 
-    /**
-     * Check if card is expired
-     */
-    public boolean isExpired() {
-        try {
-            int expMonth = Integer.parseInt(expiryMonth);
-            int expYear = Integer.parseInt(expiryYear);
-            LocalDateTime now = LocalDateTime.now();
-
-            return expYear < now.getYear() ||
-                    (expYear == now.getYear() && expMonth < now.getMonthValue());
-        } catch (NumberFormatException e) {
-            return true; // Invalid date format = expired
-        }
-    }
-
-    // Static helper methods
+    // Helper method: Simple card type detection for demo
     private static String detectCardType(String cardNumber) {
         if (cardNumber.startsWith("4")) return "VISA";
         if (cardNumber.startsWith("5") || cardNumber.startsWith("2")) return "MASTERCARD";
@@ -111,45 +99,16 @@ public record CreditCard(
         return "UNKNOWN";
     }
 
-    private static boolean isValidCardNumber(String cardNumber) {
-        // Simplified Luhn algorithm check
-        return cardNumber != null &&
-                cardNumber.matches("\\d{13,19}") &&
-                luhnCheck(cardNumber);
-    }
-
-    private static boolean isValidExpiryDate(String month, String year) {
+    // Helper method: Basic expiry date validation
+    private boolean isValidExpiryDate() {
         try {
-            int expMonth = Integer.parseInt(month);
-            int expYear = Integer.parseInt(year);
-            LocalDateTime now = LocalDateTime.now();
+            int expMonth = Integer.parseInt(expiryMonth);
+            int expYear = Integer.parseInt(expiryYear);
 
-            return expMonth >= 1 && expMonth <= 12 &&
-                    expYear >= now.getYear() &&
-                    !(expYear == now.getYear() && expMonth < now.getMonthValue());
+            // Basic range checks for demo
+            return expMonth >= 1 && expMonth <= 12 && expYear >= 2024;
         } catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    private static boolean luhnCheck(String cardNumber) {
-        int sum = 0;
-        boolean alternate = false;
-
-        for (int i = cardNumber.length() - 1; i >= 0; i--) {
-            int n = Integer.parseInt(cardNumber.substring(i, i + 1));
-
-            if (alternate) {
-                n *= 2;
-                if (n > 9) {
-                    n = (n % 10) + 1;
-                }
-            }
-
-            sum += n;
-            alternate = !alternate;
-        }
-
-        return (sum % 10 == 0);
     }
 }

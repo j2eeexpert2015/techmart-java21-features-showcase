@@ -5,10 +5,15 @@ import java.time.LocalDateTime;
 
 /**
  * PayPal Payment Method Record
- * Supports PayPal account payments with expedited processing for premium customers
  *
- * This record implements the PaymentMethod sealed interface and demonstrates
- * Java 21 record patterns with email validation and account verification logic.
+ * Demonstrates Java 21 record patterns with customer tier-based processing.
+ * This record shows how pattern matching can incorporate business rules
+ * through guard conditions.
+ *
+ * Java 21 Features Demonstrated:
+ * - Record pattern: case PayPal(var email, var accountId, var isVerified) -> ...
+ * - Guard conditions: when customer.isPremium() -> expedited processing
+ * - Clean business logic without complex inheritance hierarchies
  */
 public record PayPal(
         String email,
@@ -18,18 +23,18 @@ public record PayPal(
         LocalDateTime createdAt
 ) implements PaymentMethod {
 
-    /**
-     * Compact constructor with validation
-     */
+    // Compact constructor with validation
     public PayPal {
+        // Basic email validation for demo
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("PayPal email cannot be null or blank");
+            throw new IllegalArgumentException("PayPal email cannot be empty");
         }
 
         if (!isValidEmail(email)) {
-            throw new IllegalArgumentException("Invalid PayPal email format");
+            throw new IllegalArgumentException("Invalid email format");
         }
 
+        // Set creation time if not provided
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
@@ -42,21 +47,21 @@ public record PayPal(
 
     @Override
     public boolean isValid() {
-        return email != null && isValidEmail(email) && isVerified;
+        // PayPal requires verified account for processing
+        return email != null &&
+                isValidEmail(email) &&
+                isVerified;
     }
 
     @Override
     public BigDecimal getProcessingFee(BigDecimal amount) {
-        // PayPal processing fee: 2.9% + $0.30 for domestic
+        // PayPal standard fee: 2.9% + $0.30
         BigDecimal percentageFee = amount.multiply(BigDecimal.valueOf(0.029));
         BigDecimal fixedFee = BigDecimal.valueOf(0.30);
-
         return percentageFee.add(fixedFee);
     }
 
-    /**
-     * Get masked email for display (e.g., "j***@example.com")
-     */
+    // Helper method: Get masked email for display (privacy protection)
     public String getMaskedEmail() {
         if (email == null || email.length() < 3) {
             return "***@***.***";
@@ -77,7 +82,10 @@ public record PayPal(
         return "***@***.***";
     }
 
+    // Helper method: Simple email validation for demo
     private static boolean isValidEmail(String email) {
-        return email != null && email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
+        // Basic email pattern for demo purposes
+        return email != null &&
+                email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
     }
 }

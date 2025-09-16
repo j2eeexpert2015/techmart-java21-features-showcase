@@ -6,10 +6,17 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Payment Processing Result - Immutable record capturing payment processing outcome
+ * Payment Processing Result - Simple Record for Demo Results
  *
- * This record demonstrates Java 21 features while representing the result of
- * pattern matching-based payment processing logic.
+ * This record captures the outcome of Java 21 pattern matching-based payment processing.
+ * It's designed to be simple but complete enough to demonstrate the educational value
+ * of pattern matching decisions.
+ *
+ * Java 21 Features Demonstrated:
+ * - Record with validation in compact constructor
+ * - Factory methods for common result types
+ * - Immutable result objects
+ * - Clear API for different processing outcomes
  */
 public record PaymentProcessingResult(
         UUID transactionId,
@@ -22,56 +29,17 @@ public record PaymentProcessingResult(
         String patternMatched,
         List<String> validationMessages,
         String processingTimeEstimate,
-        LocalDateTime processedAt,
-        ProcessingMetadata metadata
+        LocalDateTime processedAt
 ) {
 
-    /**
-     * Compact constructor with validation and defaults
-     */
-    public PaymentProcessingResult {
-        if (transactionId == null) {
-            transactionId = UUID.randomUUID();
-        }
-
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount must be positive");
-        }
-
-        if (processingFee == null) {
-            processingFee = BigDecimal.ZERO;
-        }
-
-        if (status == null) {
-            status = ProcessingStatus.PENDING;
-        }
-
-        if (validationMessages == null) {
-            validationMessages = List.of();
-        } else {
-            validationMessages = List.copyOf(validationMessages);
-        }
-
-        if (processedAt == null) {
-            processedAt = LocalDateTime.now();
-        }
-
-        if (metadata == null) {
-            metadata = new ProcessingMetadata(null, null, null, List.of());
-        }
-    }
-
-    /**
-     * Processing Status Enum
-     */
+    // Processing status enum for clear status tracking
     public enum ProcessingStatus {
         PENDING("Payment is being processed"),
         APPROVED("Payment approved and processed successfully"),
         REQUIRES_VERIFICATION("Additional verification required"),
         REQUIRES_APPROVAL("Manager approval required"),
         DECLINED("Payment declined"),
-        FAILED("Payment processing failed"),
-        EXPIRED("Payment method expired");
+        FAILED("Payment processing failed");
 
         private final String description;
 
@@ -84,82 +52,67 @@ public record PaymentProcessingResult(
         }
     }
 
-    /**
-     * Processing Metadata - Additional information about the processing decision
-     */
-    public record ProcessingMetadata(
-            String customerTier,
-            String riskLevel,
-            String processingRoute,
-            List<String> appliedRules
-    ) {
-        public ProcessingMetadata {
-            if (appliedRules == null) {
-                appliedRules = List.of();
-            } else {
-                appliedRules = List.copyOf(appliedRules);
-            }
+    // Compact constructor with validation and defaults
+    public PaymentProcessingResult {
+        // Generate transaction ID if not provided
+        if (transactionId == null) {
+            transactionId = UUID.randomUUID();
+        }
+
+        // Validate required fields
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+
+        // Default processing fee if not specified
+        if (processingFee == null) {
+            processingFee = BigDecimal.ZERO;
+        }
+
+        // Default status if not specified
+        if (status == null) {
+            status = ProcessingStatus.PENDING;
+        }
+
+        // Ensure validation messages is never null
+        if (validationMessages == null) {
+            validationMessages = List.of();
+        } else {
+            validationMessages = List.copyOf(validationMessages); // Make immutable
+        }
+
+        // Set processing time if not provided
+        if (processedAt == null) {
+            processedAt = LocalDateTime.now();
         }
     }
 
-    // Convenience methods for common checks
+    // Convenience methods for checking result status
 
-    /**
-     * Check if payment was successful
-     */
     public boolean isSuccessful() {
         return status == ProcessingStatus.APPROVED;
     }
 
-    /**
-     * Check if payment requires additional action
-     */
     public boolean requiresAdditionalAction() {
         return status == ProcessingStatus.REQUIRES_VERIFICATION ||
                 status == ProcessingStatus.REQUIRES_APPROVAL;
     }
 
-    /**
-     * Check if payment failed
-     */
     public boolean hasFailed() {
         return status == ProcessingStatus.DECLINED ||
-                status == ProcessingStatus.FAILED ||
-                status == ProcessingStatus.EXPIRED;
+                status == ProcessingStatus.FAILED;
     }
 
-    /**
-     * Get total amount including processing fee
-     */
     public BigDecimal getTotalAmount() {
         return amount.add(processingFee);
     }
 
-    /**
-     * Get user-friendly status message
-     */
     public String getStatusMessage() {
         return status.getDescription();
     }
 
-    /**
-     * Check if this is a high-value transaction
-     */
-    public boolean isHighValue() {
-        return amount.compareTo(BigDecimal.valueOf(1000)) >= 0;
-    }
+    // Factory methods for common result types - makes creating results easier
 
-    /**
-     * Check if international processing was applied
-     */
-    public boolean hasInternationalProcessing() {
-        return processingAction != null &&
-                processingAction.contains("international");
-    }
-
-    /**
-     * Factory method for successful payment
-     */
     public static PaymentProcessingResult success(
             PaymentMethod paymentMethod,
             BigDecimal amount,
@@ -173,18 +126,14 @@ public record PaymentProcessingResult(
                 paymentMethod.getProcessingFee(amount),
                 ProcessingStatus.APPROVED,
                 processingAction,
-                "none",
+                "none", // No guard condition triggered
                 patternMatched,
                 List.of("Payment processed successfully"),
                 "Immediate",
-                LocalDateTime.now(),
-                new ProcessingMetadata("STANDARD", "LOW", "STANDARD", List.of("standard_processing"))
+                LocalDateTime.now()
         );
     }
 
-    /**
-     * Factory method for payment requiring verification
-     */
     public static PaymentProcessingResult requiresVerification(
             PaymentMethod paymentMethod,
             BigDecimal amount,
@@ -203,15 +152,10 @@ public record PaymentProcessingResult(
                 patternMatched,
                 List.of(reason),
                 "24-48 hours after verification",
-                LocalDateTime.now(),
-                new ProcessingMetadata("STANDARD", "HIGH", "MANUAL_REVIEW",
-                        List.of("high_value_check", "international_check"))
+                LocalDateTime.now()
         );
     }
 
-    /**
-     * Factory method for payment requiring approval
-     */
     public static PaymentProcessingResult requiresApproval(
             PaymentMethod paymentMethod,
             BigDecimal amount,
@@ -230,15 +174,10 @@ public record PaymentProcessingResult(
                 patternMatched,
                 List.of(reason),
                 "5-7 business days",
-                LocalDateTime.now(),
-                new ProcessingMetadata("BUSINESS", "MEDIUM", "MANAGER_APPROVAL",
-                        List.of("large_amount_check", "bank_transfer_verification"))
+                LocalDateTime.now()
         );
     }
 
-    /**
-     * Factory method for declined payment
-     */
     public static PaymentProcessingResult declined(
             PaymentMethod paymentMethod,
             BigDecimal amount,
@@ -249,21 +188,17 @@ public record PaymentProcessingResult(
                 UUID.randomUUID(),
                 paymentMethod,
                 amount,
-                BigDecimal.ZERO,
+                BigDecimal.ZERO, // No processing fee for declined payments
                 ProcessingStatus.DECLINED,
                 "declinePayment",
                 "validation_failed",
                 patternMatched,
                 List.of(reason),
                 "N/A",
-                LocalDateTime.now(),
-                new ProcessingMetadata("UNKNOWN", "HIGH", "DECLINED", List.of("validation_failure"))
+                LocalDateTime.now()
         );
     }
 
-    /**
-     * Factory method for expedited processing (premium customers)
-     */
     public static PaymentProcessingResult expedited(
             PaymentMethod paymentMethod,
             BigDecimal amount,
@@ -271,6 +206,7 @@ public record PaymentProcessingResult(
             String customerTier,
             BigDecimal discount) {
 
+        // Apply discount to processing fee
         BigDecimal adjustedFee = paymentMethod.getProcessingFee(amount).subtract(discount);
         if (adjustedFee.compareTo(BigDecimal.ZERO) < 0) {
             adjustedFee = BigDecimal.ZERO;
@@ -287,9 +223,7 @@ public record PaymentProcessingResult(
                 patternMatched,
                 List.of("Expedited processing applied for " + customerTier + " customer"),
                 "Immediate",
-                LocalDateTime.now(),
-                new ProcessingMetadata(customerTier, "LOW", "EXPEDITED",
-                        List.of("premium_customer", "expedited_processing"))
+                LocalDateTime.now()
         );
     }
 }

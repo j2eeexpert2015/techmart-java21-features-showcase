@@ -5,10 +5,15 @@ import java.time.LocalDateTime;
 
 /**
  * Bank Transfer Payment Method Record
- * Supports ACH transfers with manager approval for large amounts
  *
- * This record implements the PaymentMethod sealed interface and demonstrates
- * Java 21 record patterns with banking validation logic and routing number verification.
+ * Demonstrates Java 21 record patterns with amount-based guard conditions.
+ * Shows how large transfers can trigger different processing workflows
+ * through pattern matching with guards.
+ *
+ * Java 21 Features Demonstrated:
+ * - Record pattern: case BankTransfer(var account, var routing, var bank) -> ...
+ * - Amount-based guards: when amount >= 5000 -> require approval
+ * - Business rule enforcement through pattern matching
  */
 public record BankTransfer(
         String accountNumber,
@@ -19,22 +24,27 @@ public record BankTransfer(
         LocalDateTime createdAt
 ) implements PaymentMethod {
 
-    /**
-     * Compact constructor with validation
-     */
+    // Compact constructor with validation
     public BankTransfer {
-        if (accountNumber == null || !accountNumber.matches("\\d{8,17}")) {
-            throw new IllegalArgumentException("Invalid account number format");
+        // Basic validation for demo
+        if (accountNumber == null || accountNumber.isBlank()) {
+            throw new IllegalArgumentException("Account number cannot be empty");
         }
 
         if (routingNumber == null || !routingNumber.matches("\\d{9}")) {
-            throw new IllegalArgumentException("Invalid routing number format");
+            throw new IllegalArgumentException("Routing number must be 9 digits");
         }
 
-        if (accountType == null) {
-            accountType = "CHECKING"; // Default account type
+        if (bankName == null || bankName.isBlank()) {
+            throw new IllegalArgumentException("Bank name cannot be empty");
         }
 
+        // Default account type if not specified
+        if (accountType == null || accountType.isBlank()) {
+            accountType = "CHECKING";
+        }
+
+        // Set creation time if not provided
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
@@ -47,58 +57,51 @@ public record BankTransfer(
 
     @Override
     public boolean isValid() {
-        return accountNumber != null && accountNumber.matches("\\d{8,17}") &&
-                routingNumber != null && routingNumber.matches("\\d{9}") &&
-                bankName != null && !bankName.isBlank() &&
-                accountHolderName != null && !accountHolderName.isBlank();
+        // Basic validation for demo
+        return accountNumber != null &&
+                accountNumber.matches("\\d{8,17}") &&
+                routingNumber != null &&
+                routingNumber.matches("\\d{9}") &&
+                bankName != null &&
+                !bankName.isBlank() &&
+                accountHolderName != null &&
+                !accountHolderName.isBlank();
     }
 
     @Override
     public BigDecimal getProcessingFee(BigDecimal amount) {
-        // Bank transfer fee: flat $1.50 for standard, $0 for large amounts over $1000
+        // Bank transfer fee structure for demo
+        // Small fee for standard transfers, free for large amounts
         return amount.compareTo(BigDecimal.valueOf(1000)) >= 0 ?
-                BigDecimal.ZERO : BigDecimal.valueOf(1.50);
+                BigDecimal.ZERO :
+                BigDecimal.valueOf(1.50);
     }
 
-    /**
-     * Get masked account number for display (e.g., "****1234")
-     */
+    // Helper method: Get masked account number for display
     public String getMaskedAccountNumber() {
         if (accountNumber == null || accountNumber.length() < 4) {
             return "****";
         }
-
         String lastFour = accountNumber.substring(accountNumber.length() - 4);
         return "****" + lastFour;
     }
 
-    /**
-     * Check if routing number is valid using standard checksum
-     */
+    // Helper method: Simple routing number validation for demo
     public boolean isValidRoutingNumber() {
         if (routingNumber == null || !routingNumber.matches("\\d{9}")) {
             return false;
         }
 
-        // ABA routing number checksum validation
-        int[] weights = {3, 7, 1, 3, 7, 1, 3, 7, 1};
-        int sum = 0;
-
-        for (int i = 0; i < 9; i++) {
-            sum += Character.getNumericValue(routingNumber.charAt(i)) * weights[i];
-        }
-
-        return sum % 10 == 0;
+        // Simplified validation - just check it's 9 digits
+        // In real implementation, would use ABA checksum algorithm
+        return true;
     }
 
-    /**
-     * Get estimated processing time based on amount and account type
-     */
+    // Helper method: Get estimated processing time based on amount
     public String getProcessingTime(BigDecimal amount) {
+        // Large transfers take longer due to additional approvals
         if (amount.compareTo(BigDecimal.valueOf(5000)) >= 0) {
             return "5-7 business days (manager approval required)";
-        } else if ("SAVINGS".equals(accountType)) {
-            return "4-6 business days";
         } else {
             return "3-5 business days";
         }
