@@ -820,32 +820,57 @@
         }, 3000);
     }
 
-    // Log action to visual inspector
-    function logAction(action, details) {
+    // Enhanced API flow logging function
+    function logAPIFlow(action, details, type = 'info', subAction = null) {
         const logContainer = document.getElementById('api-log');
-
-        // Clear initial message
-        if (logContainer.querySelector('.text-muted')) {
-            logContainer.innerHTML = '';
-        }
 
         const logEntry = document.createElement('div');
         logEntry.className = 'api-flow-block';
-        logEntry.innerHTML = `
-            <div>👤 <strong>${action}</strong></div>
-            <div class="api-flow-child">📋 ${details}</div>
-            <div class="api-flow-child">⏰ ${new Date().toLocaleTimeString()}</div>
-            <div class="api-flow-child">🔥 Java 21: <span class="java21-pattern-tag">Pattern Matching</span></div>
-        `;
 
-        logContainer.insertBefore(logEntry, logContainer.firstChild);
+        let iconColor = 'var(--info-color)';
+        let specialTag = '';
 
-        // Limit log entries
-        while (logContainer.children.length > 8) {
-            logContainer.removeChild(logContainer.lastChild);
+        // Style based on type
+        switch(type) {
+            case 'java21':
+                iconColor = 'var(--success-color)';
+                specialTag = '<span class="java21-pattern-tag">Java 21</span>';
+                break;
+            case 'guard':
+                iconColor = 'var(--warning-color)';
+                specialTag = '<span class="java21-pattern-tag" style="background: var(--warning-color);">Guard</span>';
+                break;
+            case 'CreditCard':
+            case 'PayPal':
+            case 'BankTransfer':
+                iconColor = 'var(--primary-color)';
+                specialTag = `<span class="java21-pattern-tag" style="background: var(--primary-color);">${type}</span>`;
+                break;
         }
 
-        logContainer.scrollTop = 0;
+        // Build the log entry HTML
+        let logHTML = `<div style="border-left-color: ${iconColor}"><strong>${action}</strong> ${specialTag}</div>`;
+
+        if (details) {
+            logHTML += `<div class="api-flow-child">📋 ${details}</div>`;
+        }
+
+        if (subAction) {
+            logHTML += `<div class="api-flow-child">🔗 Method: ${subAction}</div>`;
+        }
+
+        logHTML += `<div class="api-flow-child">⏰ ${new Date().toLocaleTimeString()}</div>`;
+
+        logEntry.innerHTML = logHTML;
+        logContainer.appendChild(logEntry);
+
+        // Auto-scroll to bottom to show latest
+        logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    // Log action to visual inspector (simplified for non-backend calls)
+    function logAction(action, details) {
+        logAPIFlow(action, details);
     }
 
     // Clear log
