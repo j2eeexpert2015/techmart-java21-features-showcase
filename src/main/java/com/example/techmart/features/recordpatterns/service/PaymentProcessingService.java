@@ -48,7 +48,9 @@ public class PaymentProcessingService {
      * aspects of the new language features.
      */
     public PaymentProcessingResult processPayment(PaymentMethod paymentMethod, BigDecimal amount, Customer customer) {
-        logger.info("Processing payment for customer {} using {}", customer.username(), paymentMethod.getType());
+        logger.info("🚀 Starting Java 21 Pattern Matching Demo");
+        logger.info("📋 Input: PaymentMethod={}, Amount=${}, Customer={}",
+                paymentMethod.getType(), amount, customer.username());
 
         // Input validation
         if (paymentMethod == null) {
@@ -63,12 +65,17 @@ public class PaymentProcessingService {
 
         // Basic payment method validation
         if (!paymentMethod.isValid()) {
+            logger.warn("❌ Payment method validation failed");
             PaymentProcessingResult result = PaymentProcessingResult.declined(
                     paymentMethod, amount, "Invalid payment method details", paymentMethod.getType()
             );
+            logPatternMatchingResult(result, customer, "validation_failed");
             storeResult(result);
             return result;
         }
+
+        logger.info("🎯 Java 21 Feature: Starting PATTERN MATCHING FOR SWITCH");
+        logger.info("🔥 Java 21 Feature: Using SEALED INTERFACE for exhaustive matching");
 
         // ===================================================================================
         // MAIN JAVA 21 PATTERN MATCHING DEMONSTRATION
@@ -86,7 +93,12 @@ public class PaymentProcessingService {
                     when amount.compareTo(HIGH_VALUE_THRESHOLD) > 0 && isInternational -> {
 
                 // High-value international transactions require additional verification
-                logger.info("🔒 High-value international transaction: ${} {}", amount, type);
+                logger.info("🎯 Java 21 Feature: RECORD PATTERN matched - CreditCard");
+                logger.info("🔥 Java 21 Feature: RECORD DESTRUCTURING - extracted {} components", 8);
+                logger.info("⚡ Java 21 Feature: GUARD CONDITION triggered - amount > $1000 && isInternational");
+                logger.info("🔒 Business Logic: High-value international transaction requires verification");
+                logger.info("💳 Pattern Details: type={}, international={}, amount=${}", type, isInternational, amount);
+
                 yield PaymentProcessingResult.requiresVerification(
                         paymentMethod, amount,
                         "amount > $1000 && isInternational",
@@ -101,7 +113,11 @@ public class PaymentProcessingService {
                     when amount.compareTo(HIGH_VALUE_THRESHOLD) > 0 -> {
 
                 // High-value domestic transactions get enhanced processing
-                logger.info("💳 High-value domestic transaction: ${} {}", amount, type);
+                logger.info("🎯 Java 21 Feature: RECORD PATTERN matched - CreditCard");
+                logger.info("🔥 Java 21 Feature: RECORD DESTRUCTURING - extracted {} components", 8);
+                logger.info("⚡ Java 21 Feature: GUARD CONDITION triggered - amount > $1000");
+                logger.info("💳 Business Logic: High-value domestic transaction processing");
+                logger.info("💳 Pattern Details: type={}, amount=${}", type, amount);
 
                 // Create result with proper guard condition tracking
                 yield new PaymentProcessingResult(
@@ -121,7 +137,12 @@ public class PaymentProcessingService {
                             var name, var isInternational, var createdAt) -> {
 
                 // Standard credit card processing
-                logger.info("💳 Standard credit card: ${} {}", amount, type);
+                logger.info("🎯 Java 21 Feature: RECORD PATTERN matched - CreditCard");
+                logger.info("🔥 Java 21 Feature: RECORD DESTRUCTURING - extracted {} components", 8);
+                logger.info("⚡ Java 21 Feature: NO GUARD CONDITIONS triggered");
+                logger.info("💳 Business Logic: Standard credit card processing");
+                logger.info("💳 Pattern Details: type={}, amount=${}", type, amount);
+
                 yield PaymentProcessingResult.success(
                         paymentMethod, amount, "CreditCard", "processStandardCreditCard"
                 );
@@ -133,7 +154,12 @@ public class PaymentProcessingService {
                     when customer.isPremium() -> {
 
                 // Premium customers get expedited PayPal processing with discounts
-                logger.info("⭐ Premium customer PayPal: {} for {}", email, customer.tier());
+                logger.info("🎯 Java 21 Feature: RECORD PATTERN matched - PayPal");
+                logger.info("🔥 Java 21 Feature: RECORD DESTRUCTURING - extracted {} components", 5);
+                logger.info("⚡ Java 21 Feature: GUARD CONDITION triggered - customer.isPremium()");
+                logger.info("⭐ Business Logic: Premium customer expedited processing");
+                logger.info("💙 Pattern Details: email={}, customerTier={}", email, customer.tier());
+
                 BigDecimal discount = amount.multiply(PREMIUM_DISCOUNT_RATE);
                 yield PaymentProcessingResult.expedited(
                         paymentMethod, amount, "PayPal", customer.tier().toString(), discount
@@ -145,7 +171,12 @@ public class PaymentProcessingService {
                     when !isVerified -> {
 
                 // Unverified PayPal accounts are declined
-                logger.warn("❌ Unverified PayPal account: {}", email);
+                logger.info("🎯 Java 21 Feature: RECORD PATTERN matched - PayPal");
+                logger.info("🔥 Java 21 Feature: RECORD DESTRUCTURING - extracted {} components", 5);
+                logger.info("⚡ Java 21 Feature: GUARD CONDITION triggered - !isVerified");
+                logger.warn("❌ Business Logic: Unverified PayPal account declined");
+                logger.info("💙 Pattern Details: email={}, verified={}", email, isVerified);
+
                 yield PaymentProcessingResult.declined(
                         paymentMethod, amount, "PayPal account not verified", "PayPal"
                 );
@@ -155,7 +186,12 @@ public class PaymentProcessingService {
             case PayPal(var email, var accountId, var isVerified, var saveForFuture, var createdAt) -> {
 
                 // Standard verified PayPal processing
-                logger.info("💙 Standard PayPal: {}", email);
+                logger.info("🎯 Java 21 Feature: RECORD PATTERN matched - PayPal");
+                logger.info("🔥 Java 21 Feature: RECORD DESTRUCTURING - extracted {} components", 5);
+                logger.info("⚡ Java 21 Feature: NO GUARD CONDITIONS triggered");
+                logger.info("💙 Business Logic: Standard PayPal processing");
+                logger.info("💙 Pattern Details: email={}, verified={}", email, isVerified);
+
                 yield PaymentProcessingResult.success(
                         paymentMethod, amount, "PayPal", "processStandardPayPal"
                 );
@@ -168,7 +204,12 @@ public class PaymentProcessingService {
                     when amount.compareTo(LARGE_TRANSFER_THRESHOLD) >= 0 -> {
 
                 // Large bank transfers require manager approval
-                logger.info("🏦 Large bank transfer: ${} from {}", amount, bankName);
+                logger.info("🎯 Java 21 Feature: RECORD PATTERN matched - BankTransfer");
+                logger.info("🔥 Java 21 Feature: RECORD DESTRUCTURING - extracted {} components", 6);
+                logger.info("⚡ Java 21 Feature: GUARD CONDITION triggered - amount >= $5000");
+                logger.info("🏦 Business Logic: Large bank transfer requires manager approval");
+                logger.info("🏦 Pattern Details: bank={}, amount=${}", bankName, amount);
+
                 yield PaymentProcessingResult.requiresApproval(
                         paymentMethod, amount, "amount >= $5000", "BankTransfer",
                         "Large bank transfer requires manager approval"
@@ -181,7 +222,12 @@ public class PaymentProcessingService {
                     when !isValidRoutingNumber(routing) -> {
 
                 // Invalid routing numbers are declined
-                logger.warn("❌ Invalid routing number: {}", routing);
+                logger.info("🎯 Java 21 Feature: RECORD PATTERN matched - BankTransfer");
+                logger.info("🔥 Java 21 Feature: RECORD DESTRUCTURING - extracted {} components", 6);
+                logger.info("⚡ Java 21 Feature: GUARD CONDITION triggered - !isValidRoutingNumber()");
+                logger.warn("❌ Business Logic: Invalid routing number declined");
+                logger.info("🏦 Pattern Details: routing={}, bank={}", routing, bankName);
+
                 yield PaymentProcessingResult.declined(
                         paymentMethod, amount, "Invalid bank routing number", "BankTransfer"
                 );
@@ -192,7 +238,12 @@ public class PaymentProcessingService {
                               var accountType, var holderName, var createdAt) -> {
 
                 // Standard bank transfer processing
-                logger.info("🏦 Standard bank transfer: ${} to {}", amount, bankName);
+                logger.info("🎯 Java 21 Feature: RECORD PATTERN matched - BankTransfer");
+                logger.info("🔥 Java 21 Feature: RECORD DESTRUCTURING - extracted {} components", 6);
+                logger.info("⚡ Java 21 Feature: NO GUARD CONDITIONS triggered");
+                logger.info("🏦 Business Logic: Standard bank transfer processing");
+                logger.info("🏦 Pattern Details: bank={}, amount=${}", bankName, amount);
+
                 yield PaymentProcessingResult.success(
                         paymentMethod, amount, "BankTransfer", "processStandardBankTransfer"
                 );
@@ -204,9 +255,16 @@ public class PaymentProcessingService {
             // forgotten payment types.
         };
 
+        logger.info("✅ Java 21 Feature: EXHAUSTIVE MATCHING completed - no default case needed");
+        logger.info("🎯 Java 21 Feature: SEALED INTERFACE guarantees all cases handled by compiler");
+
         // Store result for demo history and return
         storeResult(result);
-        logPatternMatchingResult(result, customer);
+        logPatternMatchingResult(result, customer, "pattern_matching_complete");
+
+        logger.info("🏁 Pattern Matching Demo Complete: Status={}, Pattern={}, Guard={}",
+                result.status(), result.patternMatched(), result.guardCondition());
+
         return result;
     }
 
@@ -288,11 +346,25 @@ public class PaymentProcessingService {
 
     /**
      * Log the pattern matching result for educational purposes
+     * Similar to the shopping cart demo's detailed logging
      */
-    private void logPatternMatchingResult(PaymentProcessingResult result, Customer customer) {
-        logger.info("🎯 Pattern Match Result: [Customer: {} ({}), PaymentType: {}, Pattern: {}, Guard: '{}', Action: {}, Status: {}]",
-                customer.username(), customer.tier(), result.paymentMethod().getType(),
-                result.patternMatched(), result.guardCondition(), result.processingAction(), result.status());
+    private void logPatternMatchingResult(PaymentProcessingResult result, Customer customer, String phase) {
+        logger.info("🎯 ========== PATTERN MATCHING RESULT ==========");
+        logger.info("📊 Phase: {}", phase);
+        logger.info("👤 Customer: {} ({})", customer.username(), customer.tier());
+        logger.info("💳 Payment Type: {}", result.paymentMethod().getType());
+        logger.info("🎯 Pattern Matched: {}", result.patternMatched());
+        logger.info("⚡ Guard Condition: '{}'", result.guardCondition());
+        logger.info("🔄 Processing Action: {}", result.processingAction());
+        logger.info("✅ Final Status: {}", result.status());
+        logger.info("💰 Amount: ${}", result.amount());
+        logger.info("💸 Processing Fee: ${}", result.processingFee());
+        logger.info("⏱️ Processing Time: {}", result.processingTimeEstimate());
+        if (!result.validationMessages().isEmpty()) {
+            logger.info("📝 Messages: {}", result.validationMessages());
+        }
+        logger.info("🆔 Transaction ID: {}", result.transactionId());
+        logger.info("🎯 ============================================");
     }
 
     /**
