@@ -1,7 +1,7 @@
 /**
- * Enhanced Simple Payment Demo - JavaScript with Advanced Logging
- * Location: src/main/resources/static/js/simple-demo.js
- * Full Page Layout with Enhanced Visual Flow Inspector
+ * Enhanced Simple Payment Demo - JavaScript with Detailed API Response Handling
+ *
+ * UPDATED: Handles enhanced API responses with comprehensive service method tracking
  */
 
 // Global Variables
@@ -12,7 +12,7 @@ let logEntryCount = 0;
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, initializing enhanced demo...'); // Debug log
+    console.log('DOM loaded, initializing enhanced payment demo...');
     initializeDemo();
 });
 
@@ -20,33 +20,46 @@ document.addEventListener('DOMContentLoaded', function() {
  * Initialize the enhanced demo
  */
 function initializeDemo() {
-    console.log('Initializing enhanced demo...'); // Debug log
+    console.log('Initializing enhanced payment demo...');
     setupPaymentMethodSelection();
+    setupAmountSelection();
 
     // Clear initial log and show welcome
     clearLog();
-    logFlowEntry('🚀 Demo Initialization', 'Enhanced Simple Pattern Demo started');
-    logFlowEntry('🎯 Java 21 Ready', 'Pattern matching switch expressions loaded');
-    logFlowEntry('📋 Instructions', 'Select payment method → Choose amount → Process payment');
+    logFlowEntry('🚀 Demo Initialization', 'Enhanced Java 21 Pattern Matching Demo started');
+    logFlowEntry('🎯 Ready', 'Select payment method and amount, then process to see Java 21 in action');
+    logFlowEntry('🔥 Features', 'Pattern matching, guard conditions, yield expressions', 'java21');
 
-    // Update pattern preview
-    updatePatternPreview(currentMethod);
-    updateProcessingStatus('Ready to process');
-
-    console.log('✅ Enhanced demo initialized successfully');
+    console.log('✅ Enhanced payment demo initialized successfully');
 }
 
 /**
- * Setup payment method selection handlers with enhanced logging
+ * Setup payment method selection handlers
  */
 function setupPaymentMethodSelection() {
-    const paymentCards = document.querySelectorAll('.payment-card');
-    console.log('Found payment cards:', paymentCards.length); // Debug log
+    const paymentCards = document.querySelectorAll('.payment-method-card');
+    console.log('Found payment cards:', paymentCards.length);
 
     paymentCards.forEach(card => {
         card.addEventListener('click', function() {
-            console.log('Payment card clicked:', this.dataset.method); // Debug log
+            console.log('Payment card clicked:', this.dataset.method);
             selectPaymentMethod(this);
+        });
+    });
+}
+
+/**
+ * Setup amount button selection handlers
+ */
+function setupAmountSelection() {
+    const amountButtons = document.querySelectorAll('.amount-btn');
+
+    amountButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove selected class from all buttons
+            amountButtons.forEach(btn => btn.classList.remove('selected'));
+            // Add selected class to clicked button
+            this.classList.add('selected');
         });
     });
 }
@@ -56,39 +69,36 @@ function setupPaymentMethodSelection() {
  */
 function selectPaymentMethod(selectedCard) {
     const method = selectedCard.dataset.method;
-    console.log('Selecting payment method:', method); // Debug log
+    console.log('Selecting payment method:', method);
 
     // Remove selected class from all cards
-    document.querySelectorAll('.payment-card').forEach(card => {
+    document.querySelectorAll('.payment-method-card').forEach(card => {
         card.classList.remove('selected');
     });
 
-    // Add selected class to clicked card with animation
+    // Add selected class to clicked card
     selectedCard.classList.add('selected');
 
     // Update current method
     currentMethod = method;
 
-    // Enhanced logging with flow visualization
+    // Enhanced logging with pattern matching preview
     logFlowSeparator('Payment Method Selection');
-    logFlowEntry('👤 User Action', `Selected ${getMethodName(method)} payment method`);
-    logFlowEntry('🎯 Pattern Match', `switch(paymentMethod) case "${method}"`);
-    logFlowEntry('🔥 Java 21 Feature', 'Pattern Matching for Switch', 'java21');
+    logFlowEntry('👤 User Action', `Selected ${getMethodDisplayName(method)} payment method`);
+    logFlowEntry('🎯 Pattern Preview', `switch(method) case "${method}" -> ...`);
+    logFlowEntry('🔥 Java 21', 'Pattern matching switch expression ready', 'java21');
     logFlowEntry('📊 Business Logic', getPatternDescription(method));
-
-    // Update pattern preview
-    updatePatternPreview(method);
-    updateProcessingStatus(`${getMethodName(method)} selected - Ready to process`);
 }
 
 /**
- * Set the payment amount with enhanced logging
+ * Set the payment amount with enhanced logging and guard condition analysis
  */
 function setAmount(amount) {
-    console.log('Setting amount to:', amount); // Debug log
+    console.log('Setting amount to:', amount);
     const previousAmount = currentAmount;
     currentAmount = amount;
 
+    // Update display
     const amountElement = document.getElementById('current-amount');
     if (amountElement) {
         amountElement.textContent = `$${amount.toLocaleString()}`;
@@ -103,27 +113,22 @@ function setAmount(amount) {
         logFlowEntry('⚡ Guard Condition', `${guardAnalysis.condition} = TRUE`, 'guard');
         logFlowEntry('🔀 Processing Route', guardAnalysis.action, 'warning');
     } else {
-        logFlowEntry('✅ Standard Processing', 'No guard conditions triggered');
+        logFlowEntry('✅ Standard Processing', 'No guard conditions will be triggered');
     }
-
-    updateProcessingStatus(`Amount: $${amount.toLocaleString()} - ${guardAnalysis.description}`);
 }
 
 /**
- * Process the payment with comprehensive logging
+ * Process the payment with comprehensive API response handling
  */
 function processPayment() {
     console.log('Processing payment...', { method: currentMethod, amount: currentAmount });
 
-    // Update status and show processing
-    updateProcessingStatus('Processing payment...');
-
     // Enhanced pre-processing logging
     logFlowSeparator('Payment Processing Started');
-    logFlowEntry('🚀 Backend Call', `Initiating payment processing request`);
-    logFlowEntry('📋 Request Payload', `{ method: "${currentMethod}", amount: ${currentAmount} }`);
+    logFlowEntry('🚀 Backend Call', 'Initiating payment processing request');
+    logFlowEntry('📋 Request Data', `method: "${currentMethod}", amount: $${currentAmount.toLocaleString()}`);
     logFlowEntry('🌐 API Endpoint', 'POST /api/simple/payment');
-    logFlowEntry('⏱️ Processing Time', 'Measuring backend response time...');
+    logFlowEntry('⏱️ Processing...', 'Measuring backend response time...');
 
     const processingStartTime = performance.now();
 
@@ -141,7 +146,6 @@ function processPayment() {
     })
     .then(response => {
         const processingTime = Math.round(performance.now() - processingStartTime);
-
         logFlowEntry('📡 Response Received', `HTTP ${response.status} in ${processingTime}ms`);
 
         if (!response.ok) {
@@ -151,32 +155,17 @@ function processPayment() {
     })
     .then(data => {
         const totalTime = Math.round(performance.now() - processingStartTime);
+        console.log('Enhanced API response received:', data);
 
-        // Enhanced success logging
-        logFlowSeparator('Backend Processing Complete');
-        logFlowEntry('✅ Processing Result', `Status: ${data.status}`);
-        logFlowEntry('💬 Result Message', data.message);
-        logFlowEntry('🔥 Java 21 Feature', data.java21_feature, 'java21');
-        logFlowEntry('⏱️ Total Time', `${totalTime}ms end-to-end`);
-        logFlowEntry('🎯 Pattern Match', `Backend switch expression executed successfully`);
-
-        const result = {
-            status: data.status,
-            message: data.message,
-            pattern: data.java21_feature,
-            color: data.status.includes('APPROVED') ? '#10b981' : (data.status.includes('ERROR') ? '#ef4444' : '#f59e0b'),
-            processingTime: totalTime
-        };
-
-        showResult(result);
-        updateProcessingStatus(`Completed: ${data.status}`);
+        // === ENHANCED API RESPONSE HANDLING ===
+        handleEnhancedApiResponse(data, totalTime);
     })
     .catch(error => {
         console.error('Error:', error);
 
         // Enhanced error logging
         logFlowSeparator('Processing Error');
-        logFlowEntry('❌ Backend Error', 'Could not connect to Spring Boot application');
+        logFlowEntry('❌ Backend Error', 'Could not connect to Spring Boot application', 'error');
         logFlowEntry('🔧 Troubleshooting', 'Verify application is running on localhost:8080');
         logFlowEntry('📋 Error Details', error.message);
 
@@ -189,39 +178,150 @@ function processPayment() {
         };
 
         showResult(result);
-        updateProcessingStatus('Connection error - Check backend');
     });
+}
+
+/**
+ * Handle the enhanced API response with comprehensive logging
+ */
+function handleEnhancedApiResponse(data, totalTime) {
+    logFlowSeparator('Backend Processing Complete');
+
+    // === BASIC RESULT LOGGING ===
+    logFlowEntry('✅ Processing Result', `Status: ${data.status}`);
+    logFlowEntry('💬 Result Message', data.message);
+
+    // === CONTROLLER & SERVICE METHOD TRACKING ===
+    if (data.controller_method) {
+        logFlowEntry('🔴 Controller', data.controller_method);
+    }
+    if (data.service_method) {
+        logFlowEntry('🟣 Service', data.service_method);
+    }
+
+    // === JAVA 21 METHODS USED ===
+    if (data.java21_methods_used && data.java21_methods_used.length > 0) {
+        logFlowEntry('🔥 Java 21 Methods', data.java21_methods_used.join(', '), 'java21');
+    }
+
+    // === PATTERN MATCHING DETAILS ===
+    if (data.pattern_matched) {
+        logFlowEntry('🎯 Pattern Matched', data.pattern_matched);
+    }
+    if (data.guard_condition) {
+        logFlowEntry('⚡ Guard Condition', data.guard_condition, 'guard');
+    }
+    if (data.processing_action) {
+        logFlowEntry('🔄 Action Taken', data.processing_action);
+    }
+
+    // === BUSINESS LOGIC & EDUCATIONAL INFO ===
+    if (data.business_rule_applied) {
+        logFlowEntry('📋 Business Rule', data.business_rule_applied);
+    }
+    if (data.pattern_matching_path) {
+        logFlowEntry('🗺️  Pattern Path', data.pattern_matching_path);
+    }
+    if (data.performance_benefit) {
+        logFlowEntry('⚡ Performance', data.performance_benefit);
+    }
+
+    // === JAVA 21 FEATURE INFO ===
+    if (data.java21_feature) {
+        logFlowEntry('🔥 Java 21 Feature', data.java21_feature, 'java21');
+    }
+    if (data.jep_reference) {
+        logFlowEntry('📚 JEP Reference', data.jep_reference);
+    }
+
+    // === TIMING ===
+    logFlowEntry('⏱️  Total Time', `${totalTime}ms end-to-end`);
+
+    // === BUILD RESULT FOR DISPLAY ===
+    const result = {
+        status: data.status,
+        message: data.message,
+        pattern: data.java21_feature || 'Pattern Matching',
+        color: getStatusColor(data.status),
+        processingTime: totalTime,
+
+        // Enhanced result data
+        patternMatched: data.pattern_matched,
+        guardCondition: data.guard_condition,
+        processingAction: data.processing_action,
+        businessRule: data.business_rule_applied
+    };
+
+    showResult(result);
 }
 
 /**
  * Show the processing result with enhanced visualization
  */
 function showResult(result) {
-    console.log('Showing enhanced result:', result); // Debug log
+    console.log('Showing enhanced result:', result);
 
     const resultSection = document.getElementById('result-section');
     const resultContent = document.getElementById('result-content');
 
     if (!resultSection || !resultContent) {
-        console.error('Result elements not found!'); // Debug log
+        console.error('Result elements not found!');
         return;
     }
 
+    // Determine result section styling
+    resultSection.className = 'result-section ' + getResultClass(result.status);
+
     // Create enhanced result HTML
     resultContent.innerHTML = `
-        <div style="border-left: 4px solid ${result.color}; padding-left: 15px;">
-            <h4 style="color: ${result.color}; margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px;">
-                <span style="display: inline-block; width: 8px; height: 8px; background: ${result.color}; border-radius: 50%; animation: statusPulse 2s infinite;"></span>
-                ${result.status}
-            </h4>
-            <p style="margin: 0 0 10px 0; font-size: 16px; line-height: 1.4;">${result.message}</p>
-            <div style="background: rgba(0,0,0,0.05); padding: 10px; border-radius: 6px; margin: 10px 0;">
-                <small style="color: #666; font-style: italic; display: block;">
-                    <strong>Java 21 Feature:</strong> ${result.pattern}
-                </small>
-                ${result.processingTime > 0 ? `<small style="color: #666; display: block; margin-top: 4px;">
-                    <strong>Processing Time:</strong> ${result.processingTime}ms
-                </small>` : ''}
+        <div class="d-flex align-items-start gap-3">
+            <div class="flex-shrink-0">
+                <div style="width: 50px; height: 50px; background: ${result.color}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                    ${getStatusIcon(result.status)}
+                </div>
+            </div>
+            <div class="flex-grow-1">
+                <h4 style="color: ${result.color}; margin: 0 0 10px 0;">${result.status}</h4>
+                <p style="margin: 0 0 15px 0; font-size: 1.1rem; line-height: 1.4;">${result.message}</p>
+
+                <div class="row g-3">
+                    ${result.patternMatched ? `
+                    <div class="col-md-6">
+                        <strong>Pattern Matched:</strong><br>
+                        <span class="text-muted">${result.patternMatched}</span>
+                    </div>
+                    ` : ''}
+
+                    ${result.guardCondition && result.guardCondition !== 'none' ? `
+                    <div class="col-md-6">
+                        <strong>Guard Condition:</strong><br>
+                        <span class="text-muted">${result.guardCondition}</span>
+                    </div>
+                    ` : ''}
+
+                    ${result.processingAction ? `
+                    <div class="col-md-6">
+                        <strong>Processing Action:</strong><br>
+                        <span class="text-muted">${result.processingAction}</span>
+                    </div>
+                    ` : ''}
+
+                    <div class="col-md-6">
+                        <strong>Processing Time:</strong><br>
+                        <span class="text-muted">${result.processingTime}ms</span>
+                    </div>
+                </div>
+
+                ${result.businessRule ? `
+                <div class="mt-3 p-3" style="background: rgba(99, 102, 241, 0.1); border-radius: 8px; border-left: 4px solid #6366f1;">
+                    <small><strong>Business Rule Applied:</strong><br>
+                    ${result.businessRule}</small>
+                </div>
+                ` : ''}
+
+                <div class="mt-3 p-3" style="background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid #10b981;">
+                    <small><strong>Java 21 Feature:</strong> ${result.pattern}</small>
+                </div>
             </div>
         </div>
     `;
@@ -243,8 +343,8 @@ function logFlowEntry(action, details, type = 'info') {
     const log = document.getElementById('api-log');
 
     if (!log) {
-        console.error('API log element not found!'); // Debug log
-        console.log('Log entry would be:', action, details); // Fallback debug log
+        console.error('API log element not found!');
+        console.log('Log entry would be:', action, details);
         return;
     }
 
@@ -256,35 +356,35 @@ function logFlowEntry(action, details, type = 'info') {
     const logEntry = document.createElement('div');
     logEntry.className = 'api-flow-block';
 
-    let statusIcon = '';
     let specialClass = '';
+    let icon = '';
 
     switch(type) {
         case 'java21':
-            statusIcon = '<span class="status-indicator status-success"></span>';
             specialClass = ' style="border-left-color: #10b981;"';
+            icon = '🔥';
             break;
         case 'guard':
-            statusIcon = '<span class="status-indicator status-warning"></span>';
             specialClass = ' style="border-left-color: #f59e0b;"';
+            icon = '⚡';
             break;
         case 'warning':
-            statusIcon = '<span class="status-indicator status-processing"></span>';
             specialClass = ' style="border-left-color: #f59e0b;"';
+            icon = '⚠️';
             break;
         case 'error':
-            statusIcon = '<span class="status-indicator status-error"></span>';
             specialClass = ' style="border-left-color: #ef4444;"';
+            icon = '❌';
             break;
         default:
-            statusIcon = '<span class="status-indicator status-success"></span>';
+            icon = '📝';
     }
 
     logEntry.innerHTML = `
-        <div${specialClass}>${statusIcon}<strong>${action}</strong></div>
+        <div${specialClass}><strong>${icon} ${action}</strong></div>
         <div class="api-flow-child">📋 ${details}</div>
         <div class="api-flow-child">⏰ ${timestamp} (+${sessionTime}s)</div>
-        ${type === 'java21' ? '<div class="api-flow-child">🔥 Feature: <span class="java21-pattern-tag">Java 21</span></div>' : ''}
+        ${type === 'java21' ? '<div class="api-flow-child">🎯 <span class="java21-pattern-tag">Java 21</span></div>' : ''}
     `;
 
     // Insert at the top (most recent first)
@@ -292,7 +392,7 @@ function logFlowEntry(action, details, type = 'info') {
     log.insertBefore(logEntry, firstChild);
 
     // Limit log entries to prevent overflow
-    while (log.children.length > 15) {
+    while (log.children.length > 20) {
         log.removeChild(log.lastChild);
     }
 
@@ -308,28 +408,42 @@ function logFlowSeparator(title) {
     if (!log) return;
 
     const separator = document.createElement('div');
-    separator.className = 'pattern-flow-separator';
+    separator.style.cssText = `
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        margin: 12px 0;
+        position: relative;
+        text-align: center;
+    `;
+    separator.innerHTML = `
+        <div style="
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            padding: 0 12px;
+            font-size: 0.75rem;
+            color: #f59e0b;
+            font-weight: bold;
+            border-radius: 12px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        ">⚡ ${title} ⚡</div>
+    `;
 
-    // Update the separator content
-    const separatorContent = document.createElement('div');
-    separatorContent.style.cssText = 'border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 8px 0; position: relative;';
-    separatorContent.innerHTML = `<div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: #1e293b; padding: 0 8px; font-size: 9px; color: #f59e0b; font-weight: bold;">⚡ ${title} ⚡</div>`;
-
-    log.insertBefore(separatorContent, log.firstChild);
+    log.insertBefore(separator, log.firstChild);
 }
 
-/**
- * Analyze guard conditions for educational feedback
- */
+// === HELPER FUNCTIONS ===
+
 function analyzeGuardConditions(method, amount) {
     switch(method) {
         case 'creditcard':
             if (amount > 1000) {
                 return {
                     triggered: true,
-                    condition: 'amount > 1000',
-                    action: 'requiresVerification()',
-                    description: 'High-value transaction - additional verification'
+                    condition: 'amount > $1,000',
+                    action: 'requireAdditionalVerification()',
+                    description: 'High-value transaction - additional verification required'
                 };
             }
             break;
@@ -337,8 +451,8 @@ function analyzeGuardConditions(method, amount) {
             if (amount >= 5000) {
                 return {
                     triggered: true,
-                    condition: 'amount >= 5000',
-                    action: 'requiresManagerApproval()',
+                    condition: 'amount >= $5,000',
+                    action: 'requireManagerApproval()',
                     description: 'Large bank transfer - manager approval needed'
                 };
             }
@@ -353,35 +467,45 @@ function analyzeGuardConditions(method, amount) {
     };
 }
 
-/**
- * Update pattern preview code
- */
-function updatePatternPreview(method) {
-    const preview = document.getElementById('pattern-preview');
-    if (!preview) return;
-
-    const patterns = {
-        'creditcard': 'case "creditcard" -> processStandardCard();',
-        'paypal': 'case "paypal" -> processPayPalAccount();',
-        'bank': 'case "bank" -> processBankTransfer();'
+function getMethodDisplayName(method) {
+    const names = {
+        'creditcard': 'Credit Card',
+        'paypal': 'PayPal',
+        'bank': 'Bank Transfer'
     };
-
-    preview.textContent = patterns[method] || patterns['creditcard'];
+    return names[method] || method;
 }
 
-/**
- * Update processing status indicator
- */
-function updateProcessingStatus(status) {
-    const statusElement = document.getElementById('processing-status');
-    if (statusElement) {
-        statusElement.textContent = status;
-    }
+function getPatternDescription(method) {
+    const patterns = {
+        'creditcard': 'CreditCard pattern with amount-based guard conditions',
+        'paypal': 'PayPal pattern with standard processing logic',
+        'bank': 'BankTransfer pattern with approval workflow routing'
+    };
+    return patterns[method] || 'Unknown pattern';
 }
 
-/**
- * Clear the enhanced API log
- */
+function getStatusColor(status) {
+    if (status.includes('APPROVED')) return '#10b981';
+    if (status.includes('REQUIRES')) return '#f59e0b';
+    if (status.includes('ERROR')) return '#ef4444';
+    return '#6366f1';
+}
+
+function getResultClass(status) {
+    if (status.includes('APPROVED')) return 'success';
+    if (status.includes('REQUIRES')) return 'warning';
+    if (status.includes('ERROR')) return 'error';
+    return 'info';
+}
+
+function getStatusIcon(status) {
+    if (status.includes('APPROVED')) return '✓';
+    if (status.includes('REQUIRES')) return '!';
+    if (status.includes('ERROR')) return '✗';
+    return '?';
+}
+
 function clearLog() {
     const log = document.getElementById('api-log');
     if (log) {
@@ -394,160 +518,5 @@ function clearLog() {
     }
 }
 
-/**
- * Get user-friendly method name
- */
-function getMethodName(method) {
-    const names = {
-        'creditcard': 'Credit Card',
-        'paypal': 'PayPal',
-        'bank': 'Bank Transfer'
-    };
-    return names[method] || method;
-}
-
-/**
- * Get pattern description for educational purposes
- */
-function getPatternDescription(method) {
-    const patterns = {
-        'creditcard': 'CreditCard pattern with amount-based guard conditions',
-        'paypal': 'PayPal pattern with account verification logic',
-        'bank': 'BankTransfer pattern with approval workflow routing'
-    };
-    return patterns[method] || 'Unknown pattern';
-}
-
-/**
- * Get amount context for user feedback
- */
-function getAmountContext(method, amount) {
-    if (method === 'creditcard' && amount > 1000) {
-        return 'trigger the high-value guard condition';
-    } else if (method === 'bank' && amount >= 5000) {
-        return 'require manager approval for large transfer';
-    } else {
-        return 'use standard processing';
-    }
-}
-
-/**
- * Enhanced demo helper functions
- */
-
-// Auto-demo functionality for educational purposes
-function runAutoDemo() {
-    logFlowSeparator('Auto Demo Started');
-    logFlowEntry('🤖 Auto Demo', 'Running automated pattern matching demonstration');
-
-    setTimeout(() => {
-        selectPaymentMethodByName('paypal');
-        setTimeout(() => {
-            setAmount(1500);
-            setTimeout(() => {
-                processPayment();
-            }, 1000);
-        }, 1000);
-    }, 1000);
-}
-
-function selectPaymentMethodByName(methodName) {
-    const card = document.querySelector(`[data-method="${methodName}"]`);
-    if (card) {
-        selectPaymentMethod(card);
-    }
-}
-
-// Add keyboard shortcuts for power users
-document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey || event.metaKey) {
-        switch(event.key) {
-            case '1':
-                event.preventDefault();
-                selectPaymentMethodByName('creditcard');
-                break;
-            case '2':
-                event.preventDefault();
-                selectPaymentMethodByName('paypal');
-                break;
-            case '3':
-                event.preventDefault();
-                selectPaymentMethodByName('bank');
-                break;
-            case 'Enter':
-                event.preventDefault();
-                processPayment();
-                break;
-            case 'l':
-                event.preventDefault();
-                clearLog();
-                break;
-        }
-    }
-});
-
-// Add demo statistics tracking
-let demoStats = {
-    paymentsProcessed: 0,
-    methodsUsed: new Set(),
-    totalProcessingTime: 0,
-    lastProcessedAt: null
-};
-
-function updateDemoStats(method, processingTime) {
-    demoStats.paymentsProcessed++;
-    demoStats.methodsUsed.add(method);
-    demoStats.totalProcessingTime += processingTime;
-    demoStats.lastProcessedAt = new Date();
-}
-
-function showDemoStats() {
-    const avgTime = demoStats.paymentsProcessed > 0 ?
-        Math.round(demoStats.totalProcessingTime / demoStats.paymentsProcessed) : 0;
-
-    logFlowSeparator('Demo Statistics');
-    logFlowEntry('📊 Payments Processed', demoStats.paymentsProcessed.toString());
-    logFlowEntry('🎯 Methods Used', Array.from(demoStats.methodsUsed).join(', '));
-    logFlowEntry('⏱️ Average Time', `${avgTime}ms`);
-    logFlowEntry('🕒 Last Processed', demoStats.lastProcessedAt ? demoStats.lastProcessedAt.toLocaleTimeString() : 'Never');
-}
-
-// Add educational tooltips and help
-function showPatternMatchingHelp() {
-    logFlowSeparator('Pattern Matching Help');
-    logFlowEntry('📚 Java 21 Switch', 'Enhanced switch expressions with pattern matching');
-    logFlowEntry('🔀 Guard Conditions', 'when clauses add business logic to patterns');
-    logFlowEntry('🎯 Exhaustive Matching', 'Compiler ensures all cases are handled');
-    logFlowEntry('🚀 Performance', 'Optimized pattern matching at runtime');
-}
-
-// Initialize enhanced features
-function initializeEnhancedFeatures() {
-    // Add demo controls
-    console.log('🎯 Enhanced features initialized');
-    console.log('⌨️ Keyboard shortcuts: Ctrl+1/2/3 (select method), Ctrl+Enter (process), Ctrl+L (clear log)');
-
-    // Show keyboard shortcuts in log
-    setTimeout(() => {
-        logFlowEntry('⌨️ Shortcuts Available', 'Ctrl+1/2/3 (methods), Ctrl+Enter (process), Ctrl+L (clear)');
-        logFlowEntry('📚 Help Available', 'Use showPatternMatchingHelp() in console for Java 21 info');
-    }, 2000);
-}
-
-// Call enhanced initialization
-setTimeout(initializeEnhancedFeatures, 1000);
-
-// Make functions available globally for console access
-window.DemoControls = {
-    runAutoDemo,
-    showDemoStats,
-    showPatternMatchingHelp,
-    clearLog,
-    setAmount,
-    selectPaymentMethodByName,
-    processPayment
-};
-
-console.log('🚀 Enhanced Simple Demo JavaScript loaded');
-console.log('🎮 Demo controls available via window.DemoControls');
-console.log('📊 Try: DemoControls.runAutoDemo() or DemoControls.showPatternMatchingHelp()');
+console.log('🚀 Enhanced Simple Payment Demo JavaScript loaded');
+console.log('🎯 Full API response handling with educational metadata');

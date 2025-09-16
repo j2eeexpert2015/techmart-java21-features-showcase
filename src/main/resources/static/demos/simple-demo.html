@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Java 21 Pattern Matching Demo</title>
+    <title>Java 21 Pattern Matching Demo - Enhanced</title>
     <link rel="stylesheet" href="/css/simple-demo.css">
     <style>
-        /* Enhanced logging styles for better visual flow inspector */
+        /* Enhanced logging styles while keeping existing layout */
         .log-section {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
             color: #f1f5f9;
@@ -151,7 +151,7 @@
             font-weight: bold;
         }
 
-        /* Enhanced button styles for better interaction feedback */
+        /* Enhanced button feedback */
         .process-btn {
             position: relative;
             overflow: hidden;
@@ -172,7 +172,7 @@
             left: 100%;
         }
 
-        /* Enhanced payment card selection feedback */
+        /* Enhanced payment card selection */
         .payment-card.selected {
             position: relative;
         }
@@ -209,7 +209,7 @@
             }
         }
 
-        /* Improved scrollbar for log section */
+        /* Enhanced scrollbar */
         .log-section::-webkit-scrollbar {
             width: 6px;
         }
@@ -246,7 +246,7 @@
             }
         }
 
-        /* Pattern matching highlight for educational purposes */
+        /* Pattern matching highlight */
         .pattern-highlight {
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
             border: 1px solid rgba(245, 158, 11, 0.3);
@@ -270,6 +270,50 @@
             border-radius: 6px;
             font-weight: bold;
         }
+
+        /* Enhanced status indicator in result */
+        .result-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .result-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            animation: resultPulse 2s infinite;
+        }
+
+        .result-icon.success {
+            background: #10b981;
+            color: white;
+        }
+
+        .result-icon.warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .result-icon.error {
+            background: #ef4444;
+            color: white;
+        }
+
+        @keyframes resultPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
     </style>
 </head>
 <body>
@@ -277,7 +321,7 @@
 <div class="page-wrapper">
     <div class="header">
         <h1>🚀 Java 21 Pattern Matching Demo</h1>
-        <p>Simple Interactive Learning with Enhanced Logging</p>
+        <p>Enhanced Interactive Learning with Detailed API Tracking</p>
     </div>
 
     <div class="container">
@@ -356,7 +400,15 @@
 
             <div class="card result-card" id="result-section">
                 <h3>✅ Result</h3>
-                <div id="result-content"></div>
+                <div id="result-content">
+                    <div class="result-status">
+                        <div class="result-icon success">?</div>
+                        <div>
+                            <strong>Ready</strong><br>
+                            <small>Select payment method and process to see Java 21 pattern matching</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -372,29 +424,35 @@
                     <code>when amount > 1000</code>
                 </div>
                 <div class="feature-item">
-                    <strong>Sealed Interfaces</strong>
-                    <code>No default case needed</code>
+                    <strong>Yield Expressions</strong>
+                    <code>yield "APPROVED - Processing";</code>
+                </div>
+                <div class="feature-item">
+                    <strong>Enhanced Switch</strong>
+                    <code>No fall-through, cleaner syntax</code>
                 </div>
             </div>
 
             <div class="log-header">
-                <h3>📊 Visual Flow Inspector</h3>
+                <h3>📊 Enhanced Visual Flow Inspector</h3>
                 <button class="clear-btn" onclick="clearLog()">Clear</button>
             </div>
             <div class="log-section" id="api-log">
                 <div class="api-flow-block">
-                    <div><span class="status-indicator status-success"></span><strong>Simple Pattern Demo Ready!</strong></div>
-                    <div class="api-flow-child">🎯 Java 21 Features: Pattern Matching for Switch</div>
-                    <div class="api-flow-child">🔥 Language Features: <span class="java21-pattern-tag">Enhanced Switch</span></div>
+                    <div><span class="status-indicator status-success"></span><strong>Enhanced Java 21 Pattern Demo Ready!</strong></div>
+                    <div class="api-flow-child">🎯 Features: Pattern Matching for Switch with Comprehensive API Tracking</div>
+                    <div class="api-flow-child">🔥 Language: <span class="java21-pattern-tag">Java 21</span></div>
+                    <div class="api-flow-child">💡 Select payment method → Choose amount → Process to see detailed flow</div>
                 </div>
 
                 <div class="pattern-flow-separator"></div>
 
                 <div class="api-flow-block">
                     <div><span class="status-indicator status-processing"></span><strong>Waiting for User Action</strong></div>
-                    <div class="api-flow-child">👤 Select a payment method to begin</div>
-                    <div class="api-flow-child">💡 Try different amounts to see guard conditions</div>
-                    <div class="api-flow-child">🚀 Click process to see backend pattern matching</div>
+                    <div class="api-flow-child">👤 Select a payment method to begin pattern matching</div>
+                    <div class="api-flow-child">💰 Try different amounts to trigger guard conditions</div>
+                    <div class="api-flow-child">🚀 Process to see enhanced backend tracking</div>
+                    <div class="api-flow-child">📊 Watch for service method details and Java 21 method usage</div>
                 </div>
             </div>
         </div>
