@@ -1,123 +1,55 @@
 /**
- * Enhanced TechMart Payment Processing Demo - JavaScript
- * Interactive demonstration of Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy
- *
- * NEW FEATURES: UI Guidance, Automated Scenarios, Enhanced Interactivity
+ * Enhanced Payment Processing Demo - JavaScript with Rich Visual Flow Inspector
+ * UPDATED: Matches shopping cart demo's rich educational metadata display
  */
 
 /* ================================
-   DEMO CONFIGURATION AND STATE (Enhanced)
+   DEMO CONFIGURATION AND STATE
    ================================ */
-
 const PAYMENT_DEMO_CONFIG = {
     customerId: 1,
-    baseUrl: '', // Will be set based on environment
-    originalAmount: 3996.00,
-    orderAmount: 3996.00, // Current amount (can be changed by tests)
-
-    // Guard condition thresholds
+    baseUrl: '',
+    orderAmount: 1500.00, // Default amount for demo
     highValueThreshold: 1000,
-    largeTransferThreshold: 5000,
-    internationalProcessingFee: 2.5, // percentage
-    premiumCustomerDiscount: 10 // percentage
+    largeTransferThreshold: 5000
 };
 
-// Enhanced demo state for tracking user interactions
 const PaymentDemoState = {
     selectedPaymentMethod: 'creditcard',
-    customerType: 'basic', // basic, premium, vip
+    customerType: 'basic',
     isInternational: false,
-    validationErrors: [],
-    processingStep: 'method_selection',
-    patternMatchingResults: [],
-
-    // NEW: UI guidance state
-    instructionsVisible: true,
-    tooltipsInitialized: false,
-    scenarioRunning: false,
     demoStartTime: Date.now()
 };
 
 /* ================================
-   INITIALIZATION (Enhanced)
+   INITIALIZATION
    ================================ */
-
-/**
- * Initialize the enhanced payment processing demo when DOM is ready
- */
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Enhanced Payment Processing Demo Initializing...');
 
     setupEventListeners();
-    initializeTooltips();
     initializePaymentForm();
     simulateInitialPatternMatching();
-
-    // NEW: Initialize UI guidance features
-    setupUIGuidance();
-    showWelcomeMessage();
 
     console.log('✅ Enhanced Payment Processing Demo Ready');
 });
 
-/**
- * NEW: Setup UI guidance and help features
- */
-function setupUIGuidance() {
-    // Initialize customer type change handlers
+function setupEventListeners() {
+    // Payment method selection
+    document.querySelectorAll('.payment-method-card').forEach(card => {
+        card.addEventListener('click', handlePaymentMethodSelection);
+    });
+
+    // Customer type selection
     document.querySelectorAll('input[name="customerType"]').forEach(radio => {
         radio.addEventListener('change', handleCustomerTypeChange);
     });
 
-    // Initialize international card toggle
-    const internationalToggle = document.getElementById('international-card');
-    if (internationalToggle) {
-        internationalToggle.addEventListener('change', handleInternationalToggle);
-    }
-
-    // Setup demo scenarios modal
-    const scenariosModal = new bootstrap.Modal(document.getElementById('scenariosModal'));
-
-    console.log('🎯 UI guidance features initialized');
-}
-
-/**
- * NEW: Initialize Bootstrap tooltips
- */
-function initializeTooltips() {
-    if (PaymentDemoState.tooltipsInitialized) return;
-
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-    PaymentDemoState.tooltipsInitialized = true;
-    console.log('💡 Tooltips initialized');
-}
-
-/**
- * Setup all event listeners for interactive elements (Enhanced)
- */
-function setupEventListeners() {
-    // Payment method selection (existing + enhanced)
-    document.querySelectorAll('.payment-method-card').forEach(card => {
-        card.addEventListener('click', handlePaymentMethodSelection);
-        card.addEventListener('keydown', handlePaymentMethodKeydown);
-    });
-
-    // Radio button changes
-    document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
-        radio.addEventListener('change', handlePaymentMethodChange);
-    });
-
-    // Form field changes for real-time validation
-    const formFields = ['card-number', 'card-cvv', 'expiry-month', 'expiry-year'];
-    formFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            field.addEventListener('input', handleFormFieldChange);
-            field.addEventListener('blur', validateField);
+    // Amount test buttons
+    document.querySelectorAll('[onclick*="setAmount"]').forEach(button => {
+        const amount = button.textContent.match(/\$?([\d,]+)/)?.[1];
+        if (amount) {
+            button.addEventListener('click', () => setAmount(parseInt(amount.replace(',', ''))));
         }
     });
 
@@ -125,478 +57,10 @@ function setupEventListeners() {
 }
 
 /* ================================
-   NEW: UI GUIDANCE FUNCTIONS
+   PAYMENT METHOD SELECTION
    ================================ */
-
-/**
- * NEW: Toggle instructions panel visibility
- */
-function toggleInstructions() {
-    const panel = document.querySelector('.demo-instructions-panel');
-    const button = panel.querySelector('button');
-
-    if (PaymentDemoState.instructionsVisible) {
-        panel.style.transform = 'translateY(-100%)';
-        panel.style.opacity = '0';
-        button.innerHTML = '<i class="fas fa-eye"></i> Show';
-        PaymentDemoState.instructionsVisible = false;
-
-        setTimeout(() => {
-            panel.style.display = 'none';
-        }, 300);
-    } else {
-        panel.style.display = 'block';
-        setTimeout(() => {
-            panel.style.transform = 'translateY(0)';
-            panel.style.opacity = '1';
-            button.innerHTML = '<i class="fas fa-eye-slash"></i> Hide';
-            PaymentDemoState.instructionsVisible = true;
-        }, 10);
-    }
-}
-
-/**
- * NEW: Show welcome message with demo tips
- */
-function showWelcomeMessage() {
-    setTimeout(() => {
-        showNotification(
-            'Welcome! Try selecting different payment methods and amounts to see Java 21 pattern matching in action.',
-            'info'
-        );
-    }, 1000);
-}
-
-/**
- * NEW: Show flow inspector help
- */
-function showFlowHelp() {
-    const helpText = `
-    <strong>Visual Flow Inspector Guide:</strong><br>
-    🎯 Shows real-time pattern matching decisions<br>
-    📊 Tracks guard condition evaluations<br>
-    🔄 Displays processing flow steps<br>
-    <span class="java21-pattern-tag">Java 21</span> tags highlight new language features
-    `;
-
-    showNotification(helpText, 'info');
-}
-
-/**
- * NEW: Test with custom amount
- */
-function testWithAmount(amount) {
-    // Update configuration
-    PAYMENT_DEMO_CONFIG.orderAmount = amount;
-
-    // Update UI displays
-    updateAmountDisplays(amount);
-
-    // Re-simulate pattern matching with new amount
-    simulatePatternMatching(PaymentDemoState.selectedPaymentMethod);
-
-    // Update guard condition warnings
-    updateGuardConditionWarning(PaymentDemoState.selectedPaymentMethod);
-
-    // Log the test
-    logPatternMatchingFlow('Amount Test', `Testing with $${amount.toLocaleString()}`);
-
-    // Show notification
-    showNotification(
-        `Testing with amount: $${amount.toLocaleString()} - Watch for guard condition changes!`,
-        'warning'
-    );
-
-    // Reset after 10 seconds
-    setTimeout(() => {
-        resetToOriginalAmount();
-    }, 10000);
-}
-
-/**
- * NEW: Update amount displays throughout the UI
- */
-function updateAmountDisplays(amount) {
-    const totalElement = document.getElementById('total-amount');
-    const buttonAmountElement = document.getElementById('button-amount');
-
-    if (totalElement) {
-        totalElement.textContent = `$${amount.toLocaleString()}`;
-    }
-
-    if (buttonAmountElement) {
-        buttonAmountElement.textContent = `$${amount.toLocaleString()}`;
-    }
-}
-
-/**
- * NEW: Reset to original amount
- */
-function resetToOriginalAmount() {
-    PAYMENT_DEMO_CONFIG.orderAmount = PAYMENT_DEMO_CONFIG.originalAmount;
-    updateAmountDisplays(PAYMENT_DEMO_CONFIG.originalAmount);
-    simulatePatternMatching(PaymentDemoState.selectedPaymentMethod);
-    updateGuardConditionWarning(PaymentDemoState.selectedPaymentMethod);
-
-    showNotification('Amount reset to original value', 'info');
-}
-
-/**
- * NEW: Handle customer type changes
- */
-function handleCustomerTypeChange(event) {
-    const newCustomerType = event.target.value;
-    PaymentDemoState.customerType = newCustomerType;
-
-    // Re-simulate pattern matching with new customer type
-    simulatePatternMatching(PaymentDemoState.selectedPaymentMethod);
-
-    // Log the change
-    logPatternMatchingFlow('Customer Type Changed', `Now: ${newCustomerType.toUpperCase()}`);
-
-    // Show notification
-    const tierMessages = {
-        'basic': 'Basic customer - standard processing rates apply',
-        'premium': 'Premium customer - reduced fees and priority support',
-        'vip': 'VIP customer - expedited processing and no fees'
-    };
-
-    showNotification(tierMessages[newCustomerType], 'info');
-}
-
-/**
- * NEW: Handle international card toggle
- */
-function handleInternationalToggle(event) {
-    PaymentDemoState.isInternational = event.target.checked;
-
-    // Re-simulate pattern matching
-    simulatePatternMatching(PaymentDemoState.selectedPaymentMethod);
-
-    // Update guard condition warnings
-    updateGuardConditionWarning(PaymentDemoState.selectedPaymentMethod);
-
-    // Log the change
-    logPatternMatchingFlow(
-        'International Status Changed',
-        PaymentDemoState.isInternational ? 'International Card' : 'Domestic Card'
-    );
-
-    // Show notification
-    const message = PaymentDemoState.isInternational
-        ? 'International card selected - additional fees may apply for high-value transactions'
-        : 'Domestic card selected - standard processing applies';
-
-    showNotification(message, 'info');
-}
-
-/**
- * NEW: Reset demo to initial state
- */
-function resetDemo() {
-    // Reset state
-    PaymentDemoState.selectedPaymentMethod = 'creditcard';
-    PaymentDemoState.customerType = 'basic';
-    PaymentDemoState.isInternational = false;
-    PaymentDemoState.validationErrors = [];
-    PaymentDemoState.patternMatchingResults = [];
-
-    // Reset amount
-    resetToOriginalAmount();
-
-    // Reset UI elements
-    document.getElementById('customer-basic').checked = true;
-    document.getElementById('international-card').checked = false;
-
-    // Reset payment method selection
-    updateSelectedPaymentMethod('creditcard');
-    updateDynamicPaymentForm('creditcard');
-
-    // Clear form fields
-    clearAllFormFields();
-
-    // Clear logs
-    clearInspectorLog();
-
-    // Reset pattern matching
-    simulateInitialPatternMatching();
-
-    showNotification('Demo reset to initial state', 'success');
-    console.log('🔄 Demo reset completed');
-}
-
-/**
- * NEW: Clear all form fields
- */
-function clearAllFormFields() {
-    const fields = ['card-number', 'card-cvv', 'expiry-month', 'expiry-year', 'paypal-email', 'account-number', 'routing-number', 'bank-name'];
-
-    fields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            field.value = '';
-            clearFieldError(field);
-        }
-    });
-}
-
-/* ================================
-   NEW: AUTOMATED DEMO SCENARIOS
-   ================================ */
-
-/**
- * NEW: Show demo scenarios modal
- */
-function showDemoScenarios() {
-    const modal = new bootstrap.Modal(document.getElementById('scenariosModal'));
-    modal.show();
-}
-
-/**
- * NEW: Run automated demo scenario
- */
-async function runScenario(scenarioType) {
-    if (PaymentDemoState.scenarioRunning) {
-        showNotification('Please wait for current scenario to complete', 'warning');
-        return;
-    }
-
-    PaymentDemoState.scenarioRunning = true;
-
-    // Close modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('scenariosModal'));
-    if (modal) modal.hide();
-
-    showNotification(`Running scenario: ${getScenarioName(scenarioType)}`, 'info');
-
-    try {
-        switch (scenarioType) {
-            case 'high-value-international':
-                await runHighValueInternationalScenario();
-                break;
-            case 'premium-paypal':
-                await runPremiumPayPalScenario();
-                break;
-            case 'large-bank-transfer':
-                await runLargeBankTransferScenario();
-                break;
-            case 'all-patterns':
-                await runAllPatternsScenario();
-                break;
-            default:
-                throw new Error('Unknown scenario type');
-        }
-    } catch (error) {
-        console.error('Scenario error:', error);
-        showNotification('Scenario encountered an error', 'danger');
-    } finally {
-        PaymentDemoState.scenarioRunning = false;
-    }
-}
-
-/**
- * NEW: High-value international transaction scenario
- */
-async function runHighValueInternationalScenario() {
-    logPatternMatchingFlow('Scenario Started', 'High-Value International Transaction');
-
-    // Step 1: Set high amount
-    await delay(500);
-    testWithAmount(1500);
-
-    // Step 2: Select credit card
-    await delay(1000);
-    updateSelectedPaymentMethod('creditcard');
-    updateDynamicPaymentForm('creditcard');
-
-    // Step 3: Enable international
-    await delay(1000);
-    const internationalToggle = document.getElementById('international-card');
-    if (internationalToggle) {
-        internationalToggle.checked = true;
-        handleInternationalToggle({ target: internationalToggle });
-    }
-
-    // Step 4: Fill form with demo data
-    await delay(1000);
-    fillCreditCardDemoData();
-
-    // Step 5: Show results
-    await delay(1500);
-    logPatternMatchingFlow('Scenario Result', 'Guard condition triggered: amount > $1000 && isInternational');
-    showNotification('✅ High-value international transaction requires additional verification!', 'warning');
-}
-
-/**
- * NEW: Premium customer PayPal scenario
- */
-async function runPremiumPayPalScenario() {
-    logPatternMatchingFlow('Scenario Started', 'Premium Customer PayPal Processing');
-
-    // Step 1: Set customer to premium
-    await delay(500);
-    document.getElementById('customer-premium').checked = true;
-    handleCustomerTypeChange({ target: document.getElementById('customer-premium') });
-
-    // Step 2: Select PayPal
-    await delay(1000);
-    updateSelectedPaymentMethod('paypal');
-    updateDynamicPaymentForm('paypal');
-
-    // Step 3: Fill PayPal demo data
-    await delay(1000);
-    fillPayPalDemoData();
-
-    // Step 4: Show results
-    await delay(1500);
-    logPatternMatchingFlow('Scenario Result', 'Premium customer gets expedited PayPal processing');
-    showNotification('✅ Premium customer qualifies for expedited PayPal processing!', 'success');
-}
-
-/**
- * NEW: Large bank transfer scenario
- */
-async function runLargeBankTransferScenario() {
-    logPatternMatchingFlow('Scenario Started', 'Large Bank Transfer with Manager Approval');
-
-    // Step 1: Set very high amount
-    await delay(500);
-    testWithAmount(6000);
-
-    // Step 2: Select bank transfer
-    await delay(1000);
-    updateSelectedPaymentMethod('banktransfer');
-    updateDynamicPaymentForm('banktransfer');
-
-    // Step 3: Fill bank transfer demo data
-    await delay(1000);
-    fillBankTransferDemoData();
-
-    // Step 4: Show results
-    await delay(1500);
-    logPatternMatchingFlow('Scenario Result', 'Large transfer requires manager approval: amount >= $5000');
-    showNotification('✅ Large bank transfer requires manager approval!', 'warning');
-}
-
-/**
- * NEW: Test all patterns scenario
- */
-async function runAllPatternsScenario() {
-    logPatternMatchingFlow('Scenario Started', 'Testing All Payment Method Patterns');
-
-    const methods = ['creditcard', 'paypal', 'banktransfer'];
-
-    for (let i = 0; i < methods.length; i++) {
-        const method = methods[i];
-
-        // Select method
-        await delay(1000);
-        updateSelectedPaymentMethod(method);
-        updateDynamicPaymentForm(method);
-
-        // Fill demo data
-        await delay(800);
-        switch (method) {
-            case 'creditcard':
-                fillCreditCardDemoData();
-                break;
-            case 'paypal':
-                fillPayPalDemoData();
-                break;
-            case 'banktransfer':
-                fillBankTransferDemoData();
-                break;
-        }
-
-        // Log pattern match
-        await delay(500);
-        logPatternMatchingFlow('Pattern Tested', `${getPatternName(method)} pattern matched successfully`);
-    }
-
-    showNotification('✅ All payment method patterns tested successfully!', 'success');
-}
-
-/**
- * NEW: Fill credit card demo data
- */
-function fillCreditCardDemoData() {
-    const fields = {
-        'card-number': '4532 1234 5678 9012',
-        'card-cvv': '123',
-        'expiry-month': '12',
-        'expiry-year': '2026'
-    };
-
-    Object.entries(fields).forEach(([id, value]) => {
-        const field = document.getElementById(id);
-        if (field) {
-            field.value = value;
-            // Trigger change event for validation
-            field.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-    });
-}
-
-/**
- * NEW: Fill PayPal demo data
- */
-function fillPayPalDemoData() {
-    const field = document.getElementById('paypal-email');
-    if (field) {
-        field.value = 'premium.customer@example.com';
-        field.dispatchEvent(new Event('input', { bubbles: true }));
-    }
-}
-
-/**
- * NEW: Fill bank transfer demo data
- */
-function fillBankTransferDemoData() {
-    const fields = {
-        'account-number': '1234567890',
-        'routing-number': '021000021',
-        'bank-name': 'Demo Bank'
-    };
-
-    Object.entries(fields).forEach(([id, value]) => {
-        const field = document.getElementById(id);
-        if (field) {
-            field.value = value;
-            field.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-    });
-}
-
-/**
- * NEW: Get scenario display name
- */
-function getScenarioName(scenarioType) {
-    const names = {
-        'high-value-international': 'High-Value International Transaction',
-        'premium-paypal': 'Premium Customer PayPal',
-        'large-bank-transfer': 'Large Bank Transfer',
-        'all-patterns': 'Test All Patterns'
-    };
-    return names[scenarioType] || scenarioType;
-}
-
-/**
- * NEW: Utility delay function for scenarios
- */
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-/* ================================
-   EXISTING FUNCTIONS (Enhanced with better UI feedback)
-   ================================ */
-
-/**
- * Handle payment method card selection (Enhanced)
- */
 function handlePaymentMethodSelection(event) {
     event.preventDefault();
-
     const card = event.currentTarget;
     const paymentMethod = card.getAttribute('data-method');
 
@@ -604,279 +68,196 @@ function handlePaymentMethodSelection(event) {
         return; // Already selected
     }
 
-    // Add selection animation
-    card.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-        card.style.transform = '';
-    }, 150);
-
-    // Update UI state
+    // Update UI selection
     updateSelectedPaymentMethod(paymentMethod);
 
-    // Update form
-    updateDynamicPaymentForm(paymentMethod);
+    // Log selection with educational context
+    logFlowSeparator('Payment Method Selection');
+    logFlowEntry('👤 User Action', `Selected ${getPatternName(paymentMethod)} payment method`);
+    logFlowEntry('🎯 Pattern Preview', `switch(paymentMethod) → case ${getPatternName(paymentMethod)}(...)`);
+    logFlowEntry('🔥 Java 21 Feature', 'Pattern Matching for Switch Expression', 'java21');
+    logFlowEntry('📊 Business Context', getPatternDescription(paymentMethod));
 
-    // Simulate pattern matching
-    simulatePatternMatching(paymentMethod);
-
-    // Log the interaction
-    logPatternMatchingFlow('Payment Method Selection', paymentMethod);
-
-    // Enhanced feedback
+    // Show notification
     showNotification(`Selected ${getPatternName(paymentMethod)} - Pattern matching updated`, 'info');
 }
 
-/**
- * Update the selected payment method in UI (Enhanced)
- */
 function updateSelectedPaymentMethod(paymentMethod) {
-    // Update card selection with animation
+    // Update card selection
     document.querySelectorAll('.payment-method-card').forEach(card => {
         card.classList.remove('selected');
-        // Reset any transform from animations
-        card.style.transform = '';
     });
 
     const selectedCard = document.querySelector(`[data-method="${paymentMethod}"]`);
     if (selectedCard) {
         selectedCard.classList.add('selected');
-
-        // Add selection animation
-        selectedCard.style.transform = 'scale(1.02)';
-        setTimeout(() => {
-            selectedCard.style.transform = '';
-        }, 300);
     }
-
-    // Update radio buttons
-    document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
-        radio.checked = radio.value === paymentMethod;
-    });
 
     PaymentDemoState.selectedPaymentMethod = paymentMethod;
 
-    // Highlight corresponding API reference with animation
+    // Highlight corresponding API reference
     highlightPatternMatchingReference(paymentMethod);
 }
 
-/**
- * Simulate Java 21 pattern matching logic (Enhanced)
- */
-function simulatePatternMatching(paymentMethod) {
-    const amount = PAYMENT_DEMO_CONFIG.orderAmount;
-    const isHighValue = amount > PAYMENT_DEMO_CONFIG.highValueThreshold;
-    const isLargeTransfer = amount >= PAYMENT_DEMO_CONFIG.largeTransferThreshold;
+/* ================================
+   AMOUNT AND CUSTOMER SELECTION
+   ================================ */
+function setAmount(amount) {
+    PAYMENT_DEMO_CONFIG.orderAmount = amount;
 
-    // Reset previous pattern matching results
-    PaymentDemoState.patternMatchingResults = [];
+    // Update UI displays
+    updateAmountDisplays(amount);
 
-    // Simulate pattern matching switch logic with enhanced conditions
-    let matchResult;
+    // Enhanced logging with guard condition analysis
+    logFlowSeparator('Amount Configuration');
+    logFlowEntry('💰 Amount Updated', `Set to $${amount.toLocaleString()}`);
 
-    switch (paymentMethod) {
-        case 'creditcard':
-            matchResult = simulateCreditCardPattern(amount, isHighValue);
-            break;
-        case 'paypal':
-            matchResult = simulatePayPalPattern(amount);
-            break;
-        case 'banktransfer':
-            matchResult = simulateBankTransferPattern(amount, isLargeTransfer);
-            break;
-        default:
-            matchResult = { pattern: 'default', action: 'standard processing' };
-    }
-
-    // Update pattern matching status with animation
-    updatePatternMatchingStatus(matchResult);
-
-    // Update code preview
-    updateCodePreview(paymentMethod, matchResult);
-
-    PaymentDemoState.patternMatchingResults.push(matchResult);
-
-    console.log('🎯 Pattern matching simulated:', matchResult);
-}
-
-/**
- * Simulate credit card pattern matching with guards (Enhanced)
- */
-function simulateCreditCardPattern(amount, isHighValue) {
-    const isInternational = PaymentDemoState.isInternational;
-
-    if (isHighValue && isInternational) {
-        return {
-            pattern: 'CreditCard',
-            guard: 'amount > $1000 && isInternational',
-            action: 'requireAdditionalVerification',
-            message: 'High-value international transaction requires verification',
-            processingFee: amount * (PAYMENT_DEMO_CONFIG.internationalProcessingFee / 100),
-            requiresAction: true
-        };
-    } else if (isHighValue) {
-        return {
-            pattern: 'CreditCard',
-            guard: 'amount > $1000',
-            action: 'processHighValue',
-            message: 'High-value transaction - enhanced security',
-            processingFee: 0,
-            requiresAction: false
-        };
+    const guardAnalysis = analyzeGuardConditions(PaymentDemoState.selectedPaymentMethod, amount);
+    if (guardAnalysis.triggered) {
+        logFlowEntry('⚡ Guard Condition', `${guardAnalysis.condition} = TRUE`, 'guard');
+        logFlowEntry('🔀 Processing Route', guardAnalysis.action, 'warning');
+        showNotification(`Guard condition triggered: ${guardAnalysis.condition}`, 'warning');
     } else {
-        return {
-            pattern: 'CreditCard',
-            guard: 'none',
-            action: 'processStandard',
-            message: 'Standard credit card processing',
-            processingFee: 0,
-            requiresAction: false
-        };
+        logFlowEntry('✅ Standard Processing', 'No guard conditions triggered');
     }
 }
 
-/**
- * Simulate PayPal pattern matching (Enhanced)
- */
-function simulatePayPalPattern(amount) {
-    const isPremiumCustomer = PaymentDemoState.customerType !== 'basic';
+function handleCustomerTypeChange(event) {
+    const newCustomerType = event.target.value;
+    PaymentDemoState.customerType = newCustomerType;
 
-    if (isPremiumCustomer) {
-        const discountPercent = PaymentDemoState.customerType === 'vip' ? 15 : PAYMENT_DEMO_CONFIG.premiumCustomerDiscount;
+    logFlowEntry('👤 Customer Tier', `Updated to ${newCustomerType.toUpperCase()}`);
 
-        return {
-            pattern: 'PayPal',
-            guard: 'isPremiumCustomer',
-            action: 'processExpedited',
-            message: `${PaymentDemoState.customerType.toUpperCase()} customer - expedited PayPal processing`,
-            processingFee: 0,
-            discount: amount * (discountPercent / 100),
-            requiresAction: false
-        };
-    } else {
-        return {
-            pattern: 'PayPal',
-            guard: 'none',
-            action: 'processStandard',
-            message: 'Standard PayPal processing',
-            processingFee: amount * 0.029, // 2.9% PayPal fee
-            requiresAction: false
-        };
+    const tierMessages = {
+        'basic': 'Standard processing rates apply',
+        'premium': 'Reduced fees and priority support',
+        'vip': 'Expedited processing and no fees'
+    };
+
+    showNotification(tierMessages[newCustomerType], 'info');
+}
+
+/* ================================
+   MAIN PAYMENT PROCESSING
+   ================================ */
+async function processPayment() {
+    console.log('Processing payment:', { method: PaymentDemoState.selectedPaymentMethod, amount: PAYMENT_DEMO_CONFIG.orderAmount });
+
+    // Enhanced pre-processing logging (like shopping cart)
+    logFlowSeparator('Payment Processing Started');
+    logFlowEntry('🚀 API Request', 'POST /api/payment/process');
+    logFlowEntry('📋 Request Payload', `method: "${mapPaymentType(PaymentDemoState.selectedPaymentMethod)}", amount: $${PAYMENT_DEMO_CONFIG.orderAmount.toLocaleString()}`);
+    logFlowEntry('⏱️ Backend Call', 'Sending to Spring Boot application...');
+
+    const processingStartTime = performance.now();
+
+    try {
+        const response = await fetch('/api/payment/process', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                paymentType: mapPaymentType(PaymentDemoState.selectedPaymentMethod),
+                amount: PAYMENT_DEMO_CONFIG.orderAmount,
+                customerTier: PaymentDemoState.customerType.toUpperCase(),
+                isInternational: PaymentDemoState.isInternational
+            })
+        });
+
+        const processingTime = Math.round(performance.now() - processingStartTime);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        // Handle enhanced API response (like shopping cart)
+        handleEnhancedPaymentResult(result, processingTime);
+
+    } catch (error) {
+        console.error('Payment processing error:', error);
+
+        // Enhanced error logging
+        logFlowSeparator('Processing Error');
+        logFlowEntry('❌ Backend Error', 'Could not connect to Spring Boot application', 'error');
+        logFlowEntry('🔧 Troubleshooting', 'Verify application is running on localhost:8080');
+
+        showNotification('Failed to connect to backend. Is the Java application running?', 'danger');
     }
 }
 
-/**
- * Simulate bank transfer pattern matching (Enhanced)
- */
-function simulateBankTransferPattern(amount, isLargeTransfer) {
-    if (isLargeTransfer) {
-        return {
-            pattern: 'BankTransfer',
-            guard: 'amount >= $5000',
-            action: 'requireManagerApproval',
-            message: 'Large bank transfer requires manager approval',
-            processingTime: '5-7 business days',
-            requiresAction: true
-        };
-    } else {
-        return {
-            pattern: 'BankTransfer',
-            guard: 'none',
-            action: 'processStandard',
-            message: 'Standard bank transfer processing',
-            processingTime: '3-5 business days',
-            requiresAction: false
-        };
+/* ================================
+   ENHANCED API RESPONSE HANDLING (Like Shopping Cart)
+   ================================ */
+function handleEnhancedPaymentResult(result, processingTime) {
+    logFlowSeparator('Backend Processing Complete');
+
+    // === BASIC RESULT LOGGING ===
+    logFlowEntry('✅ Processing Result', `Status: ${result.status}`);
+    logFlowEntry('💬 Result Message', result.statusMessage || result.message);
+
+    // === CONTROLLER & SERVICE METHOD TRACKING (Like Shopping Cart) ===
+    if (result.controller_method) {
+        logFlowEntry('🔴 Controller', result.controller_method);
     }
-}
-
-/**
- * Update pattern matching status display (Enhanced with animations)
- */
-function updatePatternMatchingStatus(matchResult) {
-    const statusContainer = document.getElementById('pattern-status');
-
-    const requiresActionIcon = matchResult.requiresAction ? 'fa-exclamation-triangle' : 'fa-check';
-    const requiresActionClass = matchResult.requiresAction ? 'status-active' : 'status-complete';
-
-    const statusHTML = `
-        <div class="status-step">
-            <div class="status-icon status-complete">
-                <i class="fas fa-check"></i>
-            </div>
-            <div>
-                <div><strong>Pattern Matched</strong></div>
-                <small class="text-muted">Pattern: ${matchResult.pattern} identified</small>
-            </div>
-        </div>
-
-        <div class="status-step">
-            <div class="status-icon ${matchResult.guard !== 'none' ? 'status-active' : 'status-complete'}">
-                <i class="fas ${matchResult.guard !== 'none' ? 'fa-shield-alt' : 'fa-check'}"></i>
-            </div>
-            <div>
-                <div><strong>Guard Condition</strong></div>
-                <small class="text-muted">${matchResult.guard !== 'none' ? matchResult.guard : 'No guards triggered'}</small>
-            </div>
-        </div>
-
-        <div class="status-step">
-            <div class="status-icon status-active">
-                <i class="fas fa-cogs"></i>
-            </div>
-            <div>
-                <div><strong>Processing Action</strong></div>
-                <small class="text-muted">${matchResult.action}</small>
-            </div>
-        </div>
-
-        <div class="status-step">
-            <div class="status-icon ${requiresActionClass}">
-                <i class="fas ${requiresActionIcon}"></i>
-            </div>
-            <div>
-                <div><strong>${matchResult.requiresAction ? 'Action Required' : 'Ready to Process'}</strong></div>
-                <small class="text-muted">${matchResult.message}</small>
-            </div>
-        </div>
-    `;
-
-    // Add fade effect
-    statusContainer.style.opacity = '0.5';
-    setTimeout(() => {
-        statusContainer.innerHTML = statusHTML;
-        statusContainer.style.opacity = '1';
-    }, 200);
-}
-
-/**
- * Update guard condition warning visibility (Enhanced)
- */
-function updateGuardConditionWarning(paymentMethod) {
-    const warning = document.getElementById('guard-condition-warning');
-
-    if (!warning) return;
-
-    const shouldShow = paymentMethod === 'creditcard' &&
-                      PAYMENT_DEMO_CONFIG.orderAmount > PAYMENT_DEMO_CONFIG.highValueThreshold &&
-                      PaymentDemoState.isInternational;
-
-    if (shouldShow) {
-        warning.style.display = 'block';
-        warning.classList.add('show');
-
-        // Add pulsing effect for attention
-        warning.style.animation = 'slideInValidation 0.4s ease-out';
-    } else {
-        warning.style.display = 'none';
-        warning.classList.remove('show');
+    if (result.service_method) {
+        logFlowEntry('🟣 Service Layer', result.service_method);
     }
+
+    // === JAVA 21 METHODS USED (Like Shopping Cart) ===
+    if (result.java21_methods_used && result.java21_methods_used.length > 0) {
+        logFlowEntry('🔥 Java 21 Methods', result.java21_methods_used.join(', '), 'java21');
+    }
+
+    // === PATTERN MATCHING DETAILS ===
+    if (result.pattern_matched) {
+        logFlowEntry('🎯 Pattern Matched', result.pattern_matched);
+    }
+    if (result.guard_condition && result.guard_condition !== 'none') {
+        logFlowEntry('⚡ Guard Condition', result.guard_condition, 'guard');
+    }
+    if (result.processing_action) {
+        logFlowEntry('🔄 Processing Action', result.processing_action);
+    }
+
+    // === BUSINESS LOGIC & EDUCATIONAL INFO ===
+    if (result.business_rule_applied) {
+        logFlowEntry('📋 Business Rule', result.business_rule_applied);
+    }
+    if (result.pattern_matching_path) {
+        logFlowEntry('🗺️ Pattern Path', result.pattern_matching_path);
+    }
+    if (result.performance_benefit) {
+        logFlowEntry('⚡ Performance', result.performance_benefit);
+    }
+
+    // === JAVA 21 FEATURE INFO ===
+    if (result.java21_feature) {
+        logFlowEntry('🔥 Java 21 Feature', result.java21_feature, 'java21');
+    }
+
+    // === TIMING & COMPLETION ===
+    logFlowEntry('⏱️ Total Time', `${processingTime}ms end-to-end`);
+    logFlowEntry('🎉 Demo Complete', `Payment processing demonstration finished`);
+
+    // Show success notification
+    const statusClass = result.successful ? 'success' :
+                       result.requiresAdditionalAction ? 'warning' : 'danger';
+    showNotification(`Payment ${result.status}: ${result.statusMessage || 'Processed'}`, statusClass);
 }
 
-/**
- * Log pattern matching flow in visual inspector (Enhanced)
- */
-function logPatternMatchingFlow(userAction, details) {
+/* ================================
+   ENHANCED VISUAL FLOW INSPECTOR (Like Shopping Cart)
+   ================================ */
+function logFlowEntry(action, details, type = 'info') {
     const logContainer = document.getElementById('api-log');
+
+    if (!logContainer) {
+        console.warn('API log container not found');
+        return;
+    }
 
     // Clear initial message if present
     if (logContainer.querySelector('.text-muted')) {
@@ -886,19 +267,39 @@ function logPatternMatchingFlow(userAction, details) {
     const logEntry = document.createElement('div');
     logEntry.className = 'api-flow-block';
 
-    const timestamp = new Date().toLocaleTimeString();
-    const sessionTime = Math.round((Date.now() - PaymentDemoState.demoStartTime) / 1000);
+    let iconColor = 'var(--info-color)';
+    let specialTag = '';
 
+    // Style based on type (like shopping cart)
+    switch(type) {
+        case 'java21':
+            iconColor = 'var(--success-color)';
+            specialTag = '<span class="java21-pattern-tag">Java 21</span>';
+            break;
+        case 'guard':
+            iconColor = 'var(--warning-color)';
+            specialTag = '<span class="java21-pattern-tag" style="background: var(--warning-color);">Guard</span>';
+            break;
+        case 'warning':
+            iconColor = 'var(--warning-color)';
+            break;
+        case 'error':
+            iconColor = 'var(--danger-color)';
+            break;
+    }
+
+    // Build enhanced log entry (like shopping cart)
     logEntry.innerHTML = `
-        <div>👤 <strong>${userAction}</strong> (Frontend)</div>
-        <div class="api-flow-child">🎯 Pattern: switch(${details})</div>
-        <div class="api-flow-child">🔥 Java 21 Feature: <span class="java21-pattern-tag">Pattern Matching</span></div>
-        <div class="api-flow-child">⏰ ${timestamp} (+${sessionTime}s)</div>
+        <div style="border-left-color: ${iconColor}">
+            <strong>${action}</strong> ${specialTag}
+        </div>
+        <div class="api-flow-child">📋 ${details}</div>
     `;
 
+    // Insert at top (newest first)
     logContainer.insertBefore(logEntry, logContainer.firstChild);
 
-    // Limit log entries to prevent overflow
+    // Limit entries to prevent overflow
     while (logContainer.children.length > 12) {
         logContainer.removeChild(logContainer.lastChild);
     }
@@ -907,124 +308,200 @@ function logPatternMatchingFlow(userAction, details) {
     logContainer.scrollTop = 0;
 }
 
-/**
- * Clear the visual flow inspector log (Enhanced)
- */
-function clearInspectorLog() {
+function logFlowSeparator(title) {
     const logContainer = document.getElementById('api-log');
-    logContainer.innerHTML = `
-        <div class="text-muted text-center py-2">
-            <i class="fas fa-mouse-pointer mb-2"></i><br>
-            Select a payment method to see pattern matching in action...
+    if (!logContainer) return;
+
+    const separator = document.createElement('div');
+    separator.className = 'pattern-flow-separator';
+    separator.innerHTML = `
+        <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 8px 0; position: relative; text-align: center;">
+            <div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: #1e293b; padding: 0 12px; font-size: 9px; color: #f59e0b; font-weight: bold; border-radius: 12px;">
+                ⚡ ${title} ⚡
+            </div>
         </div>
     `;
 
-    showNotification('Flow inspector log cleared', 'info');
+    logContainer.insertBefore(separator, logContainer.firstChild);
 }
 
-/**
- * Show notification toast (Enhanced with better styling)
- */
-function showNotification(message, type = 'info') {
-    const container = document.getElementById('toast-container');
-
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type} alert-dismissible fade show`;
-    notification.setAttribute('role', 'alert');
-    notification.style.minWidth = '300px';
-    notification.style.borderRadius = '10px';
-    notification.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
-
-    const icons = {
-        'success': 'fas fa-check-circle',
-        'warning': 'fas fa-exclamation-triangle',
-        'danger': 'fas fa-exclamation-circle',
-        'info': 'fas fa-info-circle'
-    };
-
-    notification.innerHTML = `
-        <i class="${icons[type]} me-2"></i>
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-
-    container.appendChild(notification);
-
-    // Auto-remove after 5 seconds for non-critical messages
-    const autoRemoveTime = type === 'danger' ? 8000 : 5000;
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
-    }, autoRemoveTime);
-
-    console.log(`📢 Notification (${type}): ${message}`);
+function clearInspectorLog() {
+    const logContainer = document.getElementById('api-log');
+    if (logContainer) {
+        logContainer.innerHTML = `
+            <div class="text-muted text-center py-2">
+                <i class="fas fa-mouse-pointer mb-2"></i><br>
+                Select payment method and process to see Java 21 pattern matching...
+            </div>
+        `;
+    }
+    showNotification('Visual Flow Inspector cleared', 'info');
 }
 
 /* ================================
-   PRESERVE ALL EXISTING FUNCTIONS
+   PATTERN MATCHING REFERENCE HIGHLIGHTING
    ================================ */
+function highlightPatternMatchingReference(paymentMethod) {
+    // Clear previous highlights
+    document.querySelectorAll('.api-reference-table tr').forEach(row => {
+        row.classList.remove('pattern-highlight');
+    });
 
-// All existing functions from the original file are preserved here
-// including: handlePaymentMethodKeydown, handlePaymentMethodChange,
-// updateDynamicPaymentForm, generateCreditCardForm, generatePayPalForm,
-// generateBankTransferForm, updateCodePreview, handleFormFieldChange,
-// validateField, processPayment, validatePaymentForm, simulatePaymentProcessing,
-// etc.
+    // Highlight relevant patterns based on method
+    const rowsToHighlight = ['pattern-switch'];
 
-/**
- * Initialize payment form with default values (Enhanced)
- */
+    switch(paymentMethod) {
+        case 'creditcard':
+            rowsToHighlight.push('pattern-creditcard', 'pattern-guard');
+            break;
+        case 'paypal':
+            rowsToHighlight.push('pattern-paypal');
+            break;
+        case 'banktransfer':
+            rowsToHighlight.push('pattern-banktransfer');
+            break;
+    }
+
+    // Always highlight sealed interface
+    rowsToHighlight.push('pattern-sealed');
+
+    // Apply highlights
+    rowsToHighlight.forEach(rowId => {
+        const row = document.getElementById(rowId);
+        if (row) {
+            row.classList.add('pattern-highlight');
+        }
+    });
+
+    // Auto-remove highlights after 3 seconds
+    setTimeout(() => {
+        document.querySelectorAll('.pattern-highlight').forEach(row => {
+            row.classList.remove('pattern-highlight');
+        });
+    }, 3000);
+}
+
+/* ================================
+   UTILITY FUNCTIONS
+   ================================ */
+function updateAmountDisplays(amount) {
+    const totalElement = document.getElementById('order-total');
+    const buttonAmountElement = document.getElementById('button-amount');
+
+    if (totalElement) {
+        totalElement.textContent = `$${amount.toLocaleString()}`;
+    }
+    if (buttonAmountElement) {
+        buttonAmountElement.textContent = `$${amount.toLocaleString()}`;
+    }
+}
+
+function analyzeGuardConditions(method, amount) {
+    switch(method) {
+        case 'creditcard':
+            if (amount > PAYMENT_DEMO_CONFIG.highValueThreshold) {
+                return {
+                    triggered: true,
+                    condition: `amount > $${PAYMENT_DEMO_CONFIG.highValueThreshold.toLocaleString()}`,
+                    action: 'requireAdditionalVerification()',
+                    description: 'High-value credit card transaction verification'
+                };
+            }
+            break;
+        case 'banktransfer':
+            if (amount >= PAYMENT_DEMO_CONFIG.largeTransferThreshold) {
+                return {
+                    triggered: true,
+                    condition: `amount >= $${PAYMENT_DEMO_CONFIG.largeTransferThreshold.toLocaleString()}`,
+                    action: 'requireManagerApproval()',
+                    description: 'Large bank transfer needs approval'
+                };
+            }
+            break;
+        case 'paypal':
+            if (PaymentDemoState.customerType !== 'basic') {
+                return {
+                    triggered: true,
+                    condition: 'isPremiumCustomer()',
+                    action: 'processExpedited()',
+                    description: 'Premium customer expedited processing'
+                };
+            }
+            break;
+    }
+
+    return {
+        triggered: false,
+        condition: 'none',
+        action: 'processStandard()',
+        description: 'Standard processing path'
+    };
+}
+
+function getPatternName(method) {
+    const names = {
+        'creditcard': 'CreditCard',
+        'paypal': 'PayPal',
+        'banktransfer': 'BankTransfer'
+    };
+    return names[method] || method;
+}
+
+function getPatternDescription(method) {
+    const patterns = {
+        'creditcard': 'Credit card pattern with amount-based guard conditions and international handling',
+        'paypal': 'PayPal pattern with customer tier evaluation and account verification',
+        'banktransfer': 'Bank transfer pattern with approval workflow and routing validation'
+    };
+    return patterns[method] || 'Payment method pattern';
+}
+
+function mapPaymentType(method) {
+    const mapping = {
+        'creditcard': 'CREDIT_CARD',
+        'paypal': 'PAYPAL',
+        'banktransfer': 'BANK_TRANSFER'
+    };
+    return mapping[method] || method.toUpperCase();
+}
+
+function showNotification(message, type = 'info') {
+    console.log(`📢 Notification (${type}): ${message}`);
+
+    // You can implement toast notifications here if needed
+    // For now, just log to console
+}
+
+/* ================================
+   INITIALIZATION FUNCTIONS
+   ================================ */
 function initializePaymentForm() {
-    // Set default payment method
+    // Set default values
     updateSelectedPaymentMethod('creditcard');
-    updateDynamicPaymentForm('creditcard');
-
-    // Set default customer type for demo
     PaymentDemoState.customerType = 'basic';
-
-    // Initialize tooltips
-    initializeTooltips();
 
     console.log('💳 Enhanced payment form initialized');
 }
 
-/**
- * Simulate initial pattern matching on page load (Enhanced)
- */
 function simulateInitialPatternMatching() {
     setTimeout(() => {
-        simulatePatternMatching('creditcard');
-        logPatternMatchingFlow('Demo Initialized', 'CreditCard pattern detection ready');
-    }, 800);
+        logFlowEntry('🎯 Demo Initialized', 'Payment pattern matching demonstration ready');
+        logFlowEntry('💡 Instructions', 'Select payment method → Choose amount → Process payment');
+        logFlowEntry('🔥 Java 21 Ready', 'Pattern Matching, Record Patterns, Guard Conditions', 'java21');
+    }, 500);
 }
 
 /* ================================
-   EXPORT DEMO FUNCTIONS FOR TESTING
+   EXPORT FOR TESTING
    ================================ */
-
-// Make enhanced demo functions available globally for testing and debugging
 window.PaymentProcessingDemo = {
     config: PAYMENT_DEMO_CONFIG,
     state: PaymentDemoState,
-
-    // Original functions
-    simulatePatternMatching,
     processPayment,
     clearInspectorLog,
-
-    // New enhanced functions
-    toggleInstructions,
-    testWithAmount,
-    resetDemo,
-    runScenario,
-    showDemoScenarios,
-    handleCustomerTypeChange,
-    handleInternationalToggle
+    setAmount,
+    handleCustomerTypeChange
 };
 
-console.log('💳 Enhanced Payment Processing Demo JavaScript loaded successfully');
-console.log('🎯 Enhanced demo functions available via window.PaymentProcessingDemo');
-
-// Add all the remaining existing functions here to preserve full functionality
-// [The complete existing functions would be included here to maintain compatibility]
+console.log('🚀 Enhanced Payment Processing Demo JavaScript loaded successfully');
+console.log('🎯 Rich Visual Flow Inspector matching shopping cart demo quality');
