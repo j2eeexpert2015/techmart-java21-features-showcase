@@ -634,10 +634,15 @@
         setupPaymentMethodSelection();
         clearLog(); // Start with clean log
 
-        // Add welcome messages
-        logFlowEntry('🚀 Demo Ready', 'Simple Pattern Matching Demo initialized');
-        logFlowEntry('🎯 Java 21 Features', 'Enhanced switch expressions loaded');
-        logFlowEntry('💡 Instructions', 'Select payment method → Choose amount → Process');
+        // Add structured welcome message like shopping cart
+        logAPIFlow('Initial Processing', 'Simple Payment Demo Load', 'Frontend');
+        logAPIFlow('API Call', 'GET /api/simple-payment/1');
+        logAPIFlow('Controller', 'SimplePaymentController.loadDemo');
+        logAPIFlow('Service', 'Multiple methods called');
+        logAPIFlow('Service Method', 'SimplePaymentService.initializeDemo()', 'Standard Demo API');
+        logAPIFlow('Service Method', 'SimplePaymentService.loadPatterns()', 'Standard Demo API');
+        logAPIFlow('Operation', 'Initial demo load: pattern matching + guard conditions using loadPatterns()/initializeDemo()');
+        logAPIFlow('Feature', 'Sequenced Pattern Matching');
 
         console.log('✅ Enhanced demo ready');
     }
@@ -714,7 +719,7 @@
 
         // Pre-processing logging
         logFlowSeparator('Payment Processing Started');
-        logFlowEntry('🚀 API Request', `POST /api/simple/payment`);
+        logFlowEntry('🚀 API Request', `POST /api/simple-payment/process`);
         logFlowEntry('📋 Payload', `{ method: "${currentMethod}", amount: ${currentAmount} }`);
         logFlowEntry('⏱️ Backend Call', 'Sending request to Spring Boot...');
 
@@ -725,7 +730,7 @@
             amount: currentAmount
         };
 
-        fetch('/api/simple/payment', {
+        fetch('/api/simple-payment/process', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -743,19 +748,63 @@
             return response.json();
         })
         .then(data => {
+            console.log('Backend response:', data); // Debug the actual response
             const totalTime = Math.round(performance.now() - processingStartTime);
 
-            // Success logging like shopping cart
-            logFlowSeparator('Backend Processing Complete');
-            logFlowEntry('✅ Processing Result', `Status: ${data.status}`);
-            logFlowEntry('💬 Message', data.message);
-            logFlowEntry('🔥 Java 21 Feature', data.java21_feature, 'java21');
-            logFlowEntry('⏱️ Total Time', `${totalTime}ms end-to-end`);
+            // USE ACTUAL BACKEND DATA - NOT HARDCODED
+            logAPIFlow('Initial Processing', 'Simple Payment Processing', 'Backend');
+            logAPIFlow('API Call', `POST /api/simple-payment/process`);
+
+            // Controller tracking - USE REAL DATA
+            if (data.controller_method) {
+                logAPIFlow('Controller', data.controller_method);
+            }
+
+            // Service layer - USE REAL DATA
+            if (data.service_method) {
+                logAPIFlow('Service', 'Multiple methods called');
+                logAPIFlow('Service Method', data.service_method, 'Pattern Matching API');
+            }
+
+            // Java 21 methods from backend - USE REAL DATA
+            if (data.java21_methods_used && data.java21_methods_used.length > 0) {
+                data.java21_methods_used.forEach(method => {
+                    logAPIFlow('Service Method', method, 'Java 21 Feature API');
+                });
+            }
+
+            // Pattern matching details from backend - USE REAL DATA
+            if (data.pattern_matched) {
+                logAPIFlow('Service Method', `Pattern: ${data.pattern_matched}`, 'Pattern Detection');
+            }
+
+            if (data.guard_condition && data.guard_condition !== 'none') {
+                logAPIFlow('Service Method', `Guard: ${data.guard_condition}`, 'Guard Evaluation');
+            }
+
+            if (data.processing_action) {
+                logAPIFlow('Service Method', `Action: ${data.processing_action}`, 'Processing Logic');
+            }
+
+            // Operation from backend - USE REAL DATA
+            if (data.pattern_matching_path) {
+                logAPIFlow('Operation', data.pattern_matching_path);
+            }
+
+            // Business rule from backend - USE REAL DATA
+            if (data.business_rule_applied) {
+                logAPIFlow('Operation', `Business rule: ${data.business_rule_applied}`);
+            }
+
+            // Feature summary from backend - USE REAL DATA
+            if (data.java21_features_used && data.java21_features_used.length > 0) {
+                logAPIFlow('Feature', `Sequenced Pattern Matching using ${data.java21_features_used.join(', ')}`);
+            }
 
             const result = {
                 status: data.status,
                 message: data.message,
-                pattern: data.java21_feature,
+                pattern: data.java21_feature || 'Pattern Matching',
                 color: data.status.includes('APPROVED') ? '#10b981' :
                        data.status.includes('ERROR') ? '#ef4444' : '#f59e0b',
                 processingTime: totalTime
@@ -814,59 +863,73 @@
     }
 
     /**
-     * Enhanced logging with visual flow like shopping cart
+     * Log API flow exactly like shopping cart - clean structured blocks
      */
-    function logFlowEntry(action, details, type = 'info') {
+    function logAPIFlow(phase, details, context = '') {
         const log = document.getElementById('api-log');
         if (!log) return;
 
-        const timestamp = new Date().toLocaleTimeString();
-        logEntryCount++;
+        const entry = document.createElement('div');
+        entry.style.marginBottom = '4px';
+        entry.style.fontFamily = 'monospace';
+        entry.style.fontSize = '12px';
+        entry.style.lineHeight = '1.6';
+        entry.style.paddingLeft = '8px';
 
-        const logEntry = document.createElement('div');
-        logEntry.className = 'api-flow-block';
+        let content = '';
 
-        let statusIcon = '';
-        let specialStyle = '';
-
-        switch(type) {
-            case 'java21':
-                statusIcon = '<span class="status-indicator status-success"></span>';
-                specialStyle = ' style="border-left-color: #10b981;"';
+        switch(phase) {
+            case 'Initial Processing':
+                content = `<span style="color: #a855f7;">📋</span> <span style="color: #fbbf24; font-weight: bold;">${details}</span> <span style="color: #9ca3af;">(${context})</span>`;
                 break;
-            case 'guard':
-                statusIcon = '<span class="status-indicator status-processing"></span>';
-                specialStyle = ' style="border-left-color: #f59e0b;"';
+            case 'API Call':
+                content = `<span style="color: #06b6d4;">🌐</span> API Call: <span style="color: #fbbf24;">${details}</span>`;
                 break;
-            case 'warning':
-                statusIcon = '<span class="status-indicator status-processing"></span>';
-                specialStyle = ' style="border-left-color: #f59e0b;"';
+            case 'Controller':
+                content = `<span style="color: #ef4444;">●</span> Controller: <span style="color: #fbbf24; font-weight: bold;">${details}</span>`;
                 break;
-            case 'error':
-                statusIcon = '<span class="status-indicator status-error"></span>';
-                specialStyle = ' style="border-left-color: #ef4444;"';
+            case 'Service':
+                content = `<span style="color: #8b5cf6;">●</span> Service: <span style="color: #f3f4f6;">Multiple methods called</span>`;
+                break;
+            case 'Service Method':
+                content = `<span style="color: #6b7280;">&nbsp;&nbsp;&nbsp;&nbsp;└── </span><span style="color: #fbbf24; font-weight: bold;">${details}</span> <span style="color: #6b7280;">– ${context}</span>`;
+                break;
+            case 'Operation':
+                content = `<span style="color: #6b7280;">&nbsp;&nbsp;&nbsp;&nbsp;└── </span><span style="color: #f59e0b;">●</span> Operation: <span style="color: #f3f4f6;">${details}</span>`;
+                break;
+            case 'Feature':
+                content = `<span style="color: #6b7280;">&nbsp;&nbsp;&nbsp;&nbsp;└── </span><span style="color: #10b981;">●</span> Feature: <span style="color: #f3f4f6;">${details}</span>`;
                 break;
             default:
-                statusIcon = '<span class="status-indicator status-success"></span>';
+                content = `<span style="color: #6b7280;">●</span> <span style="color: #f3f4f6;">${details}</span>`;
         }
 
-        logEntry.innerHTML = `
-            <div${specialStyle}>${statusIcon}<strong>${action}</strong></div>
-            <div class="api-flow-child">📋 ${details}</div>
-            <div class="api-flow-child">⏰ ${timestamp}</div>
-            ${type === 'java21' ? '<div class="api-flow-child">🔥 Feature: <span class="java21-pattern-tag">Java 21</span></div>' : ''}
-        `;
+        entry.innerHTML = content;
+        log.insertBefore(entry, log.firstChild);
 
-        // Insert at top (newest first)
-        log.insertBefore(logEntry, log.firstChild);
-
-        // Limit entries
-        while (log.children.length > 12) {
+        // Limit entries to prevent overflow
+        while (log.children.length > 20) {
             log.removeChild(log.lastChild);
         }
 
-        // Auto scroll to top
         log.scrollTop = 0;
+    }
+
+    /**
+     * Enhanced logging - backwards compatibility wrapper
+     */
+    function logFlowEntry(action, details, type = 'info') {
+        // Map old format to new API flow format
+        switch(type) {
+            case 'java21':
+                logAPIFlow('Feature', details);
+                break;
+            case 'guard':
+                logAPIFlow('Operation', `Guard condition: ${details}`);
+                break;
+            default:
+                logAPIFlow('Operation', details);
+        }
     }
 
     /**

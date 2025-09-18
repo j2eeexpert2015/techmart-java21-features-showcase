@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Payment Processing Controller - Enhanced for Visual Flow Inspector
+ * Enhanced Payment Processing Controller with Rich Educational Metadata
  *
- * This controller provides the same level of educational metadata as the shopping cart demo,
- * enabling clear visualization of Java 21 pattern matching features in action.
+ * UPDATED: Now provides the same level of detailed educational metadata as ShoppingCartController
+ * Shows controller → service method flow, Java 21 features used, and comprehensive educational info
  */
 @RestController
 @RequestMapping("/api/payment")
@@ -30,7 +30,8 @@ public class PaymentProcessingController {
     }
 
     /**
-     * Main payment processing endpoint - Enhanced with detailed educational metadata
+     * Enhanced payment processing endpoint with comprehensive educational metadata
+     * MATCHES the detailed response format of shopping cart demo
      */
     @PostMapping("/process")
     public ResponseEntity<Map<String, Object>> processPayment(@RequestBody PaymentRequest request) {
@@ -41,12 +42,12 @@ public class PaymentProcessingController {
         // Create demo customer
         Customer customer = createDemoCustomer(request);
 
-        // Process payment using Java 21 pattern matching
+        // === CALL SERVICE METHOD (like shopping cart) ===
         PaymentProcessingResult result = paymentService.processPayment(
                 paymentMethod, request.amount(), customer
         );
 
-        // Build comprehensive response with educational metadata (matching shopping cart style)
+        // === BUILD COMPREHENSIVE RESPONSE WITH EDUCATIONAL METADATA ===
         Map<String, Object> response = new LinkedHashMap<>();
 
         // === BASIC RESULT DATA ===
@@ -61,11 +62,14 @@ public class PaymentProcessingController {
         response.put("processingTimeEstimate", result.processingTimeEstimate());
         response.put("validationMessages", result.validationMessages());
 
-        // === EDUCATIONAL METADATA (matching shopping cart demo format) ===
-        response.put("controller_method", "processPayment");
+        // === EDUCATIONAL METADATA (LIKE SHOPPING CART) ===
+
+        // Controller & Service method tracking
+        response.put("controller_method", "PaymentProcessingController.processPayment");
         response.put("service_method", "PaymentProcessingService.processPayment");
 
-        // Java 21 features used (for highlighting in UI)
+        // Java 21 features used (like shopping cart's java21_methods_used)
+        response.put("java21_methods_used", getJava21MethodsUsed(result));
         response.put("java21_features_used", List.of(
                 "Pattern Matching for Switch",
                 "Record Patterns",
@@ -75,68 +79,95 @@ public class PaymentProcessingController {
                 "Exhaustive Matching"
         ));
 
-        // Specific Java 21 method equivalent (like shopping cart's getFirst, getLast)
-        response.put("java21_method_used", getJava21MethodName(result));
-
-        // Pattern matching details
+        // Pattern matching details (like shopping cart's operation_description)
         response.put("pattern_matched", result.patternMatched());
         response.put("guard_condition", result.guardCondition());
         response.put("processing_action", result.processingAction());
-
-        // Operation description (like shopping cart's operation_description)
         response.put("operation_description", getOperationDescription(result));
 
-        // Additional educational context
-        response.put("record_components_extracted", getRecordComponentsCount(paymentMethod));
+        // Educational context (like shopping cart's performance_benefit)
         response.put("business_rule_applied", getBusinessRuleDescription(result));
         response.put("pattern_matching_path", getPatternMatchingPath(result));
+        response.put("record_components_extracted", getRecordComponentsCount(paymentMethod));
+
+        // Java 21 feature classification
+        response.put("java21_feature", "Pattern Matching for Switch");
+        response.put("jep_reference", "JEP 441: Pattern Matching for switch");
+        response.put("performance_benefit", "Type-safe pattern matching with automatic casting and exhaustive checking");
 
         return ResponseEntity.ok(response);
     }
 
     /**
-     * Test scenario endpoint - for educational demonstrations
+     * Simple payment endpoint for basic demo (like shopping cart's simple endpoints)
      */
-    @PostMapping("/test-scenario")
-    public ResponseEntity<Map<String, Object>> testScenario(@RequestBody ScenarioRequest request) {
+    @PostMapping("/simple")
+    public ResponseEntity<Map<String, Object>> processSimplePayment(@RequestBody SimplePaymentRequest request) {
 
-        PaymentMethod paymentMethod = createPaymentMethodFromScenario(request);
+        // === SIMULATE PATTERN MATCHING LOGIC ===
+        String result = switch (request.method()) {
+            case "creditcard" -> {
+                if (request.amount().compareTo(BigDecimal.valueOf(1000)) > 0) {
+                    yield "REQUIRES_VERIFICATION - High value credit card";
+                } else {
+                    yield "APPROVED - Credit card approved";
+                }
+            }
+            case "paypal" -> "APPROVED - PayPal processed";
+            case "bank" -> {
+                if (request.amount().compareTo(BigDecimal.valueOf(5000)) >= 0) {
+                    yield "REQUIRES_APPROVAL - Large bank transfer";
+                } else {
+                    yield "APPROVED - Bank transfer approved";
+                }
+            }
+            default -> "ERROR - Unknown payment method";
+        };
 
-        PaymentProcessingResult result = paymentService.processPaymentForDemoScenario(
-                paymentMethod,
-                request.amount(),
-                request.customerTier(),
-                request.isInternational()
-        );
-
+        // === BUILD ENHANCED RESPONSE WITH EDUCATIONAL METADATA ===
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("scenario", request.scenario());
-        response.put("result", result);
-        response.put("pattern_matched", result.patternMatched());
-        response.put("guard_condition", result.guardCondition());
-        response.put("processing_action", result.processingAction());
-        response.put("educational_note", getEducationalNote(result));
 
-        // Enhanced educational metadata for scenarios
-        response.put("java21_demonstration", Map.of(
-                "sealed_interface", "PaymentMethod with 3 implementations",
-                "record_patterns", "Destructuring " + result.patternMatched() + " record components",
-                "guard_conditions", result.guardCondition(),
-                "exhaustive_matching", "No default case needed - compiler enforced",
-                "type_safety", "Automatic casting and validation"
-        ));
+        // Basic result data
+        String[] parts = result.split(" - ");
+        response.put("status", parts[0]);
+        response.put("message", parts.length > 1 ? parts[1] : result);
+        response.put("amount", request.amount());
+        response.put("method", request.method());
+        response.put("timestamp", LocalDateTime.now());
 
-        // Visual flow metadata (matching shopping cart format)
-        response.put("controller_method", "testScenario");
-        response.put("service_method", "PaymentProcessingService.processPaymentForDemoScenario");
-        response.put("java21_method_used", getJava21MethodName(result));
-        response.put("operation_description", "Demo scenario: " + getScenarioDescription(request.scenario()));
+        // === COMPREHENSIVE EDUCATIONAL METADATA ===
+
+        // Controller & Service method tracking (like shopping cart)
+        response.put("controller_method", "PaymentProcessingController.processSimplePayment");
+        response.put("service_method", "SimplePaymentService.processPayment (simulated)");
+
+        // Java 21 methods used (like shopping cart's specific method names)
+        response.put("java21_methods_used", List.of("switch-pattern-matching", "yield-expressions"));
+
+        // Pattern matching details
+        response.put("pattern_matched", getPatternMatchedForMethod(request.method()));
+        response.put("guard_condition", getGuardConditionForRequest(request));
+        response.put("processing_action", getProcessingActionForRequest(request));
+
+        // Operation description (like shopping cart)
+        response.put("operation_description", buildOperationDescription(request));
+
+        // Java 21 feature classification
+        response.put("java21_feature", "Pattern Matching for Switch");
+        response.put("jep_reference", "JEP 441: Pattern Matching for switch");
+        response.put("performance_benefit", "Cleaner code with exhaustive pattern matching and guard conditions");
+
+        // Business rule applied
+        response.put("business_rule_applied", getBusinessRuleDescription(request));
+
+        // Pattern matching path (like shopping cart's flow description)
+        response.put("pattern_matching_path", buildPatternMatchingPath(request));
 
         return ResponseEntity.ok(response);
     }
 
     /**
-     * Get processing statistics - Enhanced with educational metadata
+     * Get processing statistics with educational metadata
      */
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getProcessingStats() {
@@ -152,8 +183,8 @@ public class PaymentProcessingController {
         response.put("declineRate", String.format("%.1f%%", stats.getDeclineRate()));
         response.put("totalAmount", stats.totalAmount());
 
-        // Educational metadata (matching shopping cart format)
-        response.put("controller_method", "getProcessingStats");
+        // === EDUCATIONAL METADATA ===
+        response.put("controller_method", "PaymentProcessingController.getProcessingStats");
         response.put("service_method", "PaymentProcessingService.getProcessingStats");
         response.put("java21_features_used", List.of("Records", "Sealed Interfaces", "Pattern Matching Results"));
         response.put("operation_description", "Statistics aggregation from pattern matching decisions");
@@ -162,7 +193,7 @@ public class PaymentProcessingController {
     }
 
     /**
-     * Get processing history - Enhanced with educational metadata
+     * Get processing history with educational metadata
      */
     @GetMapping("/history")
     public ResponseEntity<Map<String, Object>> getProcessingHistory() {
@@ -172,8 +203,8 @@ public class PaymentProcessingController {
         response.put("history", history);
         response.put("totalEntries", history.size());
 
-        // Educational metadata (matching shopping cart format)
-        response.put("controller_method", "getProcessingHistory");
+        // === EDUCATIONAL METADATA ===
+        response.put("controller_method", "PaymentProcessingController.getProcessingHistory");
         response.put("service_method", "PaymentProcessingService.getProcessingHistory");
         response.put("java21_features_used", List.of("Records", "Pattern Matching Results", "Immutable Data"));
         response.put("operation_description", "Historical view of pattern matching decisions");
@@ -182,7 +213,7 @@ public class PaymentProcessingController {
     }
 
     /**
-     * Clear processing history - Enhanced with educational metadata
+     * Clear processing history
      */
     @DeleteMapping("/history")
     public ResponseEntity<Map<String, Object>> clearHistory() {
@@ -192,80 +223,105 @@ public class PaymentProcessingController {
         response.put("status", "cleared");
         response.put("message", "Payment processing history cleared successfully");
 
-        // Educational metadata (matching shopping cart format)
-        response.put("controller_method", "clearHistory");
+        // === EDUCATIONAL METADATA ===
+        response.put("controller_method", "PaymentProcessingController.clearHistory");
         response.put("service_method", "PaymentProcessingService.clearHistory");
         response.put("operation_description", "Demo reset - clear all pattern matching results");
 
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get available payment methods - Enhanced with educational metadata
-     */
-    @GetMapping("/methods")
-    public ResponseEntity<Map<String, Object>> getAvailablePaymentMethods() {
-        Map<String, Object> response = new LinkedHashMap<>();
-
-        response.put("paymentMethods", List.of(
-                Map.of(
-                        "type", "CREDIT_CARD",
-                        "name", "Credit Card",
-                        "description", "Visa, MasterCard, American Express",
-                        "patterns", List.of("Standard processing", "High-value domestic", "High-value international"),
-                        "guardConditions", List.of("amount > $1000", "isInternational", "amount > $1000 && isInternational"),
-                        "recordComponents", 8
-                ),
-                Map.of(
-                        "type", "PAYPAL",
-                        "name", "PayPal",
-                        "description", "PayPal account payments",
-                        "patterns", List.of("Standard processing", "Premium customer expedited", "Unverified account"),
-                        "guardConditions", List.of("isPremiumCustomer", "!isVerified"),
-                        "recordComponents", 5
-                ),
-                Map.of(
-                        "type", "BANK_TRANSFER",
-                        "name", "Bank Transfer",
-                        "description", "ACH bank transfers",
-                        "patterns", List.of("Standard processing", "Large transfer approval", "Invalid routing"),
-                        "guardConditions", List.of("amount >= $5000", "!isValidRoutingNumber"),
-                        "recordComponents", 6
-                )
-        ));
-
-        // Educational metadata about sealed interface
-        response.put("sealed_interface", "PaymentMethod permits CreditCard, PayPal, BankTransfer");
-        response.put("java21_features", "Sealed interfaces enable exhaustive pattern matching");
-        response.put("compiler_guarantee", "All payment types must be handled - no default case needed");
-
-        return ResponseEntity.ok(response);
-    }
-
     // ============================================================================
-    // HELPER METHODS - Enhanced for educational metadata
+    // HELPER METHODS FOR EDUCATIONAL METADATA (like shopping cart)
     // ============================================================================
 
     /**
-     * Get Java 21 method name equivalent (like shopping cart's getFirst, getLast)
+     * Get Java 21 methods used (like shopping cart's java21_methods_used)
      */
-    private String getJava21MethodName(PaymentProcessingResult result) {
-        return switch (result.patternMatched()) {
-            case "CreditCard" -> "switch-pattern-match";
-            case "PayPal" -> "guard-condition-match";
-            case "BankTransfer" -> "amount-guard-match";
-            default -> "pattern-match";
-        };
+    private List<String> getJava21MethodsUsed(PaymentProcessingResult result) {
+        return List.of(
+                "switch-pattern-matching",
+                "record-destructuring",
+                "guard-conditions",
+                "sealed-interface-matching",
+                "yield-expressions"
+        );
     }
 
     /**
-     * Get operation description (matching shopping cart format)
+     * Get operation description (like shopping cart's operation_description)
      */
     private String getOperationDescription(PaymentProcessingResult result) {
         if (!"none".equals(result.guardCondition())) {
             return "Pattern matched with guard condition: " + result.guardCondition();
         } else {
             return "Standard pattern matching without guards";
+        }
+    }
+
+    /**
+     * Get business rule description (like shopping cart's business logic info)
+     */
+    private String getBusinessRuleDescription(PaymentProcessingResult result) {
+        return switch (result.status()) {
+            case APPROVED -> "Standard processing rules applied successfully";
+            case REQUIRES_VERIFICATION -> "Security verification required by business rules";
+            case REQUIRES_APPROVAL -> "Manager approval required by policy";
+            case DECLINED -> "Transaction declined due to validation failure";
+            default -> "Processing rules applied";
+        };
+    }
+
+    /**
+     * Get business rule description for simple requests
+     */
+    private String getBusinessRuleDescription(SimplePaymentRequest request) {
+        return switch (request.method()) {
+            case "creditcard" -> {
+                if (request.amount().compareTo(BigDecimal.valueOf(1000)) > 0) {
+                    yield "High-value credit card transactions require additional verification for security";
+                } else {
+                    yield "Standard credit card processing rules applied";
+                }
+            }
+            case "paypal" -> "PayPal transactions processed with standard validation";
+            case "bank" -> {
+                if (request.amount().compareTo(BigDecimal.valueOf(5000)) >= 0) {
+                    yield "Large bank transfers require manager approval per compliance policy";
+                } else {
+                    yield "Standard bank transfer processing rules applied";
+                }
+            }
+            default -> "No specific business rules for unknown payment method";
+        };
+    }
+
+    /**
+     * Get pattern matching path for educational purposes
+     */
+    private String getPatternMatchingPath(PaymentProcessingResult result) {
+        String pattern = result.patternMatched();
+        String guard = result.guardCondition();
+
+        if ("none".equals(guard)) {
+            return pattern + " → Standard Path → " + result.processingAction();
+        } else {
+            return pattern + " → Guard: " + guard + " → " + result.processingAction();
+        }
+    }
+
+    /**
+     * Build pattern matching path for simple requests
+     */
+    private String buildPatternMatchingPath(SimplePaymentRequest request) {
+        String pattern = getPatternMatchedForMethod(request.method());
+        String guard = getGuardConditionForRequest(request);
+        String action = getProcessingActionForRequest(request);
+
+        if ("none".equals(guard)) {
+            return String.format("%s → Standard Path → %s", pattern, action);
+        } else {
+            return String.format("%s → Guard: %s → %s", pattern, guard, action);
         }
     }
 
@@ -281,30 +337,89 @@ public class PaymentProcessingController {
     }
 
     /**
-     * Get business rule description
+     * Get the pattern that was matched for the given payment method
      */
-    private String getBusinessRuleDescription(PaymentProcessingResult result) {
-        return switch (result.status()) {
-            case APPROVED -> "Standard processing rules applied";
-            case REQUIRES_VERIFICATION -> "Security verification required by business rules";
-            case REQUIRES_APPROVAL -> "Manager approval required by policy";
-            case DECLINED -> "Transaction declined due to validation failure";
-            default -> "Processing rules applied";
+    private String getPatternMatchedForMethod(String method) {
+        return switch (method) {
+            case "creditcard" -> "CreditCard Pattern";
+            case "paypal" -> "PayPal Pattern";
+            case "bank" -> "BankTransfer Pattern";
+            default -> "Unknown Pattern";
         };
     }
 
     /**
-     * Get pattern matching path for educational purposes
+     * Determine which guard condition was evaluated for this request
      */
-    private String getPatternMatchingPath(PaymentProcessingResult result) {
-        String pattern = result.patternMatched();
-        String guard = result.guardCondition();
+    private String getGuardConditionForRequest(SimplePaymentRequest request) {
+        return switch (request.method()) {
+            case "creditcard" -> {
+                if (request.amount().compareTo(BigDecimal.valueOf(1000)) > 0) {
+                    yield "amount > $1,000";
+                } else {
+                    yield "amount <= $1,000";
+                }
+            }
+            case "bank" -> {
+                if (request.amount().compareTo(BigDecimal.valueOf(5000)) >= 0) {
+                    yield "amount >= $5,000";
+                } else {
+                    yield "amount < $5,000";
+                }
+            }
+            default -> "none";
+        };
+    }
 
-        if ("none".equals(guard)) {
-            return pattern + " → Standard Path";
+    /**
+     * Get the processing action that was taken
+     */
+    private String getProcessingActionForRequest(SimplePaymentRequest request) {
+        return switch (request.method()) {
+            case "creditcard" -> {
+                if (request.amount().compareTo(BigDecimal.valueOf(1000)) > 0) {
+                    yield "requireAdditionalVerification";
+                } else {
+                    yield "processStandardCreditCard";
+                }
+            }
+            case "paypal" -> "processStandardPayPal";
+            case "bank" -> {
+                if (request.amount().compareTo(BigDecimal.valueOf(5000)) >= 0) {
+                    yield "requireManagerApproval";
+                } else {
+                    yield "processStandardBankTransfer";
+                }
+            }
+            default -> "handleUnknownMethod";
+        };
+    }
+
+    /**
+     * Build a human-readable operation description
+     */
+    private String buildOperationDescription(SimplePaymentRequest request) {
+        String method = getMethodDisplayName(request.method());
+        String amount = "$" + request.amount().toPlainString();
+        String guard = getGuardConditionForRequest(request);
+
+        if (!"none".equals(guard)) {
+            return String.format("%s payment (%s) with guard condition: %s", method, amount, guard);
         } else {
-            return pattern + " → Guard: " + guard + " → " + result.processingAction();
+            return String.format("%s payment (%s) with standard processing", method, amount);
         }
+    }
+
+    /**
+     * Get user-friendly display name for payment method
+     */
+    private String getMethodDisplayName(String method) {
+        return switch (method) {
+            case "creditcard" -> "Credit Card";
+            case "paypal" -> "PayPal";
+            case "bank" -> "Bank Transfer";
+            default -> "Unknown Method";
+        };
     }
 
     /**
@@ -369,75 +484,8 @@ public class PaymentProcessingController {
         );
     }
 
-    /**
-     * Create payment method from scenario
-     */
-    private PaymentMethod createPaymentMethodFromScenario(ScenarioRequest request) {
-        return switch (request.scenario().toUpperCase()) {
-            case "HIGH_VALUE_INTERNATIONAL" -> new CreditCard(
-                    "4111111111111111", "VISA", "123", "12", "2026",
-                    "Demo User", true, LocalDateTime.now()
-            );
-
-            case "HIGH_VALUE_DOMESTIC" -> new CreditCard(
-                    "4111111111111111", "VISA", "123", "12", "2026",
-                    "Demo User", false, LocalDateTime.now()
-            );
-
-            case "PREMIUM_PAYPAL" -> new PayPal(
-                    "premium@example.com", "DEMO_PREMIUM", true, false, LocalDateTime.now()
-            );
-
-            case "UNVERIFIED_PAYPAL" -> new PayPal(
-                    "unverified@example.com", "DEMO_UNVERIFIED", false, false, LocalDateTime.now()
-            );
-
-            case "LARGE_BANK_TRANSFER" -> new BankTransfer(
-                    "1234567890", "021000021", "Demo Bank", "CHECKING",
-                    "Demo User", LocalDateTime.now()
-            );
-
-            case "INVALID_ROUTING" -> new BankTransfer(
-                    "1234567890", "123456789", "Demo Bank", "CHECKING",
-                    "Demo User", LocalDateTime.now()
-            );
-
-            default -> new CreditCard(
-                    "4111111111111111", "VISA", "123", "12", "2026",
-                    "Demo User", false, LocalDateTime.now()
-            );
-        };
-    }
-
-    /**
-     * Get educational note for scenario
-     */
-    private String getEducationalNote(PaymentProcessingResult result) {
-        return switch (result.patternMatched()) {
-            case "CreditCard" -> "Credit Card pattern matched with guard: " + result.guardCondition();
-            case "PayPal" -> "PayPal pattern matched - note customer tier handling";
-            case "BankTransfer" -> "Bank Transfer pattern with amount-based routing";
-            default -> "Pattern matching demonstration completed";
-        };
-    }
-
-    /**
-     * Get scenario description
-     */
-    private String getScenarioDescription(String scenario) {
-        return switch (scenario.toUpperCase()) {
-            case "HIGH_VALUE_INTERNATIONAL" -> "High-value international credit card transaction";
-            case "HIGH_VALUE_DOMESTIC" -> "High-value domestic credit card transaction";
-            case "PREMIUM_PAYPAL" -> "Premium customer PayPal processing";
-            case "UNVERIFIED_PAYPAL" -> "Unverified PayPal account handling";
-            case "LARGE_BANK_TRANSFER" -> "Large bank transfer requiring approval";
-            case "INVALID_ROUTING" -> "Invalid routing number validation";
-            default -> "Standard payment processing";
-        };
-    }
-
     // ============================================================================
-    // REQUEST/RESPONSE RECORDS (Enhanced)
+    // REQUEST/RESPONSE RECORDS
     // ============================================================================
 
     public record PaymentRequest(
@@ -464,10 +512,37 @@ public class PaymentProcessingController {
             String accountHolderName
     ) {}
 
-    public record ScenarioRequest(
-            String scenario,
-            BigDecimal amount,
-            String customerTier,
-            boolean isInternational
-    ) {}
+    /**
+     * Simple request record for basic payment processing demo
+     */
+    public record SimplePaymentRequest(
+            String method,
+            BigDecimal amount
+    ) {
+        /**
+         * Compact constructor with validation
+         */
+        public SimplePaymentRequest {
+            if (method == null || method.isBlank()) {
+                throw new IllegalArgumentException("Payment method cannot be null or empty");
+            }
+            if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Amount must be positive");
+            }
+        }
+
+        /**
+         * Check if this is a high-value transaction
+         */
+        public boolean isHighValue() {
+            return amount.compareTo(BigDecimal.valueOf(1000)) > 0;
+        }
+
+        /**
+         * Check if this requires special approval
+         */
+        public boolean requiresApproval() {
+            return "bank".equals(method) && amount.compareTo(BigDecimal.valueOf(5000)) >= 0;
+        }
+    }
 }
