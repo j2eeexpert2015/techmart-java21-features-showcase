@@ -1,367 +1,11 @@
-/* ================================
-   RESPONSIVE DESIGN ENHANCEMENTS - Fixed
-   ================================ */
-@media (max-width: 768px) {
-    .container-fluid {
-        padding: 0.25rem;
-    }
-
-    .demo-instructions-panel {
-        margin: 0.25rem;
-        padding: 0.75rem;
-        max-height: 100px;
-    }
-
-    .instructions-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .instructions-steps {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-    }
-
-    .instruction-step {
-        font-size: 0.8rem;
-    }
-
-    .step-number {
-        width: 18px;
-        height: 18px;
-        font-size: 0.7rem;
-    }
-
-    .amount-test-buttons {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.3rem;
-    }
-
-    .amount-test-buttons .btn {
-        width: 100%;
-        justify-content: center;
-        font-size: 0.75rem;
-    }
-
-    .demo-hint {
-        flex-direction: column;
-        text-align: center;
-        padding: 0.5rem;
-    }
-
-    .payment-method-card {
-        min-height: 120px;
-        padding: 0.75rem;
-    }
-
-    .customer-type-selector .btn-group {
-        display: flex;
-        width: 100%;
-    }
-
-    .customer-type-selector .btn {
-        flex: 1;
-        font-size: 0.75rem;
-        padding: 0.3rem 0.5rem;
-    }
-
-    .api-log-container {
-        height: 180px;
-        font-size: 0.75em;
-        padding: 0.5rem;
-    }
-
-    .demo-card {
-        padding: 0.75rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .demo-card h5, .demo-card h6 {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .status-step {
-        padding: 0.5rem 0;
-    }
-
-    .status-icon {
-        width: 24px;
-        height: 24px;
-        font-size: 0.7rem;
-        margin-right: 0.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .demo-instructions-panel {
-        margin: 0.1rem;
-        padding: 0.5rem;
-        max-height: 90px;
-    }
-
-    .instructions-content h6 {
-        font-size: 0.85rem;
-    }
-
-    .step-text {
-        font-size: 0.75rem;
-    }
-
-    .payment-method-card {
-        min-height: 100px;
-        padding: 0.5rem;
-    }
-
-    .payment-method-card h6 {
-        font-size: 0.8rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .payment-method-card small {
-        font-size: 0.7rem;
-    }
-
-    .pattern-info {
-        font-size: 0.65rem;
-        padding: 0.15rem 0.3rem;
-    }
-
-    .btn-primary-custom {
-        padding: 0.75rem 1.25rem;
-        font-size: 0.9rem;
-    }
-
-    .api-log-container {
-        height: 150px;
-        padding: 0.5rem;
-        font-size: 0.7em;
-    }
-
-    .demo-card {
-        padding: 0.5rem;
-    }
-
-    .customer-type-selector {
-        padding: 0.5rem;
-    }
-
-    .customer-type-selector h6 {
-        font-size: 0.8rem;
-        margin-bottom: 0.4rem;
-    }
-
-    .customer-type-selector small {
-        font-size: 0.7rem;
-    }
-}
-
-/* ================================
-   SCROLL BEHAVIOR FIXES
-   ================================ */
-.row {
-    margin: 0;
-}
-
-.col-lg-7, .col-lg-5 {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-}
-
-/* Ensure no elements cause horizontal overflow */
-* {
-    box-sizing: border-box;
-}
-
-/* Fix any potential layout issues */
-.demo-page-container .row {
-    max-width: 100%;
-}
-
-.demo-card {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-/* Ensure code preview doesn't overflow */
-.code-preview {
-    overflow-x: auto;
-    max-width: 100%;
-}
-
-.code-preview pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    margin: 0;
-    font-size: 0.8rem;
-}
-
-/* Fix table responsiveness */
-.api-reference-table {
-    width: 100%;
-    table-layout: fixed;
-}
-
-.api-reference-table td,
-.api-reference-table th {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-/* ================================
-   ACCESSIBILITY ENHANCEMENTS - Preserved
-   ================================ */
-.payment-method-card:focus-visible {
-    outline: 3px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-.btn:focus-visible {
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
-}
-
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .demo-instructions-panel,
-    .api-flow-block,
-    .validation-feedback,
-    .payment-method-card::before,
-    .btn-primary-custom::before,
-    .java21-pattern-tag,
-    .demo-hint,
-    .demo-hint i,
-    .status-icon::before {
-        animation: none;
-    }
-
-    .payment-method-card:hover,
-    .btn:hover,
-    .status-step:hover {
-        transform: none;
-    }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .payment-method-card {
-        border-width: 3px;
-    }
-
-    .pattern-matching-indicator,
-    .java21-pattern-tag {
-        border: 2px solid white;
-    }
-
-    .api-reference-table tr.pattern-highlight {
-        background: yellow !important;
-        color: black !important;
-    }
-}
-
-/* Print styles */
-@media print {
-    .demo-instructions-panel,
-    .demo-action-buttons,
-    .amount-test-buttons {
-        display: none;
-    }
-
-    .payment-method-card,
-    .btn,
-    .api-flow-block {
-        break-inside: avoid;
-    }
-
-    .demo-header {
-        background: var(--text-dark) !important;
-        color: white !important;
-    }
-
-    .container-fluid {
-        max-height: none;
-        overflow: visible;
-    }
-}
-
-/* ================================
-   FINAL LAYOUT OPTIMIZATIONS
-   ================================ */
-
-/* Ensure main container doesn't exceed viewport */
-.main-container {
-    max-height: calc(100vh - 1rem);
-    display: flex;
-    flex-direction: column;
-}
-
-/* Make demo page container flexible */
-.demo-page-container {
-    flex: 1;
-    overflow-y: auto;
-    max-height: none;
-}
-
-/* Optimize row spacing */
-.demo-page-container .row {
-    height: 100%;
-    align-items: flex-start;
-}
-
-/* Ensure columns don't exceed container */
-.col-lg-7, .col-lg-5 {
-    max-height: 100%;
-    overflow-y: auto;
-}
-
-/* Remove any potential margin/padding issues */
-.demo-page-container > .row > [class*="col-"] {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Ensure demo cards fit properly */
-.demo-card:last-child {
-    margin-bottom: 0;
-}
-
-/* Fix any Bootstrap grid issues */
-@media (min-width: 992px) {
-    .col-lg-5 .demo-card:last-child {
-        height: auto;
-        min-height: 200px;
-    }
-}
-
-/* ================================
-   SCROLLBAR STYLING FOR MAIN CONTAINER
-   ================================ */
-.demo-page-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.demo-page-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.demo-page-container::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-}
-
-.demo-page-container::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}/**
- * Enhanced TechMart Payment Processing Demo - CSS Stylesheet
+/**
+ * Enhanced TechMart Payment Processing Demo - Complete CSS Stylesheet
+ * COMPLETED: Full responsive design with Visual Flow Inspector matching shopping cart quality
  * Demonstrating Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy
- *
- * NEW FEATURES: UI Guidance, Interactive Elements, Enhanced Visual Feedback
  */
 
 /* ================================
-   EXISTING CSS VARIABLES (preserved)
+   CSS VARIABLES (PRESERVED)
    ================================ */
 :root {
     --primary-color: #007bff;
@@ -387,7 +31,7 @@
     --guard-condition-bg: #fff3cd;
     --guard-condition-border: #ffc107;
 
-    /* NEW: UI Guidance colors */
+    /* UI Guidance colors */
     --instruction-bg: #e7f3ff;
     --instruction-border: #3b82f6;
     --help-bg: #f0f9ff;
@@ -395,7 +39,7 @@
 }
 
 /* ================================
-   NEW: DEMO INSTRUCTIONS PANEL
+   DEMO INSTRUCTIONS PANEL
    ================================ */
 .demo-instructions-panel {
     background: linear-gradient(135deg, var(--instruction-bg) 0%, #f0f9ff 100%);
@@ -477,7 +121,7 @@
 }
 
 /* ================================
-   NEW: ENHANCED PAYMENT METHOD CARDS
+   ENHANCED PAYMENT METHOD CARDS
    ================================ */
 .payment-method-card {
     border: 2px solid var(--border-color);
@@ -564,7 +208,7 @@
 }
 
 /* ================================
-   NEW: AMOUNT TEST BUTTONS
+   AMOUNT TEST BUTTONS
    ================================ */
 .amount-test-buttons {
     display: flex;
@@ -592,7 +236,7 @@
 }
 
 /* ================================
-   NEW: CUSTOMER TYPE SELECTOR
+   CUSTOMER TYPE SELECTOR
    ================================ */
 .customer-type-selector {
     background: var(--help-bg);
@@ -629,7 +273,7 @@
 }
 
 /* ================================
-   NEW: DEMO ACTION BUTTONS
+   DEMO ACTION BUTTONS
    ================================ */
 .demo-action-buttons {
     text-align: center;
@@ -648,7 +292,7 @@
 }
 
 /* ================================
-   NEW: ENHANCED API REFERENCE TABLE
+   ENHANCED API REFERENCE TABLE
    ================================ */
 .api-reference-table {
     font-size: 0.85em;
@@ -719,164 +363,7 @@
 }
 
 /* ================================
-   NEW: ENHANCED VISUAL FLOW INSPECTOR
-   ================================ */
-.api-log-container {
-    background: linear-gradient(135deg, #1a1d23 0%, #2d3748 100%);
-    color: #e2e8f0;
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    font-size: 0.85em;
-    padding: 1rem;
-    border-radius: 8px;
-    height: 280px;
-    overflow-y: auto;
-    border: 2px solid #4a5568;
-    position: relative;
-}
-
-.api-log-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--success-color), var(--info-color), var(--warning-color));
-}
-
-.api-log-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.api-log-container::-webkit-scrollbar-track {
-    background: #2d3748;
-    border-radius: 4px;
-}
-
-.api-log-container::-webkit-scrollbar-thumb {
-    background: #4a5568;
-    border-radius: 4px;
-}
-
-.api-log-container::-webkit-scrollbar-thumb:hover {
-    background: #718096;
-}
-
-.api-flow-block {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 6px;
-    border-left: 4px solid var(--info-color);
-    animation: flowSlideIn 0.4s ease-out;
-    transition: all 0.3s ease;
-}
-
-.api-flow-block:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateX(4px);
-}
-
-@keyframes flowSlideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.api-flow-child {
-    padding-left: 1.5rem;
-    position: relative;
-    margin-top: 0.4rem;
-    opacity: 0.9;
-}
-
-.api-flow-child::before {
-    content: '└──';
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: var(--info-color);
-    font-weight: bold;
-}
-
-.api-flow-block strong {
-    color: var(--warning-color);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.java21-pattern-tag {
-    background: linear-gradient(45deg, var(--success-color), #38c172);
-    color: white;
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
-    animation: tagGlow 2s infinite alternate;
-}
-
-@keyframes tagGlow {
-    0% {
-        box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
-    }
-    100% {
-        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.5);
-    }
-}
-
-/* ================================
-   NEW: ENHANCED VALIDATION FEEDBACK
-   ================================ */
-.validation-feedback {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    border-left: 4px solid;
-    animation: slideInValidation 0.4s ease-out;
-    position: relative;
-    overflow: hidden;
-}
-
-.validation-feedback::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--warning-color), #f6ad55);
-}
-
-@keyframes slideInValidation {
-    from {
-        opacity: 0;
-        transform: translateY(-15px);
-        max-height: 0;
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-        max-height: 200px;
-    }
-}
-
-.validation-feedback {
-    background: linear-gradient(135deg, var(--guard-condition-bg) 0%, #fff8e1 100%);
-    color: #8b4513;
-    border-left-color: var(--warning-color);
-    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
-}
-
-/* ================================
-   NEW: ENHANCED PROCESSING STATUS
+   ENHANCED PROCESSING STATUS
    ================================ */
 .processing-status {
     background: var(--white);
@@ -968,7 +455,7 @@
 }
 
 /* ================================
-   NEW: DEMO SCENARIOS MODAL
+   DEMO SCENARIOS MODAL
    ================================ */
 .modal-content {
     border: none;
@@ -1003,7 +490,7 @@
 }
 
 /* ================================
-   NEW: ENHANCED BUTTONS
+   ENHANCED BUTTONS
    ================================ */
 .btn-primary-custom {
     background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
@@ -1050,7 +537,51 @@
 }
 
 /* ================================
-   NEW: TOOLTIPS ENHANCEMENT
+   ENHANCED VALIDATION FEEDBACK
+   ================================ */
+.validation-feedback {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    border-left: 4px solid;
+    animation: slideInValidation 0.4s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.validation-feedback::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--warning-color), #f6ad55);
+}
+
+@keyframes slideInValidation {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 200px;
+    }
+}
+
+.validation-feedback {
+    background: linear-gradient(135deg, var(--guard-condition-bg) 0%, #fff8e1 100%);
+    color: #8b4513;
+    border-left-color: var(--warning-color);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+/* ================================
+   ENHANCED TOOLTIPS
    ================================ */
 .tooltip-inner {
     background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
@@ -1070,7 +601,7 @@
 }
 
 /* ================================
-   NEW: DEMO HINT ELEMENTS
+   DEMO HINT ELEMENTS
    ================================ */
 .demo-hint {
     display: flex;
@@ -1111,9 +642,130 @@
 }
 
 /* ================================
-   RESPONSIVE DESIGN ENHANCEMENTS
+   ENHANCED VISUAL FLOW INSPECTOR (Like Shopping Cart)
+   ================================ */
+.api-log-container {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    color: #f1f5f9;
+    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.85em;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    height: 400px;
+    overflow-y: auto;
+    border: 2px solid #475569;
+    position: relative;
+    box-shadow: var(--shadow-xl);
+}
+
+.api-log-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--success-color), var(--info-color), var(--warning-color));
+    border-radius: 1rem 1rem 0 0;
+}
+
+.api-log-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.api-log-container::-webkit-scrollbar-track {
+    background: #1e293b;
+    border-radius: 4px;
+}
+
+.api-log-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+    border-radius: 4px;
+}
+
+.api-log-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--info-color));
+}
+
+.api-flow-block {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+    border-radius: 0.75rem;
+    border-left: 4px solid var(--info-color);
+    animation: flowSlideIn 0.5s ease-out;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.api-flow-block:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+    transform: translateX(4px);
+    border-left-color: var(--success-color);
+}
+
+@keyframes flowSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.api-flow-child {
+    padding-left: 1.25rem;
+    position: relative;
+    margin-top: 0.4rem;
+    opacity: 0.9;
+}
+
+.api-flow-child::before {
+    content: '└──';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--info-color);
+    font-weight: bold;
+}
+
+.api-flow-block strong {
+    color: var(--warning-color);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.java21-pattern-tag {
+    background: linear-gradient(45deg, var(--success-color), #38c172);
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+    animation: tagGlow 2s infinite alternate;
+}
+
+@keyframes tagGlow {
+    0% {
+        box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.5);
+    }
+}
+
+/* ================================
+   RESPONSIVE DESIGN ENHANCEMENTS - COMPLETED
    ================================ */
 @media (max-width: 768px) {
+    .container-fluid {
+        padding: 0.25rem;
+    }
+
     .demo-instructions-panel {
         margin: 0.5rem;
         padding: 1rem;
@@ -1128,6 +780,16 @@
     .instructions-steps {
         flex-direction: column;
         gap: 0.75rem;
+    }
+
+    .instruction-step {
+        font-size: 0.8rem;
+    }
+
+    .step-number {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
     }
 
     .amount-test-buttons {
@@ -1161,14 +823,34 @@
         flex: 1;
     }
 
-    .api-log-container {
-        height: 200px;
-        font-size: 0.8em;
-    }
-
     .scenario-buttons .btn {
         padding: 0.75rem;
         font-size: 0.9rem;
+    }
+
+    .api-log-container {
+        height: 280px;
+        padding: 1rem;
+        font-size: 0.8em;
+    }
+
+    .demo-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .demo-card h5, .demo-card h6 {
+        font-size: 1rem;
+    }
+
+    .status-step {
+        padding: 0.75rem 0;
+    }
+
+    .status-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
     }
 }
 
@@ -1176,12 +858,6 @@
     .demo-instructions-panel {
         margin: 0.25rem;
         padding: 0.75rem;
-    }
-
-    .step-number {
-        width: 20px;
-        height: 20px;
-        font-size: 0.7rem;
     }
 
     .step-text {
@@ -1199,8 +875,22 @@
     }
 
     .api-log-container {
-        height: 180px;
+        height: 250px;
         padding: 0.75rem;
+        font-size: 0.75em;
+    }
+
+    .demo-card {
+        padding: 0.75rem;
+    }
+
+    .customer-type-selector {
+        padding: 0.75rem;
+    }
+
+    .customer-type-selector .btn {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
     }
 }
 
@@ -1272,4 +962,445 @@
         background: var(--text-dark) !important;
         color: white !important;
     }
+
+    .container-fluid {
+        max-height: none;
+        overflow: visible;
+    }
 }
+
+/* ================================
+   FINAL LAYOUT OPTIMIZATIONS - COMPLETED
+   ================================ */
+
+/* Ensure main container doesn't exceed viewport */
+.main-container {
+    max-height: calc(100vh - 1rem);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Make demo page container flexible */
+.demo-page-container {
+    flex: 1;
+    overflow-y: auto;
+    max-height: none;
+}
+
+/* Optimize row spacing */
+.demo-page-container .row {
+    height: 100%;
+    align-items: flex-start;
+}
+
+/* Ensure columns don't exceed container */
+.col-lg-7, .col-lg-5 {
+    max-height: 100%;
+    overflow-y: auto;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Remove any potential margin/padding issues */
+.demo-page-container > .row > [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure demo cards fit properly */
+.demo-card {
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+}
+
+.demo-card:last-child {
+    margin-bottom: 0;
+}
+
+/* Fix any Bootstrap grid issues */
+@media (min-width: 992px) {
+    .col-lg-5 .demo-card:last-child {
+        height: auto;
+        min-height: 200px;
+    }
+}
+
+/* ================================
+   SCROLLBAR STYLING FOR MAIN CONTAINER
+   ================================ */
+.demo-page-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.demo-page-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.demo-page-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.demo-page-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* ================================
+   ADDITIONAL VISUAL FLOW INSPECTOR ENHANCEMENTS
+   ================================ */
+
+/* Pattern flow separator styling */
+.pattern-flow-separator {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 12px 0;
+    position: relative;
+    text-align: center;
+}
+
+.pattern-flow-separator::before {
+    content: '⚡ Pattern Matching Flow ⚡';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    padding: 0 12px;
+    font-size: 9px;
+    color: var(--warning-color);
+    font-weight: bold;
+    border-radius: 12px;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Status indicators for processing flow */
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: statusPulse 2s infinite;
+}
+
+.status-processing {
+    background: var(--warning-color);
+}
+
+.status-success {
+    background: var(--success-color);
+}
+
+.status-error {
+    background: var(--danger-color);
+}
+
+@keyframes statusPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.2);
+    }
+}
+
+/* Enhanced code preview styling */
+.code-preview {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 2px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    max-height: 350px;
+    overflow-y: auto;
+    line-height: 1.6;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.code-preview::before {
+    content: 'Java 21 Pattern Matching';
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.code-preview::-webkit-scrollbar {
+    width: 6px;
+}
+
+.code-preview::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+.code-preview::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+    border-radius: 3px;
+}
+
+/* ================================
+   TOAST NOTIFICATIONS STYLING
+   ================================ */
+.toast-container {
+    z-index: 9999;
+}
+
+.custom-toast {
+    min-width: 300px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.custom-toast .toast-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.custom-toast .toast-body {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Success toast styling */
+.toast-success {
+    border-left: 4px solid var(--success-color);
+}
+
+.toast-success .toast-header {
+    color: var(--success-color);
+}
+
+/* Warning toast styling */
+.toast-warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.toast-warning .toast-header {
+    color: var(--warning-color);
+}
+
+/* Error toast styling */
+.toast-error {
+    border-left: 4px solid var(--danger-color);
+}
+
+.toast-error .toast-header {
+    color: var(--danger-color);
+}
+
+/* Info toast styling */
+.toast-info {
+    border-left: 4px solid var(--info-color);
+}
+
+.toast-info .toast-header {
+    color: var(--info-color);
+}
+
+/* ================================
+   LOADING STATES AND ANIMATIONS
+   ================================ */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0, 123, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.processing-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+    z-index: 10;
+}
+
+.processing-text {
+    margin-left: 0.5rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* ================================
+   ENHANCED HOVER EFFECTS
+   ================================ */
+.demo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.api-reference-table tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    transform: translateX(2px);
+}
+
+/* ================================
+   UTILITY CLASSES
+   ================================ */
+.text-java21 {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.bg-java21 {
+    background: linear-gradient(135deg, var(--success-color), #38c172);
+    color: white;
+}
+
+.border-java21 {
+    border-color: var(--success-color) !important;
+}
+
+.shadow-java21 {
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Pattern matching specific utilities */
+.pattern-text {
+    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+    background: rgba(0, 123, 255, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.guard-text {
+    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+    background: rgba(255, 193, 7, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #8b4513;
+}
+
+/* ================================
+   DARK MODE SUPPORT (Future Enhancement)
+   ================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --white: #1a202c;
+        --light-bg: #2d3748;
+        --text-dark: #f7fafc;
+        --text-muted: #a0aec0;
+        --border-color: #4a5568;
+    }
+
+    .api-log-container {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+
+    .demo-card {
+        background: var(--light-bg);
+        color: var(--text-dark);
+    }
+}
+
+/* ================================
+   FINAL CLEANUP AND OPTIMIZATIONS
+   ================================ */
+
+/* Ensure all interactive elements have proper focus states */
+.payment-method-card:focus,
+.btn:focus,
+.form-control:focus,
+.form-check-input:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+    transition-property: transform, box-shadow, background-color, border-color, opacity;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
+
+/* Prevent layout shift during animations */
+.payment-method-card,
+.demo-card,
+.btn {
+    will-change: transform;
+}
+
+/* Performance optimization: reduce paint operations */
+.api-flow-block,
+.status-step,
+.payment-method-card::before {
+    transform: translateZ(0);
+}
+
+/* ================================
+   BROWSER COMPATIBILITY
+   ================================ */
+
+/* Firefox scrollbar styling */
+.api-log-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) #1e293b;
+}
+
+/* Safari-specific fixes */
+@supports (-webkit-backdrop-filter: blur(10px)) {
+    .api-flow-block {
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .custom-toast {
+        -webkit-backdrop-filter: blur(10px);
+    }
+}
+
+/* Edge-specific fixes for grid layout */
+@supports (-ms-grid-row-align: stretch) {
+    .demos-grid {
+        display: -ms-grid;
+    }
+}
+
+/* ================================
+   CSS GRID FALLBACK FOR OLDER BROWSERS
+   ================================ */
+@supports not (display: grid) {
+    .instructions-steps {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .stats-grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .stats-grid > * {
+        flex: 1 1 150px;
+    }
+}
+
+/* ================================
+   END OF COMPLETE CSS FILE
+   ================================ */
