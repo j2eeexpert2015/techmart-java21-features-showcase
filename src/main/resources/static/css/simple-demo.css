@@ -1,3 +1,12 @@
+/**
+ * Simple Demo CSS - UPDATED to use shared Visual Flow Inspector
+ * Removed Visual Flow Inspector styles (now in shared/visual-flow-inspector.css)
+ * Kept only demo-specific styling
+ */
+
+/* ================================
+   GLOBAL STYLES AND RESET
+   ================================ */
 * {
     margin: 0;
     padding: 0;
@@ -5,11 +14,11 @@
 }
 
 html, body {
-    height: 100%; /* Ensure html and body take full height */
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #333;
     padding: 20px;
@@ -18,20 +27,21 @@ body {
 .page-wrapper {
     display: flex;
     flex-direction: column;
-    min-height: 100%; /* Use min-height to allow content to expand */
-    background: rgba(255, 255, 255, 0.95); /* Move the white background here */
+    min-height: calc(100vh - 40px);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Prevent gradient from bleeding at corners */
+    overflow: hidden;
 }
 
-
-/* Simple Header */
+/* ================================
+   HEADER
+   ================================ */
 .header {
-    background: transparent; /* Header is now part of the white wrapper */
+    background: transparent;
     padding: 15px;
     text-align: center;
-    border-bottom: 1px solid #e5e7eb; /* Add a subtle separator */
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .header h1 {
@@ -40,7 +50,9 @@ body {
     color: #667eea;
 }
 
-/* Main Container */
+/* ================================
+   MAIN CONTAINER
+   ================================ */
 .container {
     display: flex;
     gap: 20px;
@@ -49,34 +61,40 @@ body {
     margin: 0 auto;
     padding: 20px;
     align-items: flex-start;
-    flex: 1; /* Allow container to grow and fill available space */
+    flex: 1;
 }
 
-/* Left Side */
+/* ================================
+   LEFT AND RIGHT SIDES
+   ================================ */
 .left-side {
     flex: 2;
-    background: transparent; /* No background needed, inherits from wrapper */
+    background: transparent;
 }
 
-/* Right Side */
 .right-side {
     flex: 1;
     background: rgba(0, 0, 0, 0.9);
     color: white;
     border-radius: 8px;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    max-height: calc(100vh - 140px);
 }
 
-/* Cards */
+/* ================================
+   CARDS
+   ================================ */
 .card {
     background: white;
     border-radius: 6px;
     padding: 15px;
     margin-bottom: 15px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Softer shadow */
-    border: 1px solid #e5e7eb; /* Subtle border */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
 }
-
 
 .card h3 {
     margin-bottom: 10px;
@@ -84,7 +102,9 @@ body {
     color: #333;
 }
 
-/* Top Row Layout */
+/* ================================
+   TOP ROW LAYOUT
+   ================================ */
 .top-row {
     display: flex;
     gap: 15px;
@@ -106,7 +126,9 @@ body {
     font-size: 14px;
 }
 
-/* Payment Methods */
+/* ================================
+   PAYMENT METHODS
+   ================================ */
 .payment-methods {
     display: flex;
     gap: 8px;
@@ -121,6 +143,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     background: #fafafa;
+    position: relative;
 }
 
 .payment-card.selected {
@@ -130,6 +153,29 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.payment-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    background: #10b981;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    animation: checkmarkPop 0.3s ease-out;
+}
+
+@keyframes checkmarkPop {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}
 
 .payment-card h4 {
     font-size: 12px;
@@ -142,7 +188,9 @@ body {
     margin: 0;
 }
 
-/* Instructions Grid */
+/* ================================
+   INSTRUCTIONS GRID
+   ================================ */
 .instructions-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -170,7 +218,9 @@ body {
     margin-right: 5px;
 }
 
-/* Amount Buttons */
+/* ================================
+   AMOUNT SECTION
+   ================================ */
 .amount-section {
     background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
     border: 1px solid #e0e7ff;
@@ -205,7 +255,9 @@ body {
     margin-top: 2px;
 }
 
-/* Process Button */
+/* ================================
+   PROCESS BUTTON
+   ================================ */
 .process-btn {
     width: 100%;
     padding: 12px;
@@ -217,6 +269,23 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.process-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.process-btn:hover::before {
+    left: 100%;
 }
 
 .process-btn:hover {
@@ -224,14 +293,25 @@ body {
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-/* Result */
+/* ================================
+   RESULT SECTION
+   ================================ */
 .result-card {
     background: linear-gradient(135deg, #f0f9f0 0%, #e8f5e8 100%);
     border: 1px solid #c3e6cb;
     display: none;
+    border-left: 4px solid #10b981;
+    animation: resultSlideIn 0.5s ease-out;
 }
 
-/* Right Side Content */
+@keyframes resultSlideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================
+   RIGHT SIDE FEATURES
+   ================================ */
 .features-section h3 {
     color: #fbbf24;
     margin-bottom: 10px;
@@ -262,19 +342,9 @@ body {
     border-radius: 2px;
 }
 
-/* Log Section */
-.log-section {
-    background: #0f1419;
-    color: #00ff41;
-    padding: 10px;
-    border-radius: 6px;
-    font-family: monospace;
-    font-size: 11px;
-    height: 250px;
-    overflow-y: auto;
-    margin-top: 15px;
-}
-
+/* ================================
+   LOG SECTION HEADER
+   ================================ */
 .log-header {
     display: flex;
     justify-content: space-between;
@@ -288,39 +358,52 @@ body {
     margin: 0;
 }
 
-.clear-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 4px 8px;
-    border-radius: 3px;
-    font-size: 10px;
-    cursor: pointer;
-}
+/* Note: .clear-btn styles are now in shared/visual-flow-inspector.css */
 
-.java21-highlight {
-    background: rgba(52, 211, 153, 0.2);
-    padding: 2px 4px;
-    border-left: 2px solid #34d399;
-    border-radius: 2px;
-}
-
-/* Mobile */
+/* ================================
+   MOBILE RESPONSIVE
+   ================================ */
 @media (max-width: 768px) {
     body {
-        padding: 10px; /* Reduce padding on mobile */
+        padding: 10px;
     }
 
     .container {
         flex-direction: column;
     }
+
     .top-row {
         flex-direction: column;
     }
+
     .instructions-grid {
         grid-template-columns: 1fr;
     }
+
     .right-side {
         margin-top: 15px;
+        max-height: none;
+    }
+
+    /* Visual Flow Inspector mobile adjustments handled by shared CSS */
+}
+
+@media (max-width: 480px) {
+    .payment-card h4 {
+        font-size: 11px;
+    }
+
+    .payment-card p {
+        font-size: 9px;
+    }
+
+    .amount-btn {
+        font-size: 10px;
+        padding: 6px;
+    }
+
+    .process-btn {
+        font-size: 13px;
+        padding: 10px;
     }
 }

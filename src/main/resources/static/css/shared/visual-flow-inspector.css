@@ -1,0 +1,389 @@
+/**
+ * Visual Flow Inspector - Shared CSS Component
+ * Extracted from shopping-cart-demo.css for reuse across all demos
+ *
+ * Features:
+ * - Dark terminal-style log container
+ * - Structured API flow blocks
+ * - Java 21 feature highlighting
+ * - Smooth animations and transitions
+ * - Consistent scrollbar styling
+ */
+
+/* ================================
+   API LOG CONTAINER
+   ================================ */
+.api-log-container {
+    background-color: #212529;
+    color: #f8f9fa;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85em;
+    padding: .75rem;
+    border-radius: .25rem;
+    height: 320px;
+    overflow-y: auto;
+    border: 1px solid #495057;
+    position: relative;
+}
+
+/* Enhanced version for payment/simple demos */
+.api-log-container.enhanced {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    color: #f1f5f9;
+    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+    border: 2px solid #475569;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* Optional gradient top border for enhanced version */
+.api-log-container.enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981, #06b6d4, #f59e0b);
+    border-radius: 8px 8px 0 0;
+}
+
+/* ================================
+   API FLOW BLOCKS
+   ================================ */
+.api-flow-block {
+    margin-bottom: .5rem;
+    padding-left: .5rem;
+    border-left: 3px solid #17a2b8;
+    animation: flowSlideIn 0.4s ease-out;
+    transition: all 0.3s ease;
+}
+
+/* Enhanced version with more sophisticated styling */
+.api-flow-block.enhanced {
+    margin-bottom: 8px;
+    padding: 8px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+    border-radius: 6px;
+    border-left: 3px solid #06b6d4;
+    backdrop-filter: blur(10px);
+}
+
+.api-flow-block:hover,
+.api-flow-block.enhanced:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(3px);
+    border-left-color: #10b981;
+}
+
+.api-flow-block.enhanced:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+    transform: translateX(4px);
+}
+
+@keyframes flowSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ================================
+   API FLOW CHILD ELEMENTS
+   ================================ */
+.api-flow-child {
+    padding-left: 1.25rem;
+    position: relative;
+    margin-top: 3px;
+    opacity: 0.9;
+}
+
+.api-flow-child::before {
+    content: '└──';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #6c757d;
+    font-weight: bold;
+}
+
+/* Enhanced version */
+.api-flow-child.enhanced {
+    padding-left: 15px;
+    font-size: 10px;
+}
+
+.api-flow-child.enhanced::before {
+    color: #06b6d4;
+}
+
+/* ================================
+   JAVA 21 FEATURE TAGS
+   ================================ */
+.java21-method-tag {
+    color: #ffffff;
+    background-color: #28a745;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 0.8em;
+    display: inline-block;
+    margin: 0 2px;
+}
+
+.java21-pattern-tag {
+    background: linear-gradient(45deg, #10b981, #059669);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+    animation: tagGlow 2s infinite alternate;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+/* Enhanced version for payment/simple demos */
+.java21-pattern-tag.enhanced {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    margin-left: 0.5rem;
+}
+
+@keyframes tagGlow {
+    0% {
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+        transform: scale(1);
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
+        transform: scale(1.02);
+    }
+}
+
+/* ================================
+   STATUS INDICATORS
+   ================================ */
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: statusPulse 2s infinite;
+}
+
+.status-processing {
+    background: #f59e0b;
+}
+
+.status-success {
+    background: #10b981;
+}
+
+.status-error {
+    background: #ef4444;
+}
+
+@keyframes statusPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.2);
+    }
+}
+
+/* ================================
+   FLOW SEPARATORS
+   ================================ */
+.pattern-flow-separator {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 8px 0;
+    position: relative;
+    text-align: center;
+}
+
+.pattern-flow-separator::before {
+    content: attr(data-title);
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    padding: 0 8px;
+    font-size: 9px;
+    color: #f59e0b;
+    font-weight: bold;
+    border-radius: 12px;
+}
+
+/* Default title if no data-title attribute */
+.pattern-flow-separator:not([data-title])::before {
+    content: '⚡ Pattern Matching Flow ⚡';
+}
+
+/* ================================
+   SCROLLBAR STYLING
+   ================================ */
+.api-log-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.api-log-container::-webkit-scrollbar-track {
+    background: #495057;
+    border-radius: 4px;
+}
+
+.api-log-container::-webkit-scrollbar-thumb {
+    background: #6c757d;
+    border-radius: 4px;
+}
+
+.api-log-container::-webkit-scrollbar-thumb:hover {
+    background: #868e96;
+}
+
+/* Enhanced scrollbar for payment/simple demos */
+.api-log-container.enhanced::-webkit-scrollbar {
+    width: 6px;
+}
+
+.api-log-container.enhanced::-webkit-scrollbar-track {
+    background: #1e293b;
+    border-radius: 3px;
+}
+
+.api-log-container.enhanced::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    border-radius: 3px;
+}
+
+.api-log-container.enhanced::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #0891b2, #0e7490);
+}
+
+/* ================================
+   CLEAR BUTTON STYLING
+   ================================ */
+.clear-log-btn {
+    line-height: 1;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Enhanced clear button for other demos */
+.clear-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clear-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+@media (max-width: 768px) {
+    .api-log-container {
+        height: 200px;
+        font-size: 0.8em;
+        padding: 0.5rem;
+    }
+
+    .api-log-container.enhanced {
+        height: 250px;
+        font-size: 0.8em;
+    }
+
+    .java21-pattern-tag {
+        font-size: 8px;
+        padding: 1px 4px;
+    }
+
+    .api-flow-child {
+        padding-left: 1rem;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .api-log-container {
+        height: 180px;
+        font-size: 0.75em;
+    }
+
+    .api-log-container.enhanced {
+        height: 200px;
+    }
+
+    .java21-pattern-tag {
+        font-size: 7px;
+        padding: 1px 3px;
+    }
+}
+
+/* ================================
+   ACCESSIBILITY IMPROVEMENTS
+   ================================ */
+@media (prefers-reduced-motion: reduce) {
+    .api-flow-block,
+    .java21-pattern-tag,
+    .status-indicator {
+        animation: none;
+    }
+
+    .api-flow-block:hover {
+        transform: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .api-log-container {
+        border-width: 2px;
+        border-color: white;
+    }
+
+    .java21-pattern-tag,
+    .java21-method-tag {
+        border: 1px solid white;
+    }
+}
+
+/* Print styles */
+@media print {
+    .api-log-container {
+        background: white !important;
+        color: black !important;
+        border: 2px solid black;
+    }
+
+    .api-flow-block {
+        break-inside: avoid;
+    }
+
+    .java21-pattern-tag {
+        background: gray !important;
+        color: white !important;
+    }
+}
