@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Flow Inspector - Standalone Component Demo</title>
+
+    <!-- Bootstrap for demo UI -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Visual Flow Inspector Component (Standalone) -->
+    <link rel="stylesheet" href="../css/shared/visual-flow-inspector.css">
+</head>
+<body>
+<div class="container-fluid p-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-dark text-white">
+                    <h2 class="mb-0">
+                        <i class="fas fa-stream me-2"></i>
+                        Visual Flow Inspector - Standalone Component Demo
+                    </h2>
+                    <p class="mb-0 mt-2 opacity-75">
+                        Extracted from shopping-cart-demo.html and enhanced for reusability
+                    </p>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-play"></i> Demo Actions</h5>
+                                </div>
+                                <div class="card-body">
+                                    <button class="btn btn-primary w-100 mb-2" onclick="demoBasicLog()">
+                                        <i class="fas fa-plus"></i> Basic Log Entry
+                                    </button>
+                                    <button class="btn btn-success w-100 mb-2" onclick="demoJava21Feature()">
+                                        <i class="fas fa-coffee"></i> Java 21 Feature
+                                    </button>
+                                    <button class="btn btn-info w-100 mb-2" onclick="demoApiFlow()">
+                                        <i class="fas fa-exchange-alt"></i> API Flow Demo
+                                    </button>
+                                    <button class="btn btn-warning w-100 mb-2" onclick="demoPatternMatching()">
+                                        <i class="fas fa-search"></i> Pattern Matching
+                                    </button>
+                                    <button class="btn btn-secondary w-100 mb-2" onclick="demoFlowSeparator()">
+                                        <i class="fas fa-minus"></i> Add Separator
+                                    </button>
+                                    <button class="btn btn-danger w-100 mb-2" onclick="VFI.clear()">
+                                        <i class="fas fa-trash"></i> Clear Log
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6><i class="fas fa-cog"></i> Configuration</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="enhancedMode" checked>
+                                        <label class="form-check-label" for="enhancedMode">
+                                            Enhanced Mode
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="autoScroll" checked>
+                                        <label class="form-check-label" for="autoScroll">
+                                            Auto Scroll to Top
+                                        </label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="maxEntries" class="form-label">Max Log Entries</label>
+                                        <input type="range" class="form-range" id="maxEntries" min="5" max="20" value="12">
+                                        <div class="text-center">
+                                            <small class="text-muted">Current: <span id="maxEntriesValue">12</span></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <!-- Visual Flow Inspector Component Container -->
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-stream"></i> Visual Flow Inspector
+                                    </h6>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="VFI.clear()" title="Clear Log">
+                                        <i class="fas fa-eraser"></i> Clear
+                                    </button>
+                                </div>
+                                <div class="card-body p-0">
+                                    <!-- This is the actual Visual Flow Inspector component -->
+                                    <div id="api-log" class="api-log-container enhanced" style="height: 400px; margin: 0; border-radius: 0;">
+                                        <div class="text-muted text-center py-4">
+                                            <i class="fas fa-play-circle mb-2" style="font-size: 2rem; opacity: 0.5;"></i>
+                                            <div>Click demo actions to see Visual Flow Inspector in action</div>
+                                            <small class="text-muted">Java 21 pattern matching visualization ready</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-code"></i> Usage Examples</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h6>Original Functions (Shopping Cart Compatible)</h6>
+                                    <pre class="bg-light p-3 rounded"><code>// Create flow log entry (shopping cart style)
+const logId = createFlowLog('Add Item', 'POST', '/api/cart/items');
+
+// Update with backend response
+updateFlowLog(logId, responseData);
+
+// Highlight Java 21 method in API reference table
+highlightJavaMethod('addLast');
+
+// Clear the log
+clearInspectorLog();</code></pre>
+
+                                    <h6 class="mt-4">Enhanced Functions (New Demos)</h6>
+                                    <pre class="bg-light p-3 rounded"><code>// Basic API flow logging
+logAPIFlow('Operation', 'User clicked add to cart');
+logAPIFlow('Controller', 'CartController.addToCart');
+logAPIFlow('Service', 'ShoppingCartService.addToCart');
+
+// Pattern matching demo
+VFI.logPattern('CreditCard', 'amount > 1000', 'requireVerification');
+
+// Java 21 feature demo
+VFI.logJava21('addLast()', 'Added item using Sequenced Collections');
+
+// Add separator
+VFI.separator('Payment Processing');
+
+// Configure component
+VFI.setEnhanced(true);
+VFI.setMaxEntries(15);</code></pre>
+
+                                    <h6 class="mt-4">Enhanced API Response Handling</h6>
+                                    <pre class="bg-light p-3 rounded"><code>// Handle detailed backend responses (payment/simple demos)
+fetch('/api/simple-payment/process', {
+    method: 'POST',
+    body: JSON.stringify(payload)
+})
+.then(response => response.json())
+.then(data => {
+    // Automatically logs all educational metadata
+    handleEnhancedApiResponse(data, processingTime);
+});</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-info-circle"></i> Integration Notes</h6>
+                                <ul class="mb-0">
+                                    <li><strong>Shopping Cart Demo:</strong> Works exactly the same - zero changes needed</li>
+                                    <li><strong>Other Demos:</strong> Can use enhanced functions and styling variants</li>
+                                    <li><strong>Styling:</strong> All original styles preserved, plus new variants (.enhanced, .professional, .compact)</li>
+                                    <li><strong>Backward Compatibility:</strong> All existing function signatures maintained</li>
+                                    <li><strong>Global Access:</strong> Use <code>window.VFI</code> for simple operations or individual functions</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Visual Flow Inspector Component JavaScript -->
+<script src="../js/shared/visual-flow-inspector.js"></script>
+
+<!-- Demo JavaScript -->
+<script>
+    // Demo counter for variety
+    let demoCounter = 0;
+
+    // Demo functions
+    function demoBasicLog() {
+        demoCounter++;
+        logAPIFlow('Operation', `Demo basic log entry #${demoCounter}`, 'User action triggered');
+    }
+
+    function demoJava21Feature() {
+        const methods = ['addLast()', 'getFirst()', 'removeLast()', 'addFirst()'];
+        const descriptions = [
+            'Sequenced Collections feature demonstrated',
+            'Direct access to sequence endpoints',
+            'Undo functionality with O(1) operation',
+            'Priority item placement for VIP customers'
+        ];
+
+        const randomIndex = Math.floor(Math.random() * methods.length);
+        VFI.logJava21(methods[randomIndex], descriptions[randomIndex]);
+    }
+
+    function demoApiFlow() {
+        logAPIFlow('API Call', 'POST /api/demo/action');
+        setTimeout(() => {
+            logAPIFlow('Controller', 'DemoController.handleAction');
+            logAPIFlow('Service', 'DemoService.processAction');
+            logAPIFlow('Feature', 'Java 21 Pattern Matching');
+        }, 500);
+    }
+
+    function demoPatternMatching() {
+        const patterns = [
+            ['PaymentMethod', 'amount > 1000 && isInternational', 'requireAdditionalVerification'],
+            ['CreditCard', 'customer.isVip()', 'expediteProcessing'],
+            ['BankTransfer', 'amount >= 5000', 'requireManagerApproval'],
+            ['ShippedOrder', 'deliveryPending(tracking)', 'trackDelivery']
+        ];
+
+        const randomPattern = patterns[Math.floor(Math.random() * patterns.length)];
+        VFI.logPattern(randomPattern[0], randomPattern[1], randomPattern[2]);
+    }
+
+    function demoFlowSeparator() {
+        const separators = [
+            'Payment Processing',
+            'Cart Operations',
+            'User Authentication',
+            'Order Fulfillment',
+            'Pattern Matching Demo'
+        ];
+
+        const randomSeparator = separators[Math.floor(Math.random() * separators.length)];
+        VFI.separator(randomSeparator + ' ' + new Date().getTime().toString().slice(-4));
+    }
+
+    // Configuration handlers
+    document.getElementById('enhancedMode').addEventListener('change', function() {
+        VFI.setEnhanced(this.checked);
+    });
+
+    document.getElementById('autoScroll').addEventListener('change', function() {
+        VFI.setAutoScroll(this.checked);
+    });
+
+    document.getElementById('maxEntries').addEventListener('input', function() {
+        VFI.setMaxEntries(parseInt(this.value));
+        document.getElementById('maxEntriesValue').textContent = this.value;
+    });
+
+    // Initialize demo
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Visual Flow Inspector Standalone Demo Ready!');
+
+        // Add some initial demo content
+        setTimeout(() => {
+            logAPIFlow('Initial Processing', 'Visual Flow Inspector Component Loaded', 'Standalone Demo');
+            logAPIFlow('Feature', 'Java 21 Sequenced Collections Ready');
+            VFI.separator('Demo Ready');
+        }, 500);
+    });
+
+    // Add keyboard shortcuts for demo
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            switch(e.key) {
+                case '1':
+                    e.preventDefault();
+                    demoBasicLog();
+                    break;
+                case '2':
+                    e.preventDefault();
+                    demoJava21Feature();
+                    break;
+                case '3':
+                    e.preventDefault();
+                    demoApiFlow();
+                    break;
+                case '4':
+                    e.preventDefault();
+                    demoPatternMatching();
+                    break;
+                case 'k':
+                    e.preventDefault();
+                    VFI.clear();
+                    break;
+            }
+        }
+    });
+
+    // Show keyboard shortcuts
+    console.log('🎮 Keyboard Shortcuts:');
+    console.log('  Ctrl+1: Basic Log');
+    console.log('  Ctrl+2: Java 21 Feature');
+    console.log('  Ctrl+3: API Flow');
+    console.log('  Ctrl+4: Pattern Matching');
+    console.log('  Ctrl+K: Clear Log');
+</script>
+</body>
+</html>

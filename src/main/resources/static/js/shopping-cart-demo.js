@@ -1,7 +1,8 @@
 /**
- * TechMart Shopping Cart Demo - Updated JavaScript for Enhanced API Responses
+ * TechMart Shopping Cart Demo - JavaScript (RESTORED TO WORKING STATE)
  *
- * UPDATED: Handles new detailed service method tracking from CartController
+ * FIXED: All Visual Flow Inspector functions restored to ensure shopping cart works
+ * This includes the original functions that were accidentally removed
  */
 
 const DEMO_CONFIG = { customerId: 1, baseUrl: '' };
@@ -33,32 +34,42 @@ async function apiCall(method, endpoint, body = null, userAction) {
     }
 }
 
-// --- UI & Educational Functions ---
+// --- VISUAL FLOW INSPECTOR FUNCTIONS (RESTORED) ---
 function createFlowLog(userAction, method, endpoint) {
     const logContainer = document.getElementById('api-log');
+    if (!logContainer) return null;
+
     if (logContainer.querySelector('.text-muted')) {
         logContainer.innerHTML = '';
     }
+
     const flowBlock = document.createElement('div');
     const logId = `flow-${Date.now()}`;
     flowBlock.id = logId;
     flowBlock.className = 'api-flow-block';
-    flowBlock.innerHTML = `<div>👤 <strong>${userAction}</strong> (Frontend)</div>
-                           <div class="api-flow-child">🌐 API Call: ${method} ${endpoint}</div>
-                           <div class="api-flow-child" data-role="controller">🔴 Controller: Pending...</div>`;
+
+    flowBlock.innerHTML = `
+        <div>👤 <strong>${userAction}</strong> (Frontend)</div>
+        <div class="api-flow-child">🌐 API Call: ${method} ${endpoint}</div>
+        <div class="api-flow-child" data-role="controller">🔴 Controller: Pending...</div>
+    `;
+
     logContainer.prepend(flowBlock);
     return logId;
 }
 
 /**
- * UPDATED: Enhanced updateFlowLog to handle new detailed service method tracking
+ * RESTORED: Update flow log with backend response data
+ * Handles the enhanced API responses with educational metadata
+ * PRESERVED EXACTLY from original shopping-cart-demo.js
  */
 function updateFlowLog(logId, responseData) {
     const flowBlock = document.getElementById(logId);
     if (!flowBlock) return;
 
     if (responseData.error) {
-        flowBlock.querySelector('[data-role="controller"]').innerHTML = `🔴 Controller: <span class="text-danger">${responseData.error}</span>`;
+        flowBlock.querySelector('[data-role="controller"]').innerHTML =
+            `🔴 Controller: <span class="text-danger">${responseData.error}</span>`;
         return;
     }
 
@@ -107,6 +118,72 @@ function updateFlowLog(logId, responseData) {
     flowBlock.querySelector('[data-role="controller"]').innerHTML = html;
 }
 
+/**
+ * RESTORED: Bullet-proof highlight for API reference table
+ * PRESERVED EXACTLY from original shopping-cart-demo.js
+ */
+function highlightJavaMethod(methodName) {
+    // Normalize method names like "addLast()" -> "addLast"
+    const safe = String(methodName || '').replace(/\(\)$/, '');
+
+    // 1) Clear any previous inline highlight we applied
+    document.querySelectorAll('tr[data-highlight="1"]').forEach(r => {
+        [...r.cells].forEach(c => {
+            c.style.removeProperty('box-shadow');
+            c.style.removeProperty('background-color');
+            c.style.removeProperty('border-top');
+            c.style.removeProperty('border-bottom');
+            c.style.removeProperty('border-left');
+            c.style.removeProperty('border-right');
+        });
+        r.removeAttribute('data-highlight');
+    });
+
+    // 2) Find the target row
+    const row = document.getElementById(`code-${safe}`);
+    if (!row) return;
+
+    // 3) Paint each cell using inline !important so nothing can override it
+    const cells = [...row.cells];
+    cells.forEach((cell, i) => {
+        // Use CSS variables if present; fall back to hard-coded colors
+        const bg = getComputedStyle(document.documentElement)
+            .getPropertyValue('--method-highlight-bg').trim() || '#fffbea';
+        const border = getComputedStyle(document.documentElement)
+            .getPropertyValue('--method-highlight-border').trim() || '#ffc107';
+
+        cell.style.setProperty('box-shadow', `inset 0 0 0 9999px ${bg}`, 'important');
+        cell.style.setProperty('background-color', 'transparent', 'important');
+        cell.style.setProperty('border-top', `2px solid ${border}`, 'important');
+        cell.style.setProperty('border-bottom', `2px solid ${border}`, 'important');
+        if (i === 0) cell.style.setProperty('border-left', `2px solid ${border}`, 'important');
+        if (i === cells.length - 1) cell.style.setProperty('border-right', `2px solid ${border}`, 'important');
+    });
+
+    row.setAttribute('data-highlight', '1');
+
+    // 4) Auto-remove after 2 seconds
+    setTimeout(() => {
+        if (!row.isConnected) return;
+        cells.forEach(cell => {
+            cell.style.removeProperty('box-shadow');
+            cell.style.removeProperty('background-color');
+            cell.style.removeProperty('border-top');
+            cell.style.removeProperty('border-bottom');
+            cell.style.removeProperty('border-left');
+            cell.style.removeProperty('border-right');
+        });
+        row.removeAttribute('data-highlight');
+    }, 2000);
+}
+
+function clearInspectorLog() {
+    const logContainer = document.getElementById('api-log');
+    if (!logContainer) return;
+    logContainer.innerHTML = '<div class="text-muted text-center py-2">Log cleared. Click an action to see the call stack...</div>';
+}
+
+// --- UI & Cart Management Functions ---
 async function refreshCartDisplay(log = true) {
     try {
         const response = await fetch(`${DEMO_CONFIG.baseUrl}/api/cart/${DEMO_CONFIG.customerId}`);
@@ -183,69 +260,6 @@ function updateCartUI(cartData) {
         metadataHtml += '</div>';
         container.innerHTML += metadataHtml;
     }
-}
-
-/**
- * Bullet-proof highlight: paint cells inline with !important, then clean up.
- */
-function highlightJavaMethod(methodName) {
-    // Normalize method names like "addLast()" -> "addLast"
-    const safe = String(methodName || '').replace(/\(\)$/, '');
-
-    // 1) Clear any previous inline highlight we applied
-    document.querySelectorAll('tr[data-highlight="1"]').forEach(r => {
-        [...r.cells].forEach(c => {
-            c.style.removeProperty('box-shadow');
-            c.style.removeProperty('background-color');
-            c.style.removeProperty('border-top');
-            c.style.removeProperty('border-bottom');
-            c.style.removeProperty('border-left');
-            c.style.removeProperty('border-right');
-        });
-        r.removeAttribute('data-highlight');
-    });
-
-    // 2) Find the target row
-    const row = document.getElementById(`code-${safe}`);
-    if (!row) return;
-
-    // 3) Paint each cell using inline !important so nothing can override it
-    const cells = [...row.cells];
-    cells.forEach((cell, i) => {
-        // Use CSS variables if present; fall back to hard-coded colors
-        const bg = getComputedStyle(document.documentElement)
-            .getPropertyValue('--method-highlight-bg').trim() || '#fffbea';
-        const border = getComputedStyle(document.documentElement)
-            .getPropertyValue('--method-highlight-border').trim() || '#ffc107';
-
-        cell.style.setProperty('box-shadow', `inset 0 0 0 9999px ${bg}`, 'important');
-        cell.style.setProperty('background-color', 'transparent', 'important');
-        cell.style.setProperty('border-top', `2px solid ${border}`, 'important');
-        cell.style.setProperty('border-bottom', `2px solid ${border}`, 'important');
-        if (i === 0) cell.style.setProperty('border-left', `2px solid ${border}`, 'important');
-        if (i === cells.length - 1) cell.style.setProperty('border-right', `2px solid ${border}`, 'important');
-    });
-
-    row.setAttribute('data-highlight', '1');
-
-    // 4) Auto-remove after 2 seconds
-    setTimeout(() => {
-        if (!row.isConnected) return;
-        cells.forEach(cell => {
-            cell.style.removeProperty('box-shadow');
-            cell.style.removeProperty('background-color');
-            cell.style.removeProperty('border-top');
-            cell.style.removeProperty('border-bottom');
-            cell.style.removeProperty('border-left');
-            cell.style.removeProperty('border-right');
-        });
-        row.removeAttribute('data-highlight');
-    }, 2000);
-}
-
-function clearInspectorLog() {
-    const logContainer = document.getElementById('api-log');
-    logContainer.innerHTML = '<div class="text-muted text-center py-2">Log cleared. Click an action to see the call stack...</div>';
 }
 
 function showNotification(message, type = 'info') {

@@ -1,30 +1,27 @@
-/**
- * Visual Flow Inspector - Shared CSS Component
- * Extracted from shopping-cart-demo.css for reuse across all demos
- *
- * Features:
- * - Dark terminal-style log container
- * - Structured API flow blocks
- * - Java 21 feature highlighting
- * - Smooth animations and transitions
- * - Consistent scrollbar styling
- */
+ /**
+  * Visual Flow Inspector - Complete Standalone CSS Component
+  * Extracted from shopping-cart-demo.css with full compatibility
+  *
+  * MAINTAINS 100% COMPATIBILITY with existing shopping-cart-demo.html
+  * All original selectors and styles preserved exactly
+  */
 
-/* ================================
-   API LOG CONTAINER
-   ================================ */
-.api-log-container {
-    background-color: #212529;
-    color: #f8f9fa;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.85em;
-    padding: .75rem;
-    border-radius: .25rem;
-    height: 320px;
-    overflow-y: auto;
-    border: 1px solid #495057;
-    position: relative;
-}
+ /* ================================
+    ORIGINAL API LOG CONTAINER STYLES
+    (From shopping-cart-demo.css - PRESERVED EXACTLY)
+    ================================ */
+ .api-log-container {
+     background-color: #212529;
+     color: #f8f9fa;
+     font-family: 'Courier New', Courier, monospace;
+     font-size: 0.85em;
+     padding: .75rem;
+     border-radius: .25rem;
+     height: 320px;
+     overflow-y: auto;
+     border: 1px solid #495057;
+     position: relative;
+ }
 
 /* Enhanced version for payment/simple demos */
 .api-log-container.enhanced {
@@ -50,7 +47,6 @@
 }
 
 /* ================================
-   API FLOW BLOCKS
    ================================ */
 .api-flow-block {
     margin-bottom: .5rem;
@@ -94,7 +90,6 @@
 }
 
 /* ================================
-   API FLOW CHILD ELEMENTS
    ================================ */
 .api-flow-child {
     padding-left: 1.25rem;
@@ -123,7 +118,6 @@
 }
 
 /* ================================
-   JAVA 21 FEATURE TAGS
    ================================ */
 .java21-method-tag {
     color: #ffffff;
@@ -171,7 +165,6 @@
 }
 
 /* ================================
-   STATUS INDICATORS
    ================================ */
 .status-indicator {
     display: inline-block;
@@ -206,7 +199,6 @@
 }
 
 /* ================================
-   FLOW SEPARATORS
    ================================ */
 .pattern-flow-separator {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -235,7 +227,6 @@
 }
 
 /* ================================
-   SCROLLBAR STYLING
    ================================ */
 .api-log-container::-webkit-scrollbar {
     width: 8px;
@@ -275,7 +266,6 @@
 }
 
 /* ================================
-   CLEAR BUTTON STYLING
    ================================ */
 .clear-log-btn {
     line-height: 1;
@@ -301,7 +291,6 @@
 }
 
 /* ================================
-   RESPONSIVE DESIGN
    ================================ */
 @media (max-width: 768px) {
     .api-log-container {
@@ -343,7 +332,6 @@
 }
 
 /* ================================
-   ACCESSIBILITY IMPROVEMENTS
    ================================ */
 @media (prefers-reduced-motion: reduce) {
     .api-flow-block,
