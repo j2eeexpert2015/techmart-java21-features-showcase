@@ -1,107 +1,54 @@
 /**
- * TechMart Payment Processing Demo - Clean CSS Stylesheet
- * CLEANED: Removed Visual Flow Inspector duplication - now uses shared component
- * Demonstrating Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy
+ * COMPACT LAYOUT FIX - Eliminates excessive spacing in payment demo
+ * Fixes the bloated areas marked in the provided image
  */
 
 /* ================================
-   CSS VARIABLES (PRESERVED)
+   REMOVE BOOTSTRAP DEFAULT GUTTERS
    ================================ */
-:root {
-    /* Brand color palette */
-    --primary-color: #007bff;
-    --primary-dark: #1d4ed8;
-    --primary-light: #3b82f6;
-    --secondary-color: #1e40af;
-    --success-color: #28a745;
-    --warning-color: #ffc107;
-    --danger-color: #dc3545;
-    --info-color: #17a2b8;
+.row {
+    --bs-gutter-x: 0.5rem; /* Reduce default Bootstrap gutter */
+    --bs-gutter-y: 0.5rem;
+}
 
-    /* Neutral colors */
-    --white: #ffffff;
-    --light-bg: #f8f9fa;
-    --border-color: #dee2e6;
-    --text-dark: #212529;
-    --text-muted: #6c757d;
-
-    /* Payment-specific colors */
-    --visa-color: #1a1f71;
-    --mastercard-color: #eb001b;
-    --paypal-color: #0070ba;
-    --bank-color: #2e8b57;
-
-    /* Pattern matching highlight colors */
-    --pattern-highlight-bg: #e8f4fd;
-    --pattern-highlight-border: #007bff;
-    --guard-condition-bg: #fff3cd;
-    --guard-condition-border: #ffc107;
-
-    /* UI Guidance colors */
-    --instruction-bg: #e7f3ff;
-    --instruction-border: #3b82f6;
-    --help-bg: #f0f9ff;
-    --help-border: #06b6d4;
-
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+/* Remove excess margins from columns */
+.col-lg-7, .col-lg-5, .col-md-4 {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
 }
 
 /* ================================
-   DEMO INSTRUCTIONS PANEL
+   ULTRA-COMPACT DEMO INSTRUCTIONS
    ================================ */
 .demo-instructions-panel {
-    background: linear-gradient(135deg, var(--instruction-bg) 0%, #f0f9ff 100%);
-    border: 2px solid var(--instruction-border);
-    border-radius: 12px;
-    margin: 1rem 1.5rem;
-    padding: 1.25rem;
+    background: linear-gradient(135deg, #e7f3ff 0%, #f0f9ff 100%);
+    border: 1px solid #3b82f6;
+    border-radius: 4px;
+    margin: 0.125rem 0;
+    padding: 0.375rem 0.5rem;
     position: relative;
     overflow: hidden;
-    animation: slideInFromTop 0.6s ease-out;
-}
-
-@keyframes slideInFromTop {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.demo-instructions-panel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--info-color), var(--success-color));
 }
 
 .instructions-content {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
 }
 
 .instructions-content h6 {
     margin: 0;
-    color: var(--primary-color);
+    color: #007bff;
     font-weight: 600;
+    font-size: 0.75rem;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .instructions-steps {
     display: flex;
-    gap: 1.5rem;
+    gap: 0.375rem;
     flex-wrap: wrap;
     flex-grow: 1;
 }
@@ -109,1012 +56,466 @@
 .instruction-step {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--text-dark);
+    gap: 0.25rem;
+    font-size: 0.65rem;
+    color: #212529;
 }
 
 .step-number {
-    background: var(--primary-color);
+    background: #007bff;
     color: white;
-    width: 24px;
-    height: 24px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 0.55rem;
     font-weight: 600;
     flex-shrink: 0;
 }
 
 .step-text {
-    line-height: 1.3;
+    line-height: 1;
+    font-size: 0.65rem;
 }
 
 /* ================================
-   ENHANCED PAYMENT METHOD CARDS
+   ULTRA-COMPACT DEMO CARDS
    ================================ */
-.payment-method-card {
-    border: 2px solid var(--border-color);
-    border-radius: .5rem;
-    padding: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: var(--white);
-    text-align: center;
-    min-height: 180px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
+.demo-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 0.375rem;
+    margin-bottom: 0.375rem;
+    background: #ffffff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.payment-method-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 123, 255, 0.1), transparent);
-    transition: left 0.5s ease;
-}
-
-.payment-method-card:hover::before {
-    left: 100%;
-}
-
-.payment-method-card:hover {
-    border-color: var(--primary-color);
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.2);
-    transform: translateY(-3px);
-}
-
-.payment-method-card.selected {
-    border-color: var(--primary-color);
-    background: linear-gradient(135deg, rgba(0, 123, 255, 0.08) 0%, rgba(0, 123, 255, 0.03) 100%);
-    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.25);
-    transform: translateY(-2px);
-}
-
-.payment-method-card.selected::after {
-    content: '✓';
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    background: var(--success-color);
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
+.demo-card h5, .demo-card h6 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    color: #212529;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    font-weight: bold;
-    animation: checkmarkPop 0.3s ease-out;
+    gap: 0.25rem;
 }
 
-@keyframes checkmarkPop {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+.demo-card h5 i, .demo-card h6 i {
+    color: #007bff;
+    font-size: 0.7rem;
+}
+
+/* ================================
+   COMPACT ORDER SUMMARY - NO GAPS
+   ================================ */
+.cart-summary {
+    background: #f8f9fa;
+    border-radius: 0.375rem;
+    padding: 0.25rem;
+    margin: 0;
+    font-size: 0.7rem;
+    line-height: 1;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.125rem 0.25rem;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.7rem;
+    line-height: 1.1;
+    margin: 0;
+    min-height: 24px;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+    border-top: 1px solid #dee2e6;
+    font-weight: 600;
+    color: #212529;
+    font-size: 0.75rem;
+    padding: 0.1875rem 0.25rem;
+    margin-top: 0.125rem;
+    background: rgba(0, 123, 255, 0.05);
+}
+
+.cart-item .text-muted {
+    font-size: 0.6rem;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.cart-item strong {
+    margin: 0;
+    line-height: 1.1;
+    display: block;
+}
+
+.cart-item div {
+    margin: 0;
+    padding: 0;
+}
+
+.cart-item div:first-child {
+    flex-grow: 1;
+    margin-right: 0.5rem;
+}
+
+.cart-item div:last-child {
+    text-align: right;
+    flex-shrink: 0;
+    font-weight: 600;
+}
+
+/* Force remove any remaining gaps */
+.demo-card:has(.cart-summary) {
+    padding: 0.25rem;
+}
+
+.demo-card:has(.cart-summary) h5 {
+    margin-bottom: 0.25rem;
+}
+
+.demo-card:has(.cart-summary) .d-flex {
+    margin-bottom: 0.25rem;
+}
+
+/* ================================
+   COMPACT PAYMENT METHOD CARDS
+   ================================ */
+.payment-method-card {
+    border: 2px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 0.375rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    text-align: center;
+    height: 70px;
+    width: 100%;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+}
+
+.payment-method-card h6 {
+    font-size: 0.7rem;
+    margin: 0.125rem 0;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.payment-method-card small {
+    font-size: 0.6rem;
+    color: #6c757d;
+    line-height: 1;
+    margin: 0;
+}
+
+.payment-method-icon {
+    font-size: 1rem;
+    margin-bottom: 0.125rem;
+    color: #007bff;
 }
 
 .pattern-info {
-    margin-top: 0.5rem;
-    padding: 0.25rem 0.5rem;
+    margin-top: 0.125rem;
+    padding: 0.125rem 0.25rem;
     background: rgba(0, 123, 255, 0.1);
-    border-radius: 12px;
-    font-size: 0.75rem;
+    border-radius: 4px;
+    font-size: 0.55rem;
+    line-height: 1;
+}
+
+/* Fix grid layout for payment cards */
+.row.g-3 {
+    --bs-gutter-x: 0.375rem;
+    --bs-gutter-y: 0.375rem;
 }
 
 /* ================================
-   AMOUNT TEST BUTTONS
+   COMPACT AMOUNT TEST BUTTONS
    ================================ */
 .amount-test-buttons {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    gap: 0.25rem;
+    flex-wrap: nowrap;
+}
+
+.amount-test-buttons small {
+    font-size: 0.6rem;
+    color: #6c757d;
+    white-space: nowrap;
+    margin-right: 0.25rem;
 }
 
 .amount-test-buttons .btn {
-    font-size: 0.8rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.amount-test-buttons .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.amount-test-buttons .btn:active {
-    transform: translateY(0);
+    font-size: 0.65rem;
+    padding: 0.125rem 0.375rem;
+    border-radius: 10px;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 /* ================================
-   CUSTOMER TYPE SELECTOR
+   COMPACT CUSTOMER TYPE SELECTOR
    ================================ */
 .customer-type-selector {
-    background: var(--help-bg);
-    border: 1px solid var(--help-border);
-    border-radius: 8px;
-    padding: 1rem;
+    background: #f0f9ff;
+    border: 1px solid #06b6d4;
+    border-radius: 4px;
+    padding: 0.375rem;
+    margin-bottom: 0.5rem;
 }
 
 .customer-type-selector h6 {
-    color: var(--info-color);
-    margin-bottom: 0.75rem;
+    color: #17a2b8;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
 }
 
 .customer-type-selector .btn-group .btn {
     border-radius: 0;
     transition: all 0.3s ease;
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
 }
 
-.customer-type-selector .btn-group .btn:first-child {
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
-}
-
-.customer-type-selector .btn-group .btn:last-child {
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-}
-
-.customer-type-selector .btn-check:checked + .btn {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-    color: white;
-    transform: scale(1.05);
+.customer-type-selector small {
+    font-size: 0.6rem;
+    margin-top: 0.25rem;
+    display: block;
 }
 
 /* ================================
-   DEMO ACTION BUTTONS
-   ================================ */
-.demo-action-buttons {
-    text-align: center;
-    border-top: 1px solid var(--border-color);
-    padding-top: 1rem;
-}
-
-.demo-action-buttons .btn {
-    transition: all 0.3s ease;
-    border-radius: 20px;
-}
-
-.demo-action-buttons .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* ================================
-   ENHANCED API REFERENCE TABLE
+   COMPACT API REFERENCE TABLE
    ================================ */
 .api-reference-table {
-    font-size: 0.85em;
-    border-radius: 8px;
+    font-size: 0.7rem;
+    border-radius: 4px;
     overflow: hidden;
+    margin-bottom: 0;
 }
 
 .api-reference-table td,
 .api-reference-table th {
-    padding: 0.75rem 0.5rem;
+    padding: 0.375rem 0.25rem;
     vertical-align: middle;
-    border-color: var(--border-color);
+    border-color: #dee2e6;
 }
 
 .api-reference-table code {
-    background-color: var(--pattern-highlight-bg);
-    color: var(--primary-color);
-    padding: 0.3em 0.6em;
-    border-radius: 0.35rem;
+    background-color: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+    padding: 0.125em 0.25em;
+    border-radius: 0.1875rem;
     font-weight: 600;
-    font-size: 0.9em;
-}
-
-.api-reference-table tr {
-    transition: all 0.3s ease;
-}
-
-.api-reference-table tr:hover {
-    background-color: rgba(0, 123, 255, 0.05);
-}
-
-/* Enhanced pattern highlight for API reference */
-.api-reference-table tr.pattern-highlight {
-    background-color: var(--pattern-highlight-bg) !important;
-    border-left: 4px solid var(--pattern-highlight-border);
-    animation: highlightPulse 2s ease-in-out;
-}
-
-.api-reference-table tr.pattern-highlight > * {
-    background-color: var(--pattern-highlight-bg) !important;
-    border-top: 2px solid var(--pattern-highlight-border);
-    border-bottom: 2px solid var(--pattern-highlight-border);
-    position: relative;
-}
-
-.api-reference-table tr.pattern-highlight > *:first-child {
-    border-left: 2px solid var(--pattern-highlight-border);
-}
-
-.api-reference-table tr.pattern-highlight > *:last-child {
-    border-right: 2px solid var(--pattern-highlight-border);
+    font-size: 0.8em;
 }
 
 .api-help-text {
     background: rgba(0, 123, 255, 0.05);
-    padding: 0.5rem;
-    border-radius: 6px;
+    padding: 0.25rem;
+    border-radius: 4px;
     border: 1px solid rgba(0, 123, 255, 0.1);
-}
-
-@keyframes highlightPulse {
-    0%, 100% {
-        box-shadow: 0 0 0 rgba(0, 123, 255, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
-    }
+    font-size: 0.65rem;
+    margin-top: 0.25rem;
 }
 
 /* ================================
-   ENHANCED PROCESSING STATUS
+   COMPACT PROCESSING STATUS
    ================================ */
 .processing-status {
-    background: var(--white);
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .status-step {
     display: flex;
-    align-items: flex-start;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+    padding: 0.375rem 0;
+    border-bottom: 1px solid #dee2e6;
     transition: all 0.3s ease;
     position: relative;
 }
 
 .status-step:last-child {
     border-bottom: none;
-}
-
-.status-step:hover {
-    background: rgba(0, 123, 255, 0.02);
-    border-radius: 6px;
-    margin: 0 -0.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-bottom: 0;
 }
 
 .status-icon {
-    width: 36px;
-    height: 36px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 1rem;
-    font-size: 0.9rem;
+    margin-right: 0.5rem;
+    font-size: 0.7rem;
     flex-shrink: 0;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
 }
 
-.status-icon::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: inherit;
-    opacity: 0.2;
-    transform: scale(0);
-    transition: transform 0.3s ease;
+.status-step div {
+    font-size: 0.75rem;
+    line-height: 1.2;
 }
 
-.status-active::before,
-.status-complete::before {
-    transform: scale(1.5);
-    animation: iconPulse 2s infinite;
-}
-
-@keyframes iconPulse {
-    0%, 100% {
-        transform: scale(1.5);
-        opacity: 0.2;
-    }
-    50% {
-        transform: scale(2);
-        opacity: 0.1;
-    }
-}
-
-.status-active {
-    background: linear-gradient(45deg, var(--primary-color), #3b82f6);
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-}
-
-.status-complete {
-    background: linear-gradient(45deg, var(--success-color), #38c172);
-    color: white;
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-}
-
-.status-pending {
-    background: linear-gradient(45deg, var(--text-muted), #9ca3af);
-    color: white;
-}
-
-/* ================================
-   DEMO SCENARIOS MODAL
-   ================================ */
-.modal-content {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
-
-.modal-header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
-    color: white;
-    border-radius: 15px 15px 0 0;
-    border: none;
-}
-
-.scenario-buttons .btn {
-    text-align: left;
-    padding: 1rem;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.scenario-buttons .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    border-color: currentColor;
-}
-
-.scenario-buttons .btn small {
-    opacity: 0.8;
+.status-step strong {
     font-size: 0.8rem;
+    display: block;
+    margin-bottom: 0.125rem;
+}
+
+.status-step small {
+    font-size: 0.65rem;
+    line-height: 1.1;
 }
 
 /* ================================
-   ENHANCED BUTTONS
+   COMPACT BUTTON STYLING
    ================================ */
 .btn-primary-custom {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
+    background: linear-gradient(135deg, #007bff 0%, #3b82f6 100%);
     border: none;
-    padding: 1rem 2rem;
-    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.25);
 }
 
-.btn-primary-custom::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.6s ease;
+.demo-action-buttons {
+    text-align: center;
+    border-top: 1px solid #dee2e6;
+    padding-top: 0.375rem;
+    margin-top: 0.375rem;
 }
 
-.btn-primary-custom:hover::before {
-    left: 100%;
-}
-
-.btn-primary-custom:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.4);
-}
-
-.btn-primary-custom:active {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
-}
-
-.btn-primary-custom:disabled {
-    opacity: 0.7;
-    transform: none;
-    box-shadow: none;
+.demo-action-buttons .btn {
+    border-radius: 10px;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
 }
 
 /* ================================
-   ENHANCED VALIDATION FEEDBACK
-   ================================ */
-.validation-feedback {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    border-left: 4px solid;
-    animation: slideInValidation 0.4s ease-out;
-    position: relative;
-    overflow: hidden;
-}
-
-.validation-feedback::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--warning-color), #f6ad55);
-}
-
-@keyframes slideInValidation {
-    from {
-        opacity: 0;
-        transform: translateY(-15px);
-        max-height: 0;
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-        max-height: 200px;
-    }
-}
-
-.validation-feedback {
-    background: linear-gradient(135deg, var(--guard-condition-bg) 0%, #fff8e1 100%);
-    color: #8b4513;
-    border-left-color: var(--warning-color);
-    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
-}
-
-/* ================================
-   ENHANCED TOOLTIPS
-   ================================ */
-.tooltip-inner {
-    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-    color: white;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-.tooltip.bs-tooltip-top .tooltip-arrow::before {
-    border-top-color: #1a202c;
-}
-
-.tooltip.bs-tooltip-bottom .tooltip-arrow::before {
-    border-bottom-color: #1a202c;
-}
-
-/* ================================
-   DEMO HINT ELEMENTS
-   ================================ */
-.demo-hint {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: rgba(0, 123, 255, 0.05);
-    border: 1px solid rgba(0, 123, 255, 0.2);
-    border-radius: 20px;
-    animation: hintPulse 3s infinite;
-}
-
-@keyframes hintPulse {
-    0%, 100% {
-        background: rgba(0, 123, 255, 0.05);
-        border-color: rgba(0, 123, 255, 0.2);
-    }
-    50% {
-        background: rgba(0, 123, 255, 0.1);
-        border-color: rgba(0, 123, 255, 0.3);
-    }
-}
-
-.demo-hint i {
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-4px);
-    }
-    60% {
-        transform: translateY(-2px);
-    }
-}
-
-/* ================================
-   CODE PREVIEW STYLING
-   ================================ */
-.code-preview {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 2px solid var(--border-color);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
-    font-size: 0.85rem;
-    white-space: pre-wrap;
-    max-height: 350px;
-    overflow-y: auto;
-    line-height: 1.6;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.code-preview::before {
-    content: 'Java 21 Pattern Matching';
-    position: absolute;
-    top: -12px;
-    left: 20px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
-    color: white;
-    padding: 0.3rem 1rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-.code-preview::-webkit-scrollbar {
-    width: 6px;
-}
-
-.code-preview::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 3px;
-}
-
-.code-preview::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, var(--primary-color), #3b82f6);
-    border-radius: 3px;
-}
-
-/* ================================
-   TOAST NOTIFICATIONS STYLING
-   ================================ */
-.toast-container {
-    z-index: 9999;
-}
-
-.custom-toast {
-    min-width: 300px;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(10px);
-}
-
-.custom-toast .toast-header {
-    background: rgba(255, 255, 255, 0.95);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.custom-toast .toast-body {
-    background: rgba(255, 255, 255, 0.95);
-}
-
-/* Success toast styling */
-.toast-success {
-    border-left: 4px solid var(--success-color);
-}
-
-.toast-success .toast-header {
-    color: var(--success-color);
-}
-
-/* Warning toast styling */
-.toast-warning {
-    border-left: 4px solid var(--warning-color);
-}
-
-.toast-warning .toast-header {
-    color: var(--warning-color);
-}
-
-/* Error toast styling */
-.toast-error {
-    border-left: 4px solid var(--danger-color);
-}
-
-.toast-error .toast-header {
-    color: var(--danger-color);
-}
-
-/* Info toast styling */
-.toast-info {
-    border-left: 4px solid var(--info-color);
-}
-
-.toast-info .toast-header {
-    color: var(--info-color);
-}
-
-/* ================================
-   LOADING STATES AND ANIMATIONS
-   ================================ */
-.loading-spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(0, 123, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: var(--primary-color);
-    animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.processing-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: inherit;
-    z-index: 10;
-}
-
-.processing-text {
-    margin-left: 0.5rem;
-    color: var(--primary-color);
-    font-weight: 600;
-}
-
-/* ================================
-   RESPONSIVE DESIGN ENHANCEMENTS
+   RESPONSIVE FIXES
    ================================ */
 @media (max-width: 768px) {
     .container-fluid {
-        padding: 0.25rem;
+        padding: 0.125rem;
     }
 
     .demo-instructions-panel {
-        margin: 0.5rem;
-        padding: 1rem;
+        margin: 0.125rem;
+        padding: 0.25rem 0.375rem;
     }
 
     .instructions-content {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.75rem;
+        gap: 0.25rem;
     }
 
     .instructions-steps {
         flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .instruction-step {
-        font-size: 0.8rem;
-    }
-
-    .step-number {
-        width: 20px;
-        height: 20px;
-        font-size: 0.7rem;
-    }
-
-    .amount-test-buttons {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.5rem;
-    }
-
-    .amount-test-buttons .btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .demo-hint {
-        flex-direction: column;
-        text-align: center;
-        padding: 0.75rem;
+        gap: 0.25rem;
     }
 
     .payment-method-card {
-        min-height: 160px;
-        padding: 1rem;
-    }
-
-    .customer-type-selector .btn-group {
-        display: flex;
-        width: 100%;
-    }
-
-    .customer-type-selector .btn {
-        flex: 1;
-    }
-
-    .scenario-buttons .btn {
-        padding: 0.75rem;
-        font-size: 0.9rem;
+        height: 60px;
+        padding: 0.25rem;
     }
 
     .demo-card {
-        padding: 1rem;
-        margin-bottom: 1rem;
+        padding: 0.25rem;
+        margin-bottom: 0.25rem;
     }
 
-    .demo-card h5, .demo-card h6 {
-        font-size: 1rem;
-    }
-
-    .status-step {
-        padding: 0.75rem 0;
-    }
-
-    .status-icon {
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
+    .col-lg-7, .col-lg-5 {
+        padding-left: 0.125rem;
+        padding-right: 0.125rem;
     }
 }
 
 @media (max-width: 480px) {
-    .demo-instructions-panel {
-        margin: 0.25rem;
-        padding: 0.75rem;
-    }
-
     .step-text {
-        font-size: 0.8rem;
+        font-size: 0.6rem;
     }
 
-    .payment-method-card {
-        min-height: 140px;
-        padding: 0.75rem;
+    .payment-method-card h6 {
+        font-size: 0.65rem;
     }
 
-    .btn-primary-custom {
-        padding: 0.875rem 1.5rem;
-        font-size: 1rem;
+    .payment-method-card small {
+        font-size: 0.55rem;
     }
 
-    .demo-card {
-        padding: 0.75rem;
+    .cart-item {
+        font-size: 0.65rem;
+        padding: 0.1rem 0.1875rem;
     }
 
-    .customer-type-selector {
-        padding: 0.75rem;
-    }
-
-    .customer-type-selector .btn {
-        font-size: 0.8rem;
-        padding: 0.5rem 0.75rem;
-    }
-}
-
-/* ================================
-   ACCESSIBILITY ENHANCEMENTS
-   ================================ */
-.payment-method-card:focus-visible {
-    outline: 3px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-.btn:focus-visible {
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
-}
-
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .demo-instructions-panel,
-    .validation-feedback,
-    .payment-method-card::before,
-    .btn-primary-custom::before,
-    .demo-hint,
-    .demo-hint i,
-    .status-icon::before {
-        animation: none;
-    }
-
-    .payment-method-card:hover,
-    .btn:hover,
-    .status-step:hover {
-        transform: none;
-    }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .payment-method-card {
-        border-width: 3px;
-    }
-
-    .pattern-matching-indicator {
-        border: 2px solid white;
-    }
-
-    .api-reference-table tr.pattern-highlight {
-        background: yellow !important;
-        color: black !important;
-    }
-}
-
-/* Print styles */
-@media print {
-    .demo-instructions-panel,
-    .demo-action-buttons,
     .amount-test-buttons {
-        display: none;
+        flex-wrap: wrap;
+        gap: 0.1875rem;
     }
 
-    .payment-method-card,
-    .btn {
-        break-inside: avoid;
-    }
-
-    .demo-header {
-        background: var(--text-dark) !important;
-        color: white !important;
-    }
-
-    .container-fluid {
-        max-height: none;
-        overflow: visible;
+    .amount-test-buttons .btn {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.25rem;
     }
 }
 
 /* ================================
-   UTILITY CLASSES
+   OVERRIDE BOOTSTRAP DEFAULTS
    ================================ */
-.text-java21 {
-    color: var(--success-color);
-    font-weight: 600;
+.mb-3 {
+    margin-bottom: 0.5rem !important;
 }
 
-.bg-java21 {
-    background: linear-gradient(135deg, var(--success-color), #38c172);
-    color: white;
+.mb-4 {
+    margin-bottom: 0.75rem !important;
 }
 
-.border-java21 {
-    border-color: var(--success-color) !important;
+.mt-3 {
+    margin-top: 0.5rem !important;
 }
 
-.shadow-java21 {
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+.mt-4 {
+    margin-top: 0.75rem !important;
 }
 
-/* Pattern matching specific utilities */
-.pattern-text {
-    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
-    background: rgba(0, 123, 255, 0.1);
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-size: 0.9em;
+.p-3 {
+    padding: 0.5rem !important;
 }
 
-.guard-text {
-    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
-    background: rgba(255, 193, 7, 0.1);
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-size: 0.9em;
-    color: #8b4513;
+/* Remove default Bootstrap spacing that's causing gaps */
+.demo-page-container .row > * {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
 }
 
-/* ================================
-   ENHANCED HOVER EFFECTS
-   ================================ */
-.demo-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+/* Specific fixes for marked problem areas */
+.demo-card .d-flex.justify-content-between {
+    margin-bottom: 0.25rem;
 }
 
-.api-reference-table tr:hover {
-    background-color: rgba(0, 123, 255, 0.05);
-    transform: translateX(2px);
-}
-
-/* ================================
-   MAIN LAYOUT OPTIMIZATIONS
-   ================================ */
-
-/* Ensure main container doesn't exceed viewport */
-.main-container {
-    max-height: calc(100vh - 1rem);
-    display: flex;
-    flex-direction: column;
-}
-
-/* Make demo page container flexible */
-.demo-page-container {
-    flex: 1;
-    overflow-y: auto;
-    max-height: none;
-}
-
-/* Optimize row spacing */
-.demo-page-container .row {
-    height: 100%;
-    align-items: flex-start;
-}
-
-/* Ensure columns don't exceed container */
-.col-lg-7, .col-lg-5 {
-    max-height: 100%;
-    overflow-y: auto;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-}
-
-/* Remove any potential margin/padding issues */
-.demo-page-container > .row > [class*="col-"] {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Ensure demo cards fit properly */
-.demo-card {
-    margin-bottom: 1.5rem;
-    flex-shrink: 0;
-}
-
-.demo-card:last-child {
+.demo-card .d-flex.justify-content-between:last-child {
     margin-bottom: 0;
-}
-
-/* Fix any Bootstrap grid issues */
-@media (min-width: 992px) {
-    .col-lg-5 .demo-card:last-child {
-        height: auto;
-        min-height: 200px;
-    }
-}
-
-/* ================================
-   SCROLLBAR STYLING FOR MAIN CONTAINER
-   ================================ */
-.demo-page-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.demo-page-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.demo-page-container::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 4px;
-}
-
-.demo-page-container::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
 }
