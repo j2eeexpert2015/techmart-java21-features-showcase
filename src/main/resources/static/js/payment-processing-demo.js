@@ -581,24 +581,24 @@ function hideProcessingState() {
     const button = document.querySelector('.btn-primary-custom');
     if (button) {
         button.disabled = false;
-        button.innerHTML = '<i class="fas fa-lock me-2"></i>Process Payment - <span id="button-amount"> + currentAmount.toLocaleString() + '</span>';
+        button.innerHTML = `<i class="fas fa-lock me-2"></i>Process Payment - <span id="button-amount">$${currentAmount.toLocaleString()}</span>`;
     }
 }
 
 /**
- * Update amount display
+ * FIXED: Update amount display with proper template literals
  */
 function updateAmountDisplay() {
     // Update total amount display
     const totalElement = document.getElementById('total-amount');
     if (totalElement) {
-        totalElement.textContent = ' + currentAmount.toLocaleString();
+        totalElement.textContent = `$${currentAmount.toLocaleString()}`;
     }
 
     // Update button amount
     const buttonAmount = document.getElementById('button-amount');
     if (buttonAmount) {
-        buttonAmount.textContent = ' + currentAmount.toLocaleString();
+        buttonAmount.textContent = `$${currentAmount.toLocaleString()}`;
     }
 }
 
