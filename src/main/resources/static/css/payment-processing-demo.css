@@ -1,187 +1,99 @@
-/**
- * COMPACT LAYOUT FIX - Eliminates excessive spacing in payment demo
- * Fixes the bloated areas marked in the provided image
- */
-
 /* ================================
-   REMOVE BOOTSTRAP DEFAULT GUTTERS
+   BALANCED LAYOUT FIX - PRESERVE UI STRUCTURE
+   Remove excessive spacing without breaking the layout
    ================================ */
-.row {
-    --bs-gutter-x: 0.5rem; /* Reduce default Bootstrap gutter */
-    --bs-gutter-y: 0.5rem;
-}
 
-/* Remove excess margins from columns */
-.col-lg-7, .col-lg-5, .col-md-4 {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
+/* Reset only problematic elements, not everything */
+.container-fluid {
+    padding: 0.5rem;
 }
 
 /* ================================
-   ULTRA-COMPACT DEMO INSTRUCTIONS
+   FIX BUTTON WIDTH ISSUE (PRIMARY PROBLEM)
    ================================ */
-.demo-instructions-panel {
-    background: linear-gradient(135deg, #e7f3ff 0%, #f0f9ff 100%);
-    border: 1px solid #3b82f6;
-    border-radius: 4px;
-    margin: 0.125rem 0;
-    padding: 0.375rem 0.5rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.instructions-content {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: nowrap;
-}
-
-.instructions-content h6 {
-    margin: 0;
-    color: #007bff;
+.btn-primary-custom {
+    background: linear-gradient(135deg, #007bff 0%, #3b82f6 100%);
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 6px;
     font-weight: 600;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.25);
 
-.instructions-steps {
-    display: flex;
-    gap: 0.375rem;
-    flex-wrap: wrap;
-    flex-grow: 1;
-}
-
-.instruction-step {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.65rem;
-    color: #212529;
-}
-
-.step-number {
-    background: #007bff;
-    color: white;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.55rem;
-    font-weight: 600;
-    flex-shrink: 0;
-}
-
-.step-text {
-    line-height: 1;
-    font-size: 0.65rem;
+    /* KEY FIX: Remove full width */
+    width: auto !important;           /* Override Bootstrap .w-100 */
+    max-width: 350px;                /* Reasonable maximum width */
+    margin: 0 auto;                  /* Center the button */
+    display: block;                  /* Ensure centering works */
 }
 
 /* ================================
-   ULTRA-COMPACT DEMO CARDS
-   ================================ */
-.demo-card {
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
-    padding: 0.375rem;
-    margin-bottom: 0.375rem;
-    background: #ffffff;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.demo-card h5, .demo-card h6 {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    font-size: 0.8rem;
-    color: #212529;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.demo-card h5 i, .demo-card h6 i {
-    color: #007bff;
-    font-size: 0.7rem;
-}
-
-/* ================================
-   COMPACT ORDER SUMMARY - NO GAPS
+   REDUCE ORDER SUMMARY SPACING (MAIN PROBLEM AREA)
    ================================ */
 .cart-summary {
     background: #f8f9fa;
-    border-radius: 0.375rem;
-    padding: 0.25rem;
+    border-radius: 6px;
+    padding: 0.75rem;               /* Reduced from excessive padding */
     margin: 0;
-    font-size: 0.7rem;
-    line-height: 1;
 }
 
 .cart-item {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 0.125rem 0.25rem;
-    border-bottom: 1px solid #dee2e6;
-    font-size: 0.7rem;
-    line-height: 1.1;
-    margin: 0;
-    min-height: 24px;
+    align-items: center;
+    padding: 0.4rem 0;              /* Reduced from ~1rem vertical padding */
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.9rem;
+    line-height: 1.3;               /* Tighter line height */
 }
 
 .cart-item:last-child {
     border-bottom: none;
-    border-top: 1px solid #dee2e6;
+    border-top: 2px solid #007bff;
     font-weight: 600;
-    color: #212529;
-    font-size: 0.75rem;
-    padding: 0.1875rem 0.25rem;
-    margin-top: 0.125rem;
     background: rgba(0, 123, 255, 0.05);
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
 }
 
 .cart-item .text-muted {
-    font-size: 0.6rem;
-    line-height: 1;
+    font-size: 0.8rem;
+    line-height: 1.2;
     margin: 0;
-    padding: 0;
 }
 
-.cart-item strong {
-    margin: 0;
-    line-height: 1.1;
-    display: block;
+/* ================================
+   REDUCE DEMO CARD SPACING
+   ================================ */
+.demo-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;                  /* Balanced padding */
+    margin-bottom: 1rem;            /* Reasonable spacing */
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.cart-item div {
-    margin: 0;
-    padding: 0;
-}
-
-.cart-item div:first-child {
-    flex-grow: 1;
-    margin-right: 0.5rem;
-}
-
-.cart-item div:last-child {
-    text-align: right;
-    flex-shrink: 0;
+.demo-card h5, .demo-card h6 {
     font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    color: #212529;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-/* Force remove any remaining gaps */
-.demo-card:has(.cart-summary) {
-    padding: 0.25rem;
+/* ================================
+   CONSTRAIN COLUMN WIDTHS
+   ================================ */
+.col-lg-7 {
+    max-width: 650px;               /* Prevent excessive expansion */
 }
 
-.demo-card:has(.cart-summary) h5 {
-    margin-bottom: 0.25rem;
-}
-
-.demo-card:has(.cart-summary) .d-flex {
-    margin-bottom: 0.25rem;
+.col-lg-5 {
+    max-width: 450px;
 }
 
 /* ================================
@@ -189,333 +101,255 @@
    ================================ */
 .payment-method-card {
     border: 2px solid #dee2e6;
-    border-radius: 0.375rem;
-    padding: 0.375rem;
+    border-radius: 8px;
+    padding: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
     background: #ffffff;
     text-align: center;
-    height: 70px;
-    width: 100%;
-    max-width: none;
+    height: 120px;                  /* Fixed reasonable height */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
-    overflow: hidden;
-    margin: 0;
+}
+
+.payment-method-card.selected {
+    border-color: #007bff;
+    background: rgba(0, 123, 255, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.payment-method-card:hover {
+    border-color: #007bff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .payment-method-card h6 {
-    font-size: 0.7rem;
-    margin: 0.125rem 0;
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0.25rem 0;
     font-weight: 600;
-    line-height: 1;
 }
 
 .payment-method-card small {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     color: #6c757d;
-    line-height: 1;
-    margin: 0;
 }
 
 .payment-method-icon {
-    font-size: 1rem;
-    margin-bottom: 0.125rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
     color: #007bff;
 }
 
 .pattern-info {
-    margin-top: 0.125rem;
-    padding: 0.125rem 0.25rem;
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
     background: rgba(0, 123, 255, 0.1);
     border-radius: 4px;
-    font-size: 0.55rem;
-    line-height: 1;
-}
-
-/* Fix grid layout for payment cards */
-.row.g-3 {
-    --bs-gutter-x: 0.375rem;
-    --bs-gutter-y: 0.375rem;
+    padding: 0.25rem;
+    font-size: 0.7rem;
 }
 
 /* ================================
-   COMPACT AMOUNT TEST BUTTONS
+   REDUCE INTERNATIONAL TRANSACTION SECTION
    ================================ */
-.amount-test-buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    flex-wrap: nowrap;
-}
-
-.amount-test-buttons small {
-    font-size: 0.6rem;
-    color: #6c757d;
-    white-space: nowrap;
-    margin-right: 0.25rem;
-}
-
-.amount-test-buttons .btn {
-    font-size: 0.65rem;
-    padding: 0.125rem 0.375rem;
-    border-radius: 10px;
-    line-height: 1;
-    white-space: nowrap;
+.demo-card[style*="background: #f8f9fa"] {
+    padding: 0.75rem;               /* Reduced padding */
+    margin-bottom: 1rem;
+    background: #f8f9fa !important;
 }
 
 /* ================================
-   COMPACT CUSTOMER TYPE SELECTOR
+   CUSTOMER TYPE SELECTOR
    ================================ */
 .customer-type-selector {
     background: #f0f9ff;
     border: 1px solid #06b6d4;
-    border-radius: 4px;
-    padding: 0.375rem;
-    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .customer-type-selector h6 {
     color: #17a2b8;
-    margin-bottom: 0.25rem;
-    font-size: 0.75rem;
-}
-
-.customer-type-selector .btn-group .btn {
-    border-radius: 0;
-    transition: all 0.3s ease;
-    font-size: 0.65rem;
-    padding: 0.25rem 0.5rem;
-    line-height: 1;
-}
-
-.customer-type-selector small {
-    font-size: 0.6rem;
-    margin-top: 0.25rem;
-    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
 }
 
 /* ================================
-   COMPACT API REFERENCE TABLE
+   AMOUNT TEST BUTTONS
+   ================================ */
+.amount-test-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.amount-test-buttons .btn {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+}
+
+/* ================================
+   COMPACT RIGHT COLUMN
    ================================ */
 .api-reference-table {
-    font-size: 0.7rem;
-    border-radius: 4px;
-    overflow: hidden;
+    font-size: 0.85rem;
     margin-bottom: 0;
 }
 
-.api-reference-table td,
-.api-reference-table th {
-    padding: 0.375rem 0.25rem;
+.api-reference-table td {
+    padding: 0.5rem 0.75rem;
     vertical-align: middle;
-    border-color: #dee2e6;
 }
 
-.api-reference-table code {
-    background-color: rgba(0, 123, 255, 0.1);
-    color: #007bff;
-    padding: 0.125em 0.25em;
-    border-radius: 0.1875rem;
-    font-weight: 600;
-    font-size: 0.8em;
-}
-
-.api-help-text {
-    background: rgba(0, 123, 255, 0.05);
-    padding: 0.25rem;
-    border-radius: 4px;
-    border: 1px solid rgba(0, 123, 255, 0.1);
-    font-size: 0.65rem;
-    margin-top: 0.25rem;
-}
-
-/* ================================
-   COMPACT PROCESSING STATUS
-   ================================ */
 .processing-status {
     background: #ffffff;
     border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 0.5rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
 }
 
 .status-step {
     display: flex;
     align-items: center;
-    padding: 0.375rem 0;
-    border-bottom: 1px solid #dee2e6;
-    transition: all 0.3s ease;
-    position: relative;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .status-step:last-child {
     border-bottom: none;
-    padding-bottom: 0;
 }
 
 .status-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    font-size: 0.9rem;
+}
+
+/* ================================
+   RESPONSIVE IMPROVEMENTS
+   ================================ */
+@media (max-width: 992px) {
+    .col-lg-7, .col-lg-5 {
+        max-width: 100%;
+    }
+
+    .container-fluid {
+        padding: 0.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .demo-card {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .payment-method-card {
+        height: 100px;
+        padding: 0.75rem;
+    }
+
+    .btn-primary-custom {
+        max-width: 100%;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+/* ================================
+   MAIN CONTAINER CONSTRAINTS
+   ================================ */
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.demo-page-container {
+    max-width: 100%;
+}
+
+/* ================================
+   SPECIFIC BOOTSTRAP OVERRIDES
+   ================================ */
+.mb-3 {
+    margin-bottom: 0.75rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1rem !important;
+}
+
+.mt-3 {
+    margin-top: 0.75rem !important;
+}
+
+.mt-4 {
+    margin-top: 1rem !important;
+}
+
+/* Remove excessive row gutters */
+.row {
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 1rem;
+}
+
+/* ================================
+   DEMO INSTRUCTIONS COMPACT
+   ================================ */
+.demo-instructions-panel {
+    background: linear-gradient(135deg, #e7f3ff 0%, #f0f9ff 100%);
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.instructions-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.instructions-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+}
+
+.instruction-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.step-number {
+    background: #007bff;
+    color: white;
     width: 24px;
     height: 24px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 0.5rem;
-    font-size: 0.7rem;
-    flex-shrink: 0;
-}
-
-.status-step div {
-    font-size: 0.75rem;
-    line-height: 1.2;
-}
-
-.status-step strong {
     font-size: 0.8rem;
-    display: block;
-    margin-bottom: 0.125rem;
-}
-
-.status-step small {
-    font-size: 0.65rem;
-    line-height: 1.1;
-}
-
-/* ================================
-   COMPACT BUTTON STYLING
-   ================================ */
-.btn-primary-custom {
-    background: linear-gradient(135deg, #007bff 0%, #3b82f6 100%);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
     font-weight: 600;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.25);
-}
-
-.demo-action-buttons {
-    text-align: center;
-    border-top: 1px solid #dee2e6;
-    padding-top: 0.375rem;
-    margin-top: 0.375rem;
-}
-
-.demo-action-buttons .btn {
-    border-radius: 10px;
-    font-size: 0.7rem;
-    padding: 0.25rem 0.5rem;
-}
-
-/* ================================
-   RESPONSIVE FIXES
-   ================================ */
-@media (max-width: 768px) {
-    .container-fluid {
-        padding: 0.125rem;
-    }
-
-    .demo-instructions-panel {
-        margin: 0.125rem;
-        padding: 0.25rem 0.375rem;
-    }
-
-    .instructions-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.25rem;
-    }
-
-    .instructions-steps {
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .payment-method-card {
-        height: 60px;
-        padding: 0.25rem;
-    }
-
-    .demo-card {
-        padding: 0.25rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .col-lg-7, .col-lg-5 {
-        padding-left: 0.125rem;
-        padding-right: 0.125rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .step-text {
-        font-size: 0.6rem;
-    }
-
-    .payment-method-card h6 {
-        font-size: 0.65rem;
-    }
-
-    .payment-method-card small {
-        font-size: 0.55rem;
-    }
-
-    .cart-item {
-        font-size: 0.65rem;
-        padding: 0.1rem 0.1875rem;
-    }
-
-    .amount-test-buttons {
-        flex-wrap: wrap;
-        gap: 0.1875rem;
-    }
-
-    .amount-test-buttons .btn {
-        font-size: 0.6rem;
-        padding: 0.1rem 0.25rem;
-    }
-}
-
-/* ================================
-   OVERRIDE BOOTSTRAP DEFAULTS
-   ================================ */
-.mb-3 {
-    margin-bottom: 0.5rem !important;
-}
-
-.mb-4 {
-    margin-bottom: 0.75rem !important;
-}
-
-.mt-3 {
-    margin-top: 0.5rem !important;
-}
-
-.mt-4 {
-    margin-top: 0.75rem !important;
-}
-
-.p-3 {
-    padding: 0.5rem !important;
-}
-
-/* Remove default Bootstrap spacing that's causing gaps */
-.demo-page-container .row > * {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-}
-
-/* Specific fixes for marked problem areas */
-.demo-card .d-flex.justify-content-between {
-    margin-bottom: 0.25rem;
-}
-
-.demo-card .d-flex.justify-content-between:last-child {
-    margin-bottom: 0;
+    flex-shrink: 0;
 }
