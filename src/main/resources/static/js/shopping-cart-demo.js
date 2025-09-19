@@ -1,30 +1,60 @@
 /**
- * TechMart Shopping Cart Demo - JavaScript (RESTORED TO WORKING STATE)
+ * TechMart Shopping Cart Demo - JavaScript (EMERGENCY FIX)
  *
- * FIXED: All Visual Flow Inspector functions restored to ensure shopping cart works
- * This includes the original functions that were accidentally removed
+ * EMERGENCY FIX: Restored VFI functions temporarily until shared component is fixed
+ * This ensures the demo works perfectly while we debug the shared component
  */
 
 const DEMO_CONFIG = { customerId: 1, baseUrl: '' };
 
 // --- API Action Functions ---
-function fetchCartState() { apiCall('GET', `/api/cart/${DEMO_CONFIG.customerId}`, null, 'Initial Cart Load'); }
-function addProductToCart(productId, productName, price) { apiCall('POST', `/api/cart/${DEMO_CONFIG.customerId}/items`, { productId, productName, quantity: 1, price }, `Add ${productName}`); }
-function addPriorityItem(productId, productName, price) { apiCall('POST', `/api/cart/${DEMO_CONFIG.customerId}/priority-items`, { productId, productName, quantity: 1, price }, `Add ${productName} (Priority)`); }
-function undoLastAction() { apiCall('POST', `/api/cart/${DEMO_CONFIG.customerId}/undo`, null, 'Undo Last Action'); }
-function clearCart() { apiCall('DELETE', `/api/cart/${DEMO_CONFIG.customerId}`, null, 'Clear Cart'); }
-function removeCartItem(itemId, itemName) { apiCall('DELETE', `/api/cart/${DEMO_CONFIG.customerId}/items/${itemId}`, null, `Remove ${itemName}`);}
-function redoLastAction() { showNotification('Redo functionality is not implemented in this demo.', 'info'); }
+function fetchCartState() {
+    apiCall('GET', `/api/cart/${DEMO_CONFIG.customerId}`, null, 'Initial Cart Load');
+}
+
+function addProductToCart(productId, productName, price) {
+    apiCall('POST', `/api/cart/${DEMO_CONFIG.customerId}/items`, { productId, productName, quantity: 1, price }, `Add ${productName}`);
+}
+
+function addPriorityItem(productId, productName, price) {
+    apiCall('POST', `/api/cart/${DEMO_CONFIG.customerId}/priority-items`, { productId, productName, quantity: 1, price }, `Add ${productName} (Priority)`);
+}
+
+function undoLastAction() {
+    apiCall('POST', `/api/cart/${DEMO_CONFIG.customerId}/undo`, null, 'Undo Last Action');
+}
+
+function clearCart() {
+    apiCall('DELETE', `/api/cart/${DEMO_CONFIG.customerId}`, null, 'Clear Cart');
+}
+
+function removeCartItem(itemId, itemName) {
+    apiCall('DELETE', `/api/cart/${DEMO_CONFIG.customerId}/items/${itemId}`, null, `Remove ${itemName}`);
+}
+
+function redoLastAction() {
+    showNotification('Redo functionality is not implemented in this demo.', 'info');
+}
 
 // --- Core API Caller ---
 async function apiCall(method, endpoint, body = null, userAction) {
     const logId = createFlowLog(userAction, method, endpoint);
+
     try {
-        const options = { method, headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' } };
+        const options = {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        };
         if (body) options.body = JSON.stringify(body);
+
         const response = await fetch(`${DEMO_CONFIG.baseUrl}${endpoint}`, options);
         const result = await response.json();
+
         if (!response.ok) throw result;
+
         updateFlowLog(logId, result);
         await refreshCartDisplay(false);
     } catch (error) {
@@ -34,7 +64,14 @@ async function apiCall(method, endpoint, body = null, userAction) {
     }
 }
 
-// --- VISUAL FLOW INSPECTOR FUNCTIONS (RESTORED) ---
+// ============================================================================
+// EMERGENCY FIX: VFI FUNCTIONS RESTORED (Until shared component is fixed)
+// ============================================================================
+
+/**
+ * EMERGENCY FIX: Create initial flow log entry for API calls
+ * This is the ORIGINAL working version from shopping cart
+ */
 function createFlowLog(userAction, method, endpoint) {
     const logContainer = document.getElementById('api-log');
     if (!logContainer) return null;
@@ -59,9 +96,8 @@ function createFlowLog(userAction, method, endpoint) {
 }
 
 /**
- * RESTORED: Update flow log with backend response data
- * Handles the enhanced API responses with educational metadata
- * PRESERVED EXACTLY from original shopping-cart-demo.js
+ * EMERGENCY FIX: Update flow log with backend response data
+ * This is the ORIGINAL working version from shopping cart
  */
 function updateFlowLog(logId, responseData) {
     const flowBlock = document.getElementById(logId);
@@ -119,14 +155,14 @@ function updateFlowLog(logId, responseData) {
 }
 
 /**
- * RESTORED: Bullet-proof highlight for API reference table
- * PRESERVED EXACTLY from original shopping-cart-demo.js
+ * EMERGENCY FIX: API Reference table highlighting
+ * This is the ORIGINAL working version from shopping cart
  */
 function highlightJavaMethod(methodName) {
     // Normalize method names like "addLast()" -> "addLast"
     const safe = String(methodName || '').replace(/\(\)$/, '');
 
-    // 1) Clear any previous inline highlight we applied
+    // Clear any previous inline highlight we applied
     document.querySelectorAll('tr[data-highlight="1"]').forEach(r => {
         [...r.cells].forEach(c => {
             c.style.removeProperty('box-shadow');
@@ -139,11 +175,10 @@ function highlightJavaMethod(methodName) {
         r.removeAttribute('data-highlight');
     });
 
-    // 2) Find the target row
+    // Find the target row
     const row = document.getElementById(`code-${safe}`);
     if (!row) return;
 
-    // 3) Paint each cell using inline !important so nothing can override it
     const cells = [...row.cells];
     cells.forEach((cell, i) => {
         // Use CSS variables if present; fall back to hard-coded colors
@@ -162,7 +197,6 @@ function highlightJavaMethod(methodName) {
 
     row.setAttribute('data-highlight', '1');
 
-    // 4) Auto-remove after 2 seconds
     setTimeout(() => {
         if (!row.isConnected) return;
         cells.forEach(cell => {
@@ -177,17 +211,24 @@ function highlightJavaMethod(methodName) {
     }, 2000);
 }
 
+/**
+ * EMERGENCY FIX: Clear the Visual Flow Inspector log
+ */
 function clearInspectorLog() {
     const logContainer = document.getElementById('api-log');
     if (!logContainer) return;
     logContainer.innerHTML = '<div class="text-muted text-center py-2">Log cleared. Click an action to see the call stack...</div>';
 }
 
-// --- UI & Cart Management Functions ---
+// ============================================================================
+// SHOPPING CART UI FUNCTIONS (UNCHANGED)
+// ============================================================================
+
 async function refreshCartDisplay(log = true) {
     try {
         const response = await fetch(`${DEMO_CONFIG.baseUrl}/api/cart/${DEMO_CONFIG.customerId}`);
         if (!response.ok) throw new Error('Backend not available');
+
         const cartData = await response.json();
         if (cartData) {
             updateCartUI(cartData);
@@ -268,7 +309,9 @@ function showNotification(message, type = 'info') {
     notification.className = `alert alert-${type} alert-dismissible fade show`;
     notification.innerHTML = `<span>${message}</span><button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
     container.appendChild(notification);
-    setTimeout(() => { if (notification.parentNode) notification.remove() }, 4000);
+    setTimeout(() => {
+        if (notification.parentNode) notification.remove()
+    }, 4000);
 }
 
 // --- INITIALIZATION ---
