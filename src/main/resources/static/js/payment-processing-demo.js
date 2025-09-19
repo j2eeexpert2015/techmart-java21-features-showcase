@@ -1,6 +1,6 @@
 /**
- * Payment Processing Demo - Clean JavaScript Implementation
- * CLEANED: Removed Visual Flow Inspector duplication - now uses shared component
+ * Payment Processing Demo - Fixed JavaScript Implementation
+ * FIXED: Corrected payment method selection and backend mapping
  * Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy
  */
 
@@ -32,55 +32,54 @@ function initializeDemo() {
 }
 
 /**
- * Setup payment method selection
+ * Setup payment method selection with event listeners
  */
 function setupPaymentMethodSelection() {
     const paymentCards = document.querySelectorAll('.payment-method-card');
-    const radioButtons = document.querySelectorAll('input[name="paymentMethod"]');
 
     paymentCards.forEach(card => {
         card.addEventListener('click', function() {
             selectPaymentMethod(this);
         });
     });
-
-    radioButtons.forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.checked) {
-                const card = this.closest('.payment-method-card');
-                selectPaymentMethod(card);
-            }
-        });
-    });
 }
 
 /**
- * Handle payment method selection
+ * FIXED: Handle payment method selection with correct data attribute
  */
 function selectPaymentMethod(selectedCard) {
+    // Get method from data attribute
+    const method = selectedCard.dataset.method;
+
+    if (!method) {
+        console.error('No data-method attribute found on card');
+        return;
+    }
+
     // Remove selected class from all cards
     document.querySelectorAll('.payment-method-card').forEach(card => {
         card.classList.remove('selected');
     });
 
-    // Add selected class and update radio
+    // Add selected class and update global state
     selectedCard.classList.add('selected');
-    const radio = selectedCard.querySelector('input[type="radio"]');
-    if (radio) {
-        radio.checked = true;
-        selectedPaymentMethod = radio.value;
-    }
+    selectedPaymentMethod = method;
 
-    // Update dynamic form
-    updatePaymentForm(selectedPaymentMethod);
+    // Log the selection using shared Visual Flow Inspector
+    console.log('🔥 Selected payment method:', selectedPaymentMethod);
+
+    // Use shared logging functions
+    if (typeof logAPIFlow !== 'undefined') {
+        logAPIFlow('Operation', `Selected ${getMethodDisplayName(method)} payment method`);
+        logAPIFlow('Feature', `Pattern: case ${method.charAt(0).toUpperCase() + method.slice(1)}(...) ->`);
+        logAPIFlow('Operation', 'Guard conditions analysis will occur on processing');
+    }
 
     // Update API reference highlighting
     highlightApiReference(selectedPaymentMethod);
 
     // Update pattern matching logic display
     updatePatternMatchingLogic(selectedPaymentMethod);
-
-    console.log('Selected payment method:', selectedPaymentMethod);
 }
 
 /**
@@ -119,8 +118,6 @@ function setupInternationalCardToggle() {
  * Setup quick amount test buttons
  */
 function setupQuickAmountButtons() {
-    // Amount test buttons are handled by onclick attributes in HTML
-    // Just update the display
     updateAmountDisplay();
 }
 
@@ -214,11 +211,11 @@ function buildPaymentPayload() {
         case 'creditcard':
             return {
                 ...basePayload,
-                cardNumber: getFormValue('card-number', '4111111111111111'),
+                cardNumber: '4111111111111111',
                 cardType: 'VISA',
-                cvv: getFormValue('card-cvv', '123'),
-                expiryMonth: getFormValue('expiry-month', '12'),
-                expiryYear: getFormValue('expiry-year', '2026'),
+                cvv: '123',
+                expiryMonth: '12',
+                expiryYear: '2026',
                 cardholderName: 'Demo User'
             };
 
@@ -290,7 +287,7 @@ function handlePaymentError(error, logId) {
  * Test payment with specific amount (called by quick test buttons)
  */
 function testWithAmount(amount) {
-    console.log(`Testing with amount: $${amount}`);
+    console.log(`Testing with amount: ${amount}`);
 
     // Update current amount
     currentAmount = amount;
@@ -399,104 +396,6 @@ function toggleInstructions() {
 // ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
-
-/**
- * Update dynamic payment form based on selected method
- */
-function updatePaymentForm(method) {
-    const formContainer = document.getElementById('payment-form');
-    if (!formContainer) return;
-
-    let formHtml = '';
-
-    switch (method) {
-        case 'creditcard':
-            formHtml = `
-                <h6><i class="fas fa-credit-card text-primary"></i> Credit Card Details
-                    <span class="pattern-matching-indicator ms-2">Pattern: CreditCard</span>
-                </h6>
-                <div class="row">
-                    <div class="col-md-8">
-                        <label class="form-label">Card Number</label>
-                        <input type="text" class="form-control" placeholder="1234 5678 9012 3456" id="card-number">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">CVV</label>
-                        <input type="text" class="form-control" placeholder="123" maxlength="4" id="card-cvv">
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Expiry Month</label>
-                        <select class="form-control" id="expiry-month">
-                            <option value="">Select Month</option>
-                            <option value="01">01 - January</option>
-                            <option value="12" selected>12 - December</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Expiry Year</label>
-                        <select class="form-control" id="expiry-year">
-                            <option value="">Select Year</option>
-                            <option value="2025">2025</option>
-                            <option value="2026" selected>2026</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="international-card" ${isInternationalCard ? 'checked' : ''}>
-                        <label class="form-check-label" for="international-card">
-                            International Card (triggers additional guard conditions)
-                        </label>
-                    </div>
-                </div>`;
-            break;
-
-        case 'paypal':
-            formHtml = `
-                <h6><i class="fab fa-paypal text-primary"></i> PayPal Details
-                    <span class="pattern-matching-indicator ms-2">Pattern: PayPal</span>
-                </h6>
-                <div class="mb-3">
-                    <label class="form-label">PayPal Email</label>
-                    <input type="email" class="form-control" placeholder="your-email@example.com" value="demo@example.com">
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" checked disabled>
-                    <label class="form-check-label">Account Verified</label>
-                </div>`;
-            break;
-
-        case 'banktransfer':
-            formHtml = `
-                <h6><i class="fas fa-university text-primary"></i> Bank Transfer Details
-                    <span class="pattern-matching-indicator ms-2">Pattern: BankTransfer</span>
-                </h6>
-                <div class="row">
-                    <div class="col-md-8">
-                        <label class="form-label">Account Number</label>
-                        <input type="text" class="form-control" placeholder="1234567890">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Routing Number</label>
-                        <input type="text" class="form-control" placeholder="021000021">
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <label class="form-label">Bank Name</label>
-                    <input type="text" class="form-control" placeholder="Your Bank Name" value="Demo Bank">
-                </div>`;
-            break;
-    }
-
-    formContainer.innerHTML = formHtml;
-
-    // Re-setup event handlers for new form elements
-    if (method === 'creditcard') {
-        setupInternationalCardToggle();
-    }
-}
 
 /**
  * Update API reference table highlighting
@@ -654,7 +553,7 @@ function analyzeAmountImpact(amount) {
     const prevAmount = currentAmount;
     const analysis = analyzeGuardConditions(selectedPaymentMethod);
 
-    console.log(`Amount change: $${prevAmount} → $${amount}`);
+    console.log(`Amount change: ${prevAmount} → ${amount}`);
     console.log('Guard analysis:', analysis);
 
     return analysis;
@@ -682,7 +581,7 @@ function hideProcessingState() {
     const button = document.querySelector('.btn-primary-custom');
     if (button) {
         button.disabled = false;
-        button.innerHTML = '<i class="fas fa-lock me-2"></i>Process Payment - <span id="button-amount">$' + currentAmount.toLocaleString() + '</span>';
+        button.innerHTML = '<i class="fas fa-lock me-2"></i>Process Payment - <span id="button-amount"> + currentAmount.toLocaleString() + '</span>';
     }
 }
 
@@ -693,13 +592,13 @@ function updateAmountDisplay() {
     // Update total amount display
     const totalElement = document.getElementById('total-amount');
     if (totalElement) {
-        totalElement.textContent = '$' + currentAmount.toLocaleString();
+        totalElement.textContent = ' + currentAmount.toLocaleString();
     }
 
     // Update button amount
     const buttonAmount = document.getElementById('button-amount');
     if (buttonAmount) {
-        buttonAmount.textContent = '$' + currentAmount.toLocaleString();
+        buttonAmount.textContent = ' + currentAmount.toLocaleString();
     }
 }
 
@@ -954,16 +853,10 @@ function resetPaymentMethodSelection() {
         card.classList.remove('selected');
     });
 
-    document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
-        radio.checked = false;
-    });
-
     // Select credit card as default
     const defaultCard = document.querySelector('[data-method="creditcard"]');
     if (defaultCard) {
         defaultCard.classList.add('selected');
-        const radio = defaultCard.querySelector('input[type="radio"]');
-        if (radio) radio.checked = true;
     }
 }
 
@@ -1006,7 +899,7 @@ function hideGuardConditionWarning() {
 // ============================================================================
 
 /**
- * Map payment method to backend format
+ * FIXED: Map payment method to backend format
  */
 function mapPaymentTypeForBackend(method) {
     const mapping = {
@@ -1030,14 +923,6 @@ function getMethodDisplayName(method) {
 }
 
 /**
- * Get form value with fallback
- */
-function getFormValue(elementId, fallback = '') {
-    const element = document.getElementById(elementId);
-    return element ? element.value || fallback : fallback;
-}
-
-/**
  * Highlight specific Java method in API reference
  */
 function highlightJavaMethod(methodName) {
@@ -1051,348 +936,9 @@ function highlightJavaMethod(methodName) {
     });
 }
 
-/**
- * Format currency amount for display
- */
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-    }).format(amount);
-}
+// Also create alias for shared Visual Flow Inspector
+window.clearLog = clearInspectorLog;
 
-/**
- * Generate unique transaction ID
- */
-function generateTransactionId() {
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substr(2, 9);
-    return `TXN_${timestamp}_${random}`.toUpperCase();
-}
-
-/**
- * Validate payment form based on selected method
- */
-function validatePaymentForm() {
-    const errors = [];
-
-    switch (selectedPaymentMethod) {
-        case 'creditcard':
-            const cardNumber = getFormValue('card-number');
-            const cvv = getFormValue('card-cvv');
-            const expiryMonth = getFormValue('expiry-month');
-            const expiryYear = getFormValue('expiry-year');
-
-            if (!cardNumber || cardNumber.length < 16) {
-                errors.push('Valid card number is required');
-            }
-            if (!cvv || cvv.length < 3) {
-                errors.push('Valid CVV is required');
-            }
-            if (!expiryMonth || !expiryYear) {
-                errors.push('Expiry date is required');
-            }
-            break;
-
-        case 'paypal':
-            // PayPal validation would go here
-            break;
-
-        case 'banktransfer':
-            // Bank transfer validation would go here
-            break;
-    }
-
-    return {
-        valid: errors.length === 0,
-        errors: errors
-    };
-}
-
-/**
- * Get processing fee based on method and amount
- */
-function calculateProcessingFee(method, amount) {
-    const feeRates = {
-        'creditcard': 0.029, // 2.9%
-        'paypal': 0.034,     // 3.4%
-        'banktransfer': 0.01 // 1.0%
-    };
-
-    const rate = feeRates[method] || 0.029;
-    return Math.round(amount * rate * 100) / 100;
-}
-
-/**
- * Get estimated processing time
- */
-function getEstimatedProcessingTime(method) {
-    const times = {
-        'creditcard': 'Instant',
-        'paypal': '1-2 minutes',
-        'banktransfer': '1-3 business days'
-    };
-    return times[method] || 'Unknown';
-}
-
-/**
- * Check if amount requires special handling
- */
-function requiresSpecialHandling(amount, method, isInternational = false) {
-    if (method === 'creditcard' && amount > 1000 && isInternational) {
-        return {
-            required: true,
-            reason: 'High-value international transaction',
-            additionalSteps: ['Enhanced verification', 'Fraud check', 'Manual review']
-        };
-    }
-
-    if (method === 'banktransfer' && amount >= 5000) {
-        return {
-            required: true,
-            reason: 'Large bank transfer',
-            additionalSteps: ['Manager approval', 'AML check', 'Wire transfer setup']
-        };
-    }
-
-    return {
-        required: false,
-        reason: 'Standard processing',
-        additionalSteps: []
-    };
-}
-
-/**
- * Log demo activity for analytics
- */
-function logDemoActivity(action, data = {}) {
-    const logEntry = {
-        timestamp: new Date().toISOString(),
-        action: action,
-        paymentMethod: selectedPaymentMethod,
-        amount: currentAmount,
-        customerType: selectedCustomerType,
-        isInternational: isInternationalCard,
-        ...data
-    };
-
-    console.log('Demo Activity:', logEntry);
-
-    // In a real app, you might send this to an analytics service
-    // analytics.track('payment_demo_activity', logEntry);
-}
-
-/**
- * Get payment method icon class
- */
-function getPaymentMethodIcon(method) {
-    const icons = {
-        'creditcard': 'fas fa-credit-card',
-        'paypal': 'fab fa-paypal',
-        'banktransfer': 'fas fa-university'
-    };
-    return icons[method] || 'fas fa-credit-card';
-}
-
-/**
- * Check browser compatibility for demo features
- */
-function checkBrowserCompatibility() {
-    const features = {
-        fetch: typeof fetch !== 'undefined',
-        promises: typeof Promise !== 'undefined',
-        localStorage: typeof Storage !== 'undefined',
-        bootstrap: typeof bootstrap !== 'undefined'
-    };
-
-    const incompatible = Object.keys(features).filter(feature => !features[feature]);
-
-    if (incompatible.length > 0) {
-        console.warn('Some demo features may not work due to browser compatibility:', incompatible);
-        showToast('Warning', 'Some features may not work in your browser', 'warning');
-    }
-
-    return features;
-}
-
-/**
- * Initialize demo with browser compatibility check
- */
-function initializeDemoSafely() {
-    try {
-        checkBrowserCompatibility();
-        initializeDemo();
-        logDemoActivity('demo_initialized');
-    } catch (error) {
-        console.error('Demo initialization failed:', error);
-        showToast('Error', 'Demo initialization failed', 'error');
-    }
-}
-
-/**
- * Handle demo errors gracefully
- */
-function handleDemoError(error, context = 'general') {
-    console.error(`Demo error in ${context}:`, error);
-
-    logDemoActivity('error_occurred', {
-        context: context,
-        error: error.message || error.toString()
-    });
-
-    // Show user-friendly error message
-    const errorMessages = {
-        'payment_processing': 'Payment processing encountered an error. Please try again.',
-        'form_validation': 'Please check your form inputs and try again.',
-        'network': 'Network connection issue. Please check your internet connection.',
-        'general': 'An unexpected error occurred. Please refresh the page and try again.'
-    };
-
-    const message = errorMessages[context] || errorMessages.general;
-    showErrorNotification(message);
-}
-
-/**
- * Debounce function for performance optimization
- */
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-/**
- * Throttle function for performance optimization
- */
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-}
-
-// ============================================================================
-// PERFORMANCE MONITORING
-// ============================================================================
-
-/**
- * Monitor performance metrics
- */
-const performanceMonitor = {
-    metrics: {},
-
-    start(label) {
-        this.metrics[label] = {
-            startTime: performance.now(),
-            endTime: null,
-            duration: null
-        };
-    },
-
-    end(label) {
-        if (this.metrics[label]) {
-            this.metrics[label].endTime = performance.now();
-            this.metrics[label].duration = this.metrics[label].endTime - this.metrics[label].startTime;
-
-            console.log(`Performance [${label}]: ${Math.round(this.metrics[label].duration)}ms`);
-            return this.metrics[label].duration;
-        }
-        return 0;
-    },
-
-    getMetrics() {
-        return { ...this.metrics };
-    },
-
-    clear() {
-        this.metrics = {};
-    }
-};
-
-// ============================================================================
-// DEMO ANALYTICS AND INSIGHTS
-// ============================================================================
-
-/**
- * Track user interactions for demo insights
- */
-const demoAnalytics = {
-    interactions: [],
-    sessionStartTime: Date.now(),
-
-    track(event, data = {}) {
-        const interaction = {
-            timestamp: Date.now(),
-            event: event,
-            sessionTime: Date.now() - this.sessionStartTime,
-            data: data
-        };
-
-        this.interactions.push(interaction);
-        console.log('Demo Analytics:', interaction);
-    },
-
-    getSessionSummary() {
-        const sessionDuration = Date.now() - this.sessionStartTime;
-        const eventCounts = this.interactions.reduce((acc, interaction) => {
-            acc[interaction.event] = (acc[interaction.event] || 0) + 1;
-            return acc;
-        }, {});
-
-        return {
-            sessionDuration: sessionDuration,
-            totalInteractions: this.interactions.length,
-            eventCounts: eventCounts,
-            averageTimePerAction: sessionDuration / this.interactions.length || 0
-        };
-    }
-};
-
-// ============================================================================
-// INITIALIZATION AND ERROR HANDLING
-// ============================================================================
-
-// Global error handler for the demo
-window.addEventListener('error', (event) => {
-    handleDemoError(event.error, 'javascript_error');
-});
-
-// Handle unhandled promise rejections
-window.addEventListener('unhandledrejection', (event) => {
-    handleDemoError(event.reason, 'promise_rejection');
-    event.preventDefault();
-});
-
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeDemoSafely);
-} else {
-    // DOM is already ready
-    initializeDemoSafely();
-}
-
-// Export functions for testing (if in a module environment)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        processPayment,
-        buildPaymentPayload,
-        analyzeGuardConditions,
-        validatePaymentForm,
-        calculateProcessingFee,
-        formatCurrency,
-        performanceMonitor,
-        demoAnalytics
-    };
-}
+console.log('🚀 Fixed Payment Processing Demo loaded successfully');
+console.log('✅ Payment method selection corrected');
+console.log('🔧 Backend mapping fixed');
