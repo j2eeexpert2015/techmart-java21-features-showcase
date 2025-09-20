@@ -1,7 +1,8 @@
 /**
- * Payment Processing Demo - JavaScript Implementation (UPDATED)
+ * Payment Processing Demo - JavaScript Implementation (OPTIMIZED LAYOUT)
+ * ADDED: Instruction panel starts collapsed, optimized space usage
  * FIXED: Moved all inline onclick handlers to external event listeners
- * ADDED: Proper event listener setup for clean HTML separation
+ * ENHANCED: Better height management and responsive behavior
  * Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy
  */
 
@@ -14,7 +15,7 @@ let isInternationalCard = false;
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Payment Processing Demo initializing...');
     initializeDemo();
-    setupEventListeners(); // NEW: Setup external event listeners
+    setupEventListeners();
 });
 
 /**
@@ -70,18 +71,37 @@ function setupEventListeners() {
 
 /**
  * Initialize the demo with event handlers and default state
+ * UPDATED: Start with instructions collapsed for space optimization
  */
 function initializeDemo() {
     setupPaymentMethodSelection();
     setupCustomerTypeSelection();
     setupInternationalCardToggle();
     setupQuickAmountButtons();
-    setupInstructions();
+
+    // NEW: Initialize instructions as collapsed to save space
+    initializeInstructionsCollapsed();
 
     // Initialize tooltips
     initializeTooltips();
 
     console.log('Payment Processing Demo ready');
+}
+
+/**
+ * NEW: Initialize instruction panel as collapsed
+ */
+function initializeInstructionsCollapsed() {
+    const instructionsPanel = document.querySelector('.demo-instructions-panel');
+    const toggleBtn = document.getElementById('toggle-instructions-btn');
+
+    if (instructionsPanel && toggleBtn) {
+        // Start collapsed
+        instructionsPanel.classList.add('collapsed');
+        toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Show Instructions';
+
+        console.log('Instructions panel initialized as collapsed');
+    }
 }
 
 /**
@@ -172,13 +192,6 @@ function setupInternationalCardToggle() {
  */
 function setupQuickAmountButtons() {
     updateAmountDisplay();
-}
-
-/**
- * Setup demo instructions toggle
- */
-function setupInstructions() {
-    // Instructions toggle functionality if needed
 }
 
 /**
@@ -431,23 +444,32 @@ function runScenario(scenarioName) {
 }
 
 /**
- * Toggle instructions panel visibility
+ * UPDATED: Toggle instructions panel visibility with animation
  */
 function toggleInstructions() {
     const panel = document.querySelector('.demo-instructions-panel');
     const button = document.getElementById('toggle-instructions-btn');
 
-    if (panel.style.display === 'none') {
-        panel.style.display = 'block';
+    if (!panel || !button) {
+        console.warn('Instructions panel or button not found');
+        return;
+    }
+
+    if (panel.classList.contains('collapsed')) {
+        // Expand
+        panel.classList.remove('collapsed');
         button.innerHTML = '<i class="fas fa-eye-slash"></i> Hide';
+        console.log('Instructions panel expanded');
     } else {
-        panel.style.display = 'none';
+        // Collapse
+        panel.classList.add('collapsed');
         button.innerHTML = '<i class="fas fa-eye"></i> Show Instructions';
+        console.log('Instructions panel collapsed');
     }
 }
 
 // ============================================================================
-// HELPER FUNCTIONS
+// HELPER FUNCTIONS FOR EDUCATIONAL METADATA
 // ============================================================================
 
 /**
@@ -634,7 +656,7 @@ function hideProcessingState() {
     const button = document.querySelector('.btn-primary-custom');
     if (button) {
         button.disabled = false;
-        button.innerHTML = `<i class="fas fa-lock me-2"></i>Process Payment - <span id="button-amount">$${currentAmount.toLocaleString()}</span>`;
+        button.innerHTML = `<i class="fas fa-lock me-2"></i>Process Payment - <span id="button-amount">${currentAmount.toLocaleString()}</span>`;
     }
 }
 
@@ -645,13 +667,13 @@ function updateAmountDisplay() {
     // Update total amount display
     const totalElement = document.getElementById('total-amount');
     if (totalElement) {
-        totalElement.textContent = `$${currentAmount.toLocaleString()}`;
+        totalElement.textContent = `${currentAmount.toLocaleString()}`;
     }
 
     // Update button amount
     const buttonAmount = document.getElementById('button-amount');
     if (buttonAmount) {
-        buttonAmount.textContent = `$${currentAmount.toLocaleString()}`;
+        buttonAmount.textContent = `${currentAmount.toLocaleString()}`;
     }
 }
 
@@ -1020,10 +1042,19 @@ window.PaymentDemo = {
 
     // UI functions
     updateUI: updateUIForScenario,
-    clearLog: clearInspectorLog
+    clearLog: clearInspectorLog,
+
+    // NEW: Layout optimization functions
+    toggleInstructions,
+    getInstructionsState: () => {
+        const panel = document.querySelector('.demo-instructions-panel');
+        return panel ? !panel.classList.contains('collapsed') : false;
+    }
 };
 
-console.log('🚀 Updated Payment Processing Demo loaded successfully');
+console.log('🚀 Optimized Payment Processing Demo loaded successfully');
 console.log('✅ All inline onclick handlers moved to external event listeners');
+console.log('🎯 Layout optimized: Visual Flow Inspector moved to top, instructions start collapsed');
+console.log('📱 Responsive behavior enhanced for better mobile experience');
 console.log('🔧 Clean HTML/CSS/JS separation achieved');
 console.log('🎮 Try: PaymentDemo.testWithAmount(1500) or PaymentDemo.runScenario("high-value-international")');
