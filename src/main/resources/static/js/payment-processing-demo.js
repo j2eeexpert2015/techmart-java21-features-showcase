@@ -1,6 +1,7 @@
 /**
- * Payment Processing Demo - Fixed JavaScript Implementation
- * FIXED: Corrected payment method selection and backend mapping
+ * Payment Processing Demo - JavaScript Implementation (UPDATED)
+ * FIXED: Moved all inline onclick handlers to external event listeners
+ * ADDED: Proper event listener setup for clean HTML separation
  * Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy
  */
 
@@ -13,7 +14,59 @@ let isInternationalCard = false;
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Payment Processing Demo initializing...');
     initializeDemo();
+    setupEventListeners(); // NEW: Setup external event listeners
 });
+
+/**
+ * NEW: Setup all event listeners to replace inline onclick handlers
+ */
+function setupEventListeners() {
+    console.log('Setting up event listeners...');
+
+    // Quick test amount buttons
+    const amountButtons = document.querySelectorAll('[data-amount]');
+    amountButtons.forEach(button => {
+        const amount = parseInt(button.getAttribute('data-amount'));
+        button.addEventListener('click', () => testWithAmount(amount));
+    });
+
+    // Main action buttons
+    const processBtn = document.getElementById('process-payment-btn');
+    if (processBtn) {
+        processBtn.addEventListener('click', processPayment);
+    }
+
+    const resetBtn = document.getElementById('reset-demo-btn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', resetDemo);
+    }
+
+    const scenariosBtn = document.getElementById('scenarios-btn');
+    if (scenariosBtn) {
+        scenariosBtn.addEventListener('click', showDemoScenarios);
+    }
+
+    // Toggle instructions button
+    const toggleInstructionsBtn = document.getElementById('toggle-instructions-btn');
+    if (toggleInstructionsBtn) {
+        toggleInstructionsBtn.addEventListener('click', toggleInstructions);
+    }
+
+    // Clear log button
+    const clearLogBtn = document.getElementById('clear-log-btn');
+    if (clearLogBtn) {
+        clearLogBtn.addEventListener('click', clearLog);
+    }
+
+    // Modal scenario buttons
+    const scenarioButtons = document.querySelectorAll('[data-scenario]');
+    scenarioButtons.forEach(button => {
+        const scenario = button.getAttribute('data-scenario');
+        button.addEventListener('click', () => runScenario(scenario));
+    });
+
+    console.log('✅ Event listeners setup complete');
+}
 
 /**
  * Initialize the demo with event handlers and default state
@@ -45,7 +98,7 @@ function setupPaymentMethodSelection() {
 }
 
 /**
- * FIXED: Handle payment method selection with correct data attribute
+ * Handle payment method selection with correct data attribute
  */
 function selectPaymentMethod(selectedCard) {
     // Get method from data attribute
@@ -382,7 +435,7 @@ function runScenario(scenarioName) {
  */
 function toggleInstructions() {
     const panel = document.querySelector('.demo-instructions-panel');
-    const button = panel.querySelector('button');
+    const button = document.getElementById('toggle-instructions-btn');
 
     if (panel.style.display === 'none') {
         panel.style.display = 'block';
@@ -540,9 +593,9 @@ function updateGuardConditionWarning() {
 
     if (guardAnalysis.triggered && selectedPaymentMethod === 'creditcard' &&
         currentAmount > 1000 && isInternationalCard) {
-        warning.style.display = 'block';
+        warning.classList.add('visible');
     } else {
-        warning.style.display = 'none';
+        warning.classList.remove('visible');
     }
 }
 
@@ -586,7 +639,7 @@ function hideProcessingState() {
 }
 
 /**
- * FIXED: Update amount display with proper template literals
+ * Update amount display with proper template literals
  */
 function updateAmountDisplay() {
     // Update total amount display
@@ -890,7 +943,7 @@ function resetInternationalToggle() {
 function hideGuardConditionWarning() {
     const warning = document.getElementById('guard-condition-warning');
     if (warning) {
-        warning.style.display = 'none';
+        warning.classList.remove('visible');
     }
 }
 
@@ -899,7 +952,7 @@ function hideGuardConditionWarning() {
 // ============================================================================
 
 /**
- * FIXED: Map payment method to backend format
+ * Map payment method to backend format
  */
 function mapPaymentTypeForBackend(method) {
     const mapping = {
@@ -936,9 +989,41 @@ function highlightJavaMethod(methodName) {
     });
 }
 
-// Also create alias for shared Visual Flow Inspector
+// ============================================================================
+// ALIASES AND COMPATIBILITY
+// ============================================================================
+
+// Create alias for shared Visual Flow Inspector
 window.clearLog = clearInspectorLog;
 
-console.log('🚀 Fixed Payment Processing Demo loaded successfully');
-console.log('✅ Payment method selection corrected');
-console.log('🔧 Backend mapping fixed');
+// Export debug functions for console access
+window.PaymentDemo = {
+    // Core functions
+    processPayment,
+    resetDemo,
+    testWithAmount,
+
+    // Scenario functions
+    runScenario,
+    showDemoScenarios,
+
+    // State inspection
+    getCurrentState: () => ({
+        method: selectedPaymentMethod,
+        customerType: selectedCustomerType,
+        amount: currentAmount,
+        international: isInternationalCard
+    }),
+
+    // Direct API access
+    buildPayload: buildPaymentPayload,
+
+    // UI functions
+    updateUI: updateUIForScenario,
+    clearLog: clearInspectorLog
+};
+
+console.log('🚀 Updated Payment Processing Demo loaded successfully');
+console.log('✅ All inline onclick handlers moved to external event listeners');
+console.log('🔧 Clean HTML/CSS/JS separation achieved');
+console.log('🎮 Try: PaymentDemo.testWithAmount(1500) or PaymentDemo.runScenario("high-value-international")');

@@ -46,7 +46,7 @@
                         <span class="step-text">Observe API Reference highlighting when patterns are matched</span>
                     </div>
                 </div>
-                <button class="btn btn-sm btn-outline-primary ms-3" onclick="toggleInstructions()">
+                <button class="btn btn-sm btn-outline-primary ms-3" id="toggle-instructions-btn">
                     <i class="fas fa-eye-slash"></i> Hide
                 </button>
             </div>
@@ -62,13 +62,16 @@
                             <h5><i class="fas fa-shopping-cart"></i> Order Summary</h5>
                             <div class="amount-test-buttons">
                                 <small class="text-muted me-2">Quick Tests:</small>
-                                <button class="btn btn-sm btn-outline-primary me-1" onclick="testWithAmount(500)" data-bs-toggle="tooltip" title="Test small amount - standard processing">
+                                <button class="btn btn-sm btn-outline-primary me-1" data-amount="500"
+                                        data-bs-toggle="tooltip" title="Test small amount - standard processing">
                                     $500
                                 </button>
-                                <button class="btn btn-sm btn-outline-warning me-1" onclick="testWithAmount(1500)" data-bs-toggle="tooltip" title="Test high value - triggers guard conditions">
+                                <button class="btn btn-sm btn-outline-warning me-1" data-amount="1500"
+                                        data-bs-toggle="tooltip" title="Test high value - triggers guard conditions">
                                     $1,500
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="testWithAmount(6000)" data-bs-toggle="tooltip" title="Test very high value - manager approval required">
+                                <button class="btn btn-sm btn-outline-danger" data-amount="6000"
+                                        data-bs-toggle="tooltip" title="Test very high value - manager approval required">
                                     $6,000
                                 </button>
                             </div>
@@ -172,7 +175,7 @@
                         </div>
 
                         <!-- International Transaction Toggle -->
-                        <div class="demo-card mb-4" style="background: #f8f9fa; padding: 1rem;">
+                        <div class="demo-card mb-4 international-transaction-toggle">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="international-card">
                                 <label class="form-check-label" for="international-card">
@@ -183,7 +186,7 @@
                         </div>
 
                         <!-- Guard Condition Warning -->
-                        <div class="validation-feedback" id="guard-condition-warning" style="display: none;">
+                        <div class="validation-feedback guard-condition-warning" id="guard-condition-warning">
                             <i class="fas fa-exclamation-triangle me-2"></i>
                             <strong>High-Value International Transaction Detected</strong><br>
                             Amount > $1,000 with international card requires additional verification.
@@ -191,15 +194,14 @@
 
                         <!-- Action Buttons -->
                         <div class="mt-4">
-                            <!-- <button class="btn btn-primary-custom btn-lg w-100" onclick="processPayment()" id="process-payment-btn"> -->
-                            <button class="btn btn-primary-custom btn-lg" onclick="processPayment()" id="process-payment-btn">
+                            <button class="btn btn-primary-custom btn-lg" id="process-payment-btn">
                                 <i class="fas fa-lock me-2"></i>Process Payment - <span id="button-amount">$3,996.00</span>
                             </button>
                             <div class="demo-action-buttons mt-3">
-                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="resetDemo()">
+                                <button class="btn btn-outline-secondary btn-sm me-2" id="reset-demo-btn">
                                     <i class="fas fa-undo"></i> Reset Demo
                                 </button>
-                                <button class="btn btn-outline-info btn-sm" onclick="showDemoScenarios()">
+                                <button class="btn btn-outline-info btn-sm" id="scenarios-btn">
                                     <i class="fas fa-play"></i> Run Scenarios
                                 </button>
                             </div>
@@ -281,14 +283,14 @@
                     <div class="demo-card">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h6><i class="fas fa-stream"></i> Visual Flow Inspector</h6>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="clearLog()" title="Clear Log">
+                            <button class="btn btn-sm btn-outline-secondary" id="clear-log-btn" title="Clear Log">
                                 <i class="fas fa-eraser"></i> Clear
                             </button>
                         </div>
                         <!-- Use shared Visual Flow Inspector component -->
-                        <div id="api-log" class="api-log-container enhanced" style="height: 300px;">
+                        <div id="api-log" class="api-log-container enhanced vfi-standard-height">
                             <div class="text-muted text-center py-2">
-                                <i class="fas fa-play-circle mb-2" style="font-size: 1.5rem; opacity: 0.5;"></i>
+                                <i class="fas fa-play-circle mb-2 play-circle-icon"></i>
                                 <div>Select payment method and process payment to see Java 21 pattern matching flow</div>
                                 <small class="text-muted">Pattern matching visualization ready</small>
                             </div>
@@ -313,19 +315,19 @@
             <div class="modal-body">
                 <p>Choose a scenario to see automated pattern matching demonstrations:</p>
                 <div class="scenario-buttons">
-                    <button class="btn btn-primary mb-2 w-100" onclick="runScenario('high-value-international')">
+                    <button class="btn btn-primary mb-2 w-100" data-scenario="high-value-international">
                         <i class="fas fa-globe"></i> High-Value International Transaction
                         <small class="d-block">CreditCard + amount > $1000 + international</small>
                     </button>
-                    <button class="btn btn-warning mb-2 w-100" onclick="runScenario('premium-paypal')">
+                    <button class="btn btn-warning mb-2 w-100" data-scenario="premium-paypal">
                         <i class="fas fa-star"></i> Premium Customer PayPal
                         <small class="d-block">PayPal + premium customer tier</small>
                     </button>
-                    <button class="btn btn-danger mb-2 w-100" onclick="runScenario('large-bank-transfer')">
+                    <button class="btn btn-danger mb-2 w-100" data-scenario="large-bank-transfer">
                         <i class="fas fa-university"></i> Large Bank Transfer
                         <small class="d-block">BankTransfer + amount > $5000</small>
                     </button>
-                    <button class="btn btn-info mb-2 w-100" onclick="runScenario('all-patterns')">
+                    <button class="btn btn-info mb-2 w-100" data-scenario="all-patterns">
                         <i class="fas fa-list"></i> Test All Patterns
                         <small class="d-block">Cycle through all payment methods</small>
                     </button>

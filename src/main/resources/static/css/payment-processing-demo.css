@@ -1,6 +1,35 @@
 /* ================================
-   BALANCED LAYOUT FIX - PRESERVE UI STRUCTURE
-   Remove excessive spacing without breaking the layout
+   ADDITIONAL STYLES MOVED FROM INLINE HTML
+   ================================ */
+
+/* International Transaction Toggle Styling - moved from inline style */
+.international-transaction-toggle {
+    background: #f8f9fa !important;
+    padding: 1rem !important;
+}
+
+/* Guard Condition Warning - moved from inline style */
+.guard-condition-warning {
+    display: none !important;
+}
+
+.guard-condition-warning.visible {
+    display: block !important;
+}
+
+/* Visual Flow Inspector Height - moved from inline style */
+.vfi-standard-height {
+    height: 300px !important;
+}
+
+/* Play Circle Icon - moved from inline style */
+.play-circle-icon {
+    font-size: 1.5rem !important;
+    opacity: 0.5 !important;
+}
+
+/* ================================
+   EXISTING STYLES (PRESERVED)
    ================================ */
 
 /* Reset only problematic elements, not everything */
@@ -154,15 +183,6 @@
     border-radius: 4px;
     padding: 0.25rem;
     font-size: 0.7rem;
-}
-
-/* ================================
-   REDUCE INTERNATIONAL TRANSACTION SECTION
-   ================================ */
-.demo-card[style*="background: #f8f9fa"] {
-    padding: 0.75rem;               /* Reduced padding */
-    margin-bottom: 1rem;
-    background: #f8f9fa !important;
 }
 
 /* ================================
