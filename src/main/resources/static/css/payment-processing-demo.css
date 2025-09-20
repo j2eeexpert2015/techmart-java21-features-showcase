@@ -203,17 +203,18 @@
 }
 
 /* ================================
-   BALANCED LAYOUT FIX - PRESERVE UI STRUCTURE
-   Remove excessive spacing without breaking the layout
+   BALANCED LAYOUT - PRESERVE UI STRUCTURE
    ================================ */
 
 /* Reset only problematic elements, not everything */
 .container-fluid {
     padding: 0.5rem;
+    max-width: 1200px;  /* ONLY WIDTH CONSTRAINT NEEDED */
+    margin: 0 auto;     /* CENTER THE LAYOUT */
 }
 
 /* ================================
-   FIX BUTTON WIDTH ISSUE (PRIMARY PROBLEM)
+   FIX BUTTON WIDTH ISSUE
    ================================ */
 .btn-primary-custom {
     background: linear-gradient(135deg, #007bff 0%, #3b82f6 100%);
@@ -224,21 +225,19 @@
     font-size: 0.9rem;
     transition: all 0.3s ease;
     box-shadow: 0 3px 8px rgba(0, 123, 255, 0.25);
-
-    /* KEY FIX: Remove full width */
-    width: auto !important;           /* Override Bootstrap .w-100 */
-    max-width: 350px;                /* Reasonable maximum width */
-    margin: 0 auto;                  /* Center the button */
-    display: block;                  /* Ensure centering works */
+    width: auto !important;
+    max-width: 350px;
+    margin: 0 auto;
+    display: block;
 }
 
 /* ================================
-   REDUCE ORDER SUMMARY SPACING (MAIN PROBLEM AREA)
+   REDUCE ORDER SUMMARY SPACING
    ================================ */
 .cart-summary {
     background: #f8f9fa;
     border-radius: 6px;
-    padding: 0.75rem;               /* Reduced from excessive padding */
+    padding: 0.75rem;
     margin: 0;
 }
 
@@ -246,10 +245,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.4rem 0;              /* Reduced from ~1rem vertical padding */
+    padding: 0.4rem 0;
     border-bottom: 1px solid #e9ecef;
     font-size: 0.9rem;
-    line-height: 1.3;               /* Tighter line height */
+    line-height: 1.3;
 }
 
 .cart-item:last-child {
@@ -268,13 +267,13 @@
 }
 
 /* ================================
-   REDUCE DEMO CARD SPACING
+   DEMO CARD SPACING
    ================================ */
 .demo-card {
     border: 1px solid #dee2e6;
     border-radius: 8px;
-    padding: 1rem;                  /* Balanced padding */
-    margin-bottom: 1rem;            /* Reasonable spacing */
+    padding: 1rem;
+    margin-bottom: 1rem;
     background: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
@@ -290,18 +289,7 @@
 }
 
 /* ================================
-   CONSTRAIN COLUMN WIDTHS
-   ================================ */
-.col-lg-7 {
-    max-width: 650px;               /* Prevent excessive expansion */
-}
-
-.col-lg-5 {
-    max-width: 450px;
-}
-
-/* ================================
-   COMPACT PAYMENT METHOD CARDS
+   PAYMENT METHOD CARDS
    ================================ */
 .payment-method-card {
     border: 2px solid #dee2e6;
@@ -311,7 +299,7 @@
     transition: all 0.3s ease;
     background: #ffffff;
     text-align: center;
-    height: 120px;                  /* Fixed reasonable height */
+    height: 120px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -361,15 +349,6 @@
 }
 
 /* ================================
-   REDUCE INTERNATIONAL TRANSACTION SECTION
-   ================================ */
-.demo-card[style*="background: #f8f9fa"] {
-    padding: 0.75rem;               /* Reduced padding */
-    margin-bottom: 1rem;
-    background: #f8f9fa !important;
-}
-
-/* ================================
    CUSTOMER TYPE SELECTOR
    ================================ */
 .customer-type-selector {
@@ -403,7 +382,7 @@
 }
 
 /* ================================
-   COMPACT RIGHT COLUMN
+   RIGHT COLUMN
    ================================ */
 .api-reference-table {
     font-size: 0.85rem;
@@ -445,118 +424,7 @@
 }
 
 /* ================================
-   RESPONSIVE IMPROVEMENTS
-   ================================ */
-@media (max-width: 992px) {
-    .col-lg-7, .col-lg-5 {
-        max-width: 100%;
-    }
-
-    .container-fluid {
-        padding: 0.25rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .demo-card {
-        padding: 0.75rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .payment-method-card {
-        height: 100px;
-        padding: 0.75rem;
-    }
-
-    .btn-primary-custom {
-        max-width: 100%;
-        padding: 0.75rem 1.5rem;
-    }
-}
-
-/* ================================
-   MAIN CONTAINER PROPERLY CONSTRAINED
-   Fix the excessive width while preserving all styling
-   ================================ */
-.main-container {
-    max-width: 1200px !important;  /* FIXED: Changed from 100% to reasonable width */
-    margin: 0 auto;
-    padding: 0;
-    width: 100%;
-}
-
-.demo-page-container {
-    max-width: 100%;
-    padding: 1rem;
-}
-
-/* Override Bootstrap container padding for this demo */
-.container-fluid {
-    padding: 0.25rem !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-}
-
-/* ================================
-   RESPONSIVE GRID OPTIMIZATION
-   ================================ */
-.row {
-    --bs-gutter-x: 0.75rem;
-    --bs-gutter-y: 0.75rem;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-/* ================================
-   COLUMN WIDTH OPTIMIZATION
-   ================================ */
-.col-lg-7 {
-    flex: 0 0 58.333333%;
-}
-
-.col-lg-5 {
-    flex: 0 0 41.666667%;
-}
-
-/* ================================
-   RESPONSIVE IMPROVEMENTS FOR CONSTRAINED WIDTH
-   ================================ */
-@media (max-width: 992px) {
-    .col-lg-7, .col-lg-5 {
-        max-width: 100%;
-        flex: 0 0 100%;
-    }
-
-    .demo-page-container {
-        padding: 0.75rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .demo-page-container {
-        padding: 0.5rem;
-    }
-
-    .row {
-        --bs-gutter-x: 0.5rem;
-        --bs-gutter-y: 0.5rem;
-    }
-}
-
-/* ================================
-   DEMO CARD SPACING OPTIMIZATION
-   ================================ */
-.demo-card {
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 0.75rem;
-    background: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-/* ================================
-   DEMO INSTRUCTIONS COMPACT
+   DEMO INSTRUCTIONS
    ================================ */
 .demo-instructions-panel {
     background: linear-gradient(135deg, #e7f3ff 0%, #f0f9ff 100%);
@@ -599,4 +467,30 @@
     font-size: 0.8rem;
     font-weight: 600;
     flex-shrink: 0;
+}
+
+/* ================================
+   RESPONSIVE IMPROVEMENTS
+   ================================ */
+@media (max-width: 992px) {
+    .container-fluid {
+        padding: 0.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .demo-card {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .payment-method-card {
+        height: 100px;
+        padding: 0.75rem;
+    }
+
+    .btn-primary-custom {
+        max-width: 100%;
+        padding: 0.75rem 1.5rem;
+    }
 }
