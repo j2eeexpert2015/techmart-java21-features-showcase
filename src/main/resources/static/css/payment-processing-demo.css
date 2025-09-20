@@ -475,41 +475,84 @@
 }
 
 /* ================================
-   MAIN CONTAINER CONSTRAINTS
+   MAIN CONTAINER PROPERLY CONSTRAINED
+   Fix the excessive width while preserving all styling
    ================================ */
 .main-container {
-    max-width: 1400px;
+    max-width: 1200px !important;  /* FIXED: Changed from 100% to reasonable width */
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0;
+    width: 100%;
 }
 
 .demo-page-container {
     max-width: 100%;
+    padding: 1rem;
+}
+
+/* Override Bootstrap container padding for this demo */
+.container-fluid {
+    padding: 0.25rem !important;
+    max-width: 100% !important;
+    margin: 0 !important;
 }
 
 /* ================================
-   SPECIFIC BOOTSTRAP OVERRIDES
+   RESPONSIVE GRID OPTIMIZATION
    ================================ */
-.mb-3 {
-    margin-bottom: 0.75rem !important;
-}
-
-.mb-4 {
-    margin-bottom: 1rem !important;
-}
-
-.mt-3 {
-    margin-top: 0.75rem !important;
-}
-
-.mt-4 {
-    margin-top: 1rem !important;
-}
-
-/* Remove excessive row gutters */
 .row {
-    --bs-gutter-x: 1rem;
-    --bs-gutter-y: 1rem;
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 0.75rem;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* ================================
+   COLUMN WIDTH OPTIMIZATION
+   ================================ */
+.col-lg-7 {
+    flex: 0 0 58.333333%;
+}
+
+.col-lg-5 {
+    flex: 0 0 41.666667%;
+}
+
+/* ================================
+   RESPONSIVE IMPROVEMENTS FOR CONSTRAINED WIDTH
+   ================================ */
+@media (max-width: 992px) {
+    .col-lg-7, .col-lg-5 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .demo-page-container {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .demo-page-container {
+        padding: 0.5rem;
+    }
+
+    .row {
+        --bs-gutter-x: 0.5rem;
+        --bs-gutter-y: 0.5rem;
+    }
+}
+
+/* ================================
+   DEMO CARD SPACING OPTIMIZATION
+   ================================ */
+.demo-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* ================================
