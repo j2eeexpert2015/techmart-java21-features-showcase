@@ -119,7 +119,7 @@ function setupPaymentMethodSelection() {
 
 
 /**
- * Handle payment method selection with enhanced highlighting for both table and logic
+ * ENHANCED: Handle payment method selection with coordinated highlighting
  */
 function selectPaymentMethod(selectedCard) {
     const method = selectedCard.dataset.method;
@@ -147,9 +147,13 @@ function selectPaymentMethod(selectedCard) {
         logAPIFlow('Operation', 'Guard conditions analysis will occur on processing');
     }
 
-    // Enhanced highlighting for BOTH sections
-    highlightApiReference(selectedPaymentMethod);           // Table highlighting
-    updatePatternMatchingLogic(selectedPaymentMethod);      // Logic highlighting
+    // ENHANCED: Highlight BOTH sections with coordinated timing
+    highlightApiReference(selectedPaymentMethod);           // Table highlighting (existing)
+
+    // Add small delay before highlighting Pattern Matching Logic for nice visual flow
+    setTimeout(() => {
+        highlightPatternMatchingLogic(selectedPaymentMethod);  // NEW: Logic highlighting
+    }, 300);
 
     // Update guard condition analysis
     updateGuardConditionWarning();
@@ -520,6 +524,7 @@ function highlightApiReference(method) {
         console.warn('⚠️ No highlighting patterns defined for method:', method);
     }
 }
+
 /**
  * Enhanced Pattern Matching Logic highlighting
  */
@@ -532,16 +537,13 @@ function updatePatternMatchingLogic(method) {
         return;
     }
 
-    // Clear previous highlights
-    document.querySelectorAll('.status-step').forEach(step => {
-        step.classList.remove('step-highlight', 'step-warning', 'step-error');
-    });
-
-    // Update the pattern matching status steps
+    // Update the pattern matching status steps first
     updateProcessingStatusSteps(method);
 
-    // Highlight relevant steps based on method and conditions
-    highlightRelevantSteps(method);
+    // Then apply highlighting with slight delay for better visual flow
+    setTimeout(() => {
+        highlightPatternMatchingLogic(method);
+    }, 100);
 }
 
 /**
@@ -1273,6 +1275,81 @@ window.PaymentDemo = {
         return panel ? !panel.classList.contains('collapsed') : false;
     }
 };
+
+/**
+ * NEW: Pattern Matching Logic highlighting with same colors as API Reference
+ * Add this to your payment-processing-demo.js file
+ */
+
+/**
+ * NEW: Highlight Pattern Matching Logic steps with same colors as API Reference
+ */
+function highlightPatternMatchingLogic(method) {
+    console.log('🎯 Highlighting Pattern Matching Logic for method:', method);
+
+    const statusContainer = document.getElementById('pattern-status');
+    if (!statusContainer) {
+        console.warn('⚠️ Pattern status container not found');
+        return;
+    }
+
+    // Clear previous highlights from Pattern Matching Logic
+    document.querySelectorAll('.status-step').forEach(step => {
+        step.classList.remove('highlight-pattern', 'highlight-switch', 'highlight-guard', 'highlight-sealed');
+    });
+
+    // Define which steps to highlight for each payment method - SAME COLORS AS API REFERENCE
+    const highlightMappings = {
+        'creditcard': [
+            { stepIndex: 0, highlightClass: 'highlight-switch' },    // Payment Method Detection - green (switch)
+            { stepIndex: 1, highlightClass: 'highlight-guard' },     // Guard Condition Check - orange (guard)
+            { stepIndex: 2, highlightClass: 'highlight-pattern' },   // Validation - blue (pattern)
+            { stepIndex: 3, highlightClass: 'highlight-sealed' }     // Processing - gray (sealed)
+        ],
+        'paypal': [
+            { stepIndex: 0, highlightClass: 'highlight-switch' },    // Payment Method Detection - green (switch)
+            { stepIndex: 1, highlightClass: 'highlight-sealed' },    // Guard Condition Check - gray (sealed)
+            { stepIndex: 2, highlightClass: 'highlight-pattern' },   // Validation - blue (pattern)
+            { stepIndex: 3, highlightClass: 'highlight-switch' }     // Processing - green (switch)
+        ],
+        'banktransfer': [
+            { stepIndex: 0, highlightClass: 'highlight-switch' },    // Payment Method Detection - green (switch)
+            { stepIndex: 1, highlightClass: 'highlight-guard' },     // Guard Condition Check - orange (guard)
+            { stepIndex: 2, highlightClass: 'highlight-pattern' },   // Validation - blue (pattern)
+            { stepIndex: 3, highlightClass: 'highlight-sealed' }     // Processing - gray (sealed)
+        ]
+    };
+
+    const mappings = highlightMappings[method];
+    if (!mappings) {
+        console.warn('⚠️ No highlight mappings defined for method:', method);
+        return;
+    }
+
+    const steps = document.querySelectorAll('.status-step');
+
+    // Apply highlights with staggered timing for visual appeal - SAME AS API REFERENCE
+    mappings.forEach(({ stepIndex, highlightClass }, index) => {
+        if (steps[stepIndex]) {
+            setTimeout(() => {
+                steps[stepIndex].classList.add(highlightClass);
+                console.log(`✅ Highlighted step ${stepIndex} with class: ${highlightClass}`);
+            }, index * 200); // 200ms delay between each highlight - SAME AS API REFERENCE
+        } else {
+            console.warn(`⚠️ Step ${stepIndex} not found for highlighting`);
+        }
+    });
+
+    // Auto-remove highlighting after 5 seconds - SAME AS API REFERENCE
+    setTimeout(() => {
+        mappings.forEach(({ stepIndex, highlightClass }) => {
+            if (steps[stepIndex] && steps[stepIndex].classList.contains(highlightClass)) {
+                steps[stepIndex].classList.remove(highlightClass);
+            }
+        });
+        console.log('🔄 Auto-removed Pattern Matching Logic highlighting for:', method);
+    }, 5000);
+}
 
 console.log('🚀 Optimized Payment Processing Demo loaded successfully');
 console.log('✅ All inline onclick handlers moved to external event listeners');

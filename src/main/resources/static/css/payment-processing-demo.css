@@ -1231,3 +1231,337 @@
     25% { transform: translateX(-5px); }
     75% { transform: translateX(5px); }
 }
+
+/* ================================
+   ENHANCED PATTERN MATCHING LOGIC HIGHLIGHTING
+   Same colors and effects as API Reference table
+   ================================ */
+
+/* Enhanced Pattern Matching Logic highlighting with SAME COLORS as API Reference */
+.status-step.highlight-pattern {
+    background: linear-gradient(90deg,
+        rgba(219, 234, 254, 1) 0%,
+        rgba(147, 197, 253, 1) 50%,
+        rgba(219, 234, 254, 1) 100%) !important;
+    border: 2px solid rgba(59, 130, 246, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+    transform: translateY(-2px) !important;
+    animation: highlightFadePatternLogic 4s ease-out forwards !important;
+}
+
+.status-step.highlight-switch {
+    background: linear-gradient(90deg,
+        rgba(220, 252, 231, 1) 0%,
+        rgba(134, 239, 172, 1) 50%,
+        rgba(220, 252, 231, 1) 100%) !important;
+    border: 2px solid rgba(34, 197, 94, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3) !important;
+    transform: translateY(-2px) !important;
+    animation: highlightFadeSwitchLogic 4s ease-out forwards !important;
+}
+
+.status-step.highlight-guard {
+    background: linear-gradient(90deg,
+        rgba(254, 243, 199, 1) 0%,
+        rgba(253, 186, 116, 1) 50%,
+        rgba(254, 243, 199, 1) 100%) !important;
+    border: 2px solid rgba(249, 115, 22, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3) !important;
+    transform: translateY(-2px) !important;
+    animation: highlightFadeGuardLogic 4s ease-out forwards !important;
+}
+
+.status-step.highlight-sealed {
+    background: linear-gradient(90deg,
+        rgba(241, 245, 249, 1) 0%,
+        rgba(203, 213, 225, 1) 50%,
+        rgba(241, 245, 249, 1) 100%) !important;
+    border: 2px solid rgba(100, 116, 139, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3) !important;
+    transform: translateY(-2px) !important;
+    animation: highlightFadeSealedLogic 4s ease-out forwards !important;
+}
+
+/* Pattern Matching Logic highlight animations - SAME as API Reference */
+@keyframes highlightFadePatternLogic {
+    0% {
+        background: linear-gradient(90deg,
+            rgba(219, 234, 254, 1) 0%,
+            rgba(147, 197, 253, 1) 50%,
+            rgba(219, 234, 254, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        border: 2px solid rgba(59, 130, 246, 0.8);
+    }
+    25% {
+        background: linear-gradient(90deg,
+            rgba(219, 234, 254, 1) 0%,
+            rgba(147, 197, 253, 1) 50%,
+            rgba(219, 234, 254, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    100% {
+        background: transparent;
+        transform: translateY(0) scale(1);
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+}
+
+@keyframes highlightFadeSwitchLogic {
+    0% {
+        background: linear-gradient(90deg,
+            rgba(220, 252, 231, 1) 0%,
+            rgba(134, 239, 172, 1) 50%,
+            rgba(220, 252, 231, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        border: 2px solid rgba(34, 197, 94, 0.8);
+    }
+    25% {
+        background: linear-gradient(90deg,
+            rgba(220, 252, 231, 1) 0%,
+            rgba(134, 239, 172, 1) 50%,
+            rgba(220, 252, 231, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+    }
+    100% {
+        background: transparent;
+        transform: translateY(0) scale(1);
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+}
+
+@keyframes highlightFadeGuardLogic {
+    0% {
+        background: linear-gradient(90deg,
+            rgba(254, 243, 199, 1) 0%,
+            rgba(253, 186, 116, 1) 50%,
+            rgba(254, 243, 199, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        border: 2px solid rgba(249, 115, 22, 0.8);
+    }
+    25% {
+        background: linear-gradient(90deg,
+            rgba(254, 243, 199, 1) 0%,
+            rgba(253, 186, 116, 1) 50%,
+            rgba(254, 243, 199, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+    }
+    100% {
+        background: transparent;
+        transform: translateY(0) scale(1);
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+}
+
+@keyframes highlightFadeSealedLogic {
+    0% {
+        background: linear-gradient(90deg,
+            rgba(241, 245, 249, 1) 0%,
+            rgba(203, 213, 225, 1) 50%,
+            rgba(241, 245, 249, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+        border: 2px solid rgba(100, 116, 139, 0.8);
+    }
+    25% {
+        background: linear-gradient(90deg,
+            rgba(241, 245, 249, 1) 0%,
+            rgba(203, 213, 225, 1) 50%,
+            rgba(241, 245, 249, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+    }
+    100% {
+        background: transparent;
+        transform: translateY(0) scale(1);
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+}
+
+/* Accessibility - reduced motion for Pattern Matching Logic */
+@media (prefers-reduced-motion: reduce) {
+    .status-step.highlight-pattern,
+    .status-step.highlight-switch,
+    .status-step.highlight-guard,
+    .status-step.highlight-sealed {
+        animation: none;
+        background: rgba(239, 246, 255, 0.5) !important;
+        transform: none !important;
+    }
+}
+
+/* ================================
+   ENHANCED PATTERN MATCHING LOGIC HIGHLIGHTING
+   SAME COLORS AS API REFERENCE TABLE
+   ================================ */
+
+/* ENHANCED: Pattern Matching Logic step highlighting effects - SAME COLORS AS API REFERENCE */
+.status-step.highlight-pattern {
+    background: linear-gradient(90deg,
+        rgba(219, 234, 254, 1) 0%,
+        rgba(147, 197, 253, 1) 50%,
+        rgba(219, 234, 254, 1) 100%) !important;
+    border: 2px solid rgba(59, 130, 246, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+    transform: translateY(-2px) !important;
+    animation: highlightFadePattern 4s ease-out forwards !important;
+}
+
+.status-step.highlight-switch {
+    background: linear-gradient(90deg,
+        rgba(220, 252, 231, 1) 0%,
+        rgba(134, 239, 172, 1) 50%,
+        rgba(220, 252, 231, 1) 100%) !important;
+    border: 2px solid rgba(34, 197, 94, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3) !important;
+    transform: translateY(-2px) !important;
+    animation: highlightFadeSwitch 4s ease-out forwards !important;
+}
+
+.status-step.highlight-guard {
+    background: linear-gradient(90deg,
+        rgba(254, 243, 199, 1) 0%,
+        rgba(253, 186, 116, 1) 50%,
+        rgba(254, 243, 199, 1) 100%) !important;
+    border: 2px solid rgba(249, 115, 22, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3) !important;
+    transform: translateY(-2px) !important;
+    animation: highlightFadeGuard 4s ease-out forwards !important;
+}
+
+.status-step.highlight-sealed {
+    background: linear-gradient(90deg,
+        rgba(241, 245, 249, 1) 0%,
+        rgba(203, 213, 225, 1) 50%,
+        rgba(241, 245, 249, 1) 100%) !important;
+    border: 2px solid rgba(100, 116, 139, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3) !important;
+    transform: translateY(-2px) !important;
+    animation: highlightFadeSealed 4s ease-out forwards !important;
+}
+
+/* Pattern Matching Logic highlight animations - SAME AS API REFERENCE */
+@keyframes highlightFadePattern {
+    0% {
+        background: linear-gradient(90deg,
+            rgba(219, 234, 254, 1) 0%,
+            rgba(147, 197, 253, 1) 50%,
+            rgba(219, 234, 254, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        border: 2px solid rgba(59, 130, 246, 0.8);
+    }
+    25% {
+        background: linear-gradient(90deg,
+            rgba(219, 234, 254, 1) 0%,
+            rgba(147, 197, 253, 1) 50%,
+            rgba(219, 234, 254, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    100% {
+        background: transparent;
+        transform: translateY(0) scale(1);
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+}
+
+@keyframes highlightFadeSwitch {
+    0% {
+        background: linear-gradient(90deg,
+            rgba(220, 252, 231, 1) 0%,
+            rgba(134, 239, 172, 1) 50%,
+            rgba(220, 252, 231, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        border: 2px solid rgba(34, 197, 94, 0.8);
+    }
+    25% {
+        background: linear-gradient(90deg,
+            rgba(220, 252, 231, 1) 0%,
+            rgba(134, 239, 172, 1) 50%,
+            rgba(220, 252, 231, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+    }
+    100% {
+        background: transparent;
+        transform: translateY(0) scale(1);
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+}
+
+@keyframes highlightFadeGuard {
+    0% {
+        background: linear-gradient(90deg,
+            rgba(254, 243, 199, 1) 0%,
+            rgba(253, 186, 116, 1) 50%,
+            rgba(254, 243, 199, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        border: 2px solid rgba(249, 115, 22, 0.8);
+    }
+    25% {
+        background: linear-gradient(90deg,
+            rgba(254, 243, 199, 1) 0%,
+            rgba(253, 186, 116, 1) 50%,
+            rgba(254, 243, 199, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+    }
+    100% {
+        background: transparent;
+        transform: translateY(0) scale(1);
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+}
+
+@keyframes highlightFadeSealed {
+    0% {
+        background: linear-gradient(90deg,
+            rgba(241, 245, 249, 1) 0%,
+            rgba(203, 213, 225, 1) 50%,
+            rgba(241, 245, 249, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+        border: 2px solid rgba(100, 116, 139, 0.8);
+    }
+    25% {
+        background: linear-gradient(90deg,
+            rgba(241, 245, 249, 1) 0%,
+            rgba(203, 213, 225, 1) 50%,
+            rgba(241, 245, 249, 1) 100%);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+    }
+    100% {
+        background: transparent;
+        transform: translateY(0) scale(1);
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+}
+
+/* Accessibility - reduced motion for Pattern Matching Logic */
+@media (prefers-reduced-motion: reduce) {
+    .status-step.highlight-pattern,
+    .status-step.highlight-switch,
+    .status-step.highlight-guard,
+    .status-step.highlight-sealed {
+        animation: none;
+        background: rgba(239, 246, 255, 0.5) !important;
+        transform: none !important;
+    }
+}
