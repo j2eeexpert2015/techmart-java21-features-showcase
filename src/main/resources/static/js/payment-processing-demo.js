@@ -117,11 +117,11 @@ function setupPaymentMethodSelection() {
     });
 }
 
+
 /**
- * ENHANCED: Handle payment method selection with immediate visual feedback
+ * Handle payment method selection with enhanced highlighting for both table and logic
  */
 function selectPaymentMethod(selectedCard) {
-    // Get method from data attribute
     const method = selectedCard.dataset.method;
 
     if (!method) {
@@ -138,30 +138,21 @@ function selectPaymentMethod(selectedCard) {
     selectedCard.classList.add('selected');
     selectedPaymentMethod = method;
 
-    // IMMEDIATE VISUAL FEEDBACK - Update pattern matching logic right away
-    updatePatternMatchingLogic(selectedPaymentMethod);
-
-    // Log the selection using shared Visual Flow Inspector
     console.log('🔥 Selected payment method:', selectedPaymentMethod);
 
     // Use shared logging functions
     if (typeof logAPIFlow !== 'undefined') {
         logAPIFlow('Operation', `Selected ${getMethodDisplayName(method)} payment method`);
         logAPIFlow('Feature', `Pattern: case ${method.charAt(0).toUpperCase() + method.slice(1)}(...) ->`);
-
-        // Show immediate guard analysis
-        const guardAnalysis = analyzeGuardConditions(method);
-        if (guardAnalysis.triggered) {
-            logAPIFlow('Operation', `Guard condition will trigger: ${guardAnalysis.condition}`);
-        } else {
-            logAPIFlow('Operation', 'No guard conditions will be triggered');
-        }
+        logAPIFlow('Operation', 'Guard conditions analysis will occur on processing');
     }
 
-    // Update API reference highlighting
-    highlightApiReference(selectedPaymentMethod);
+    // Enhanced highlighting for BOTH sections
+    highlightApiReference(selectedPaymentMethod);           // Table highlighting
+    updatePatternMatchingLogic(selectedPaymentMethod);      // Logic highlighting
 
-    console.log(`Pattern matching logic updated for: ${method}`);
+    // Update guard condition analysis
+    updateGuardConditionWarning();
 }
 
 /**
@@ -482,49 +473,179 @@ function toggleInstructions() {
 // ============================================================================
 
 /**
- * ENHANCED: Update API reference table highlighting with smooth row effects
+ * Update API reference table highlighting with ENHANCED VISIBILITY
  */
 function highlightApiReference(method) {
-    // Clear all previous highlights from API reference table
+    console.log('🎯 Highlighting API reference for method:', method);
+
+    // Clear all previous highlights first
     document.querySelectorAll('.api-reference-table tr').forEach(row => {
-        row.classList.remove('pattern-highlight', 'method-highlight',
-                           'highlight-pattern', 'highlight-switch', 'highlight-guard', 'highlight-sealed');
+        row.classList.remove('method-highlight');
     });
 
-    // Define patterns and their highlight types
+    // Define which patterns to highlight for each payment method
     const patterns = {
-        'creditcard': [
-            { id: 'pattern-switch', type: 'switch', delay: 0 },
-            { id: 'pattern-creditcard', type: 'pattern', delay: 200 },
-            { id: 'pattern-guard', type: 'guard', delay: 400 }
-        ],
-        'paypal': [
-            { id: 'pattern-switch', type: 'switch', delay: 0 },
-            { id: 'pattern-paypal', type: 'pattern', delay: 200 },
-            { id: 'pattern-sealed', type: 'sealed', delay: 400 }
-        ],
-        'banktransfer': [
-            { id: 'pattern-switch', type: 'switch', delay: 0 },
-            { id: 'pattern-banktransfer', type: 'pattern', delay: 200 },
-            { id: 'pattern-guard', type: 'guard', delay: 400 }
-        ]
+        'creditcard': ['pattern-switch', 'pattern-creditcard', 'pattern-guard'],
+        'paypal': ['pattern-switch', 'pattern-paypal', 'pattern-sealed'],
+        'banktransfer': ['pattern-switch', 'pattern-banktransfer', 'pattern-guard']
     };
 
     if (patterns[method]) {
-        patterns[method].forEach(({ id, type, delay }) => {
-            const row = document.getElementById(id);
+        console.log('🔥 Highlighting patterns:', patterns[method]);
+
+        patterns[method].forEach((patternId, index) => {
+            const row = document.getElementById(patternId);
             if (row) {
+                // Add staggered highlighting effect for visual appeal
                 setTimeout(() => {
-                    row.classList.add(`highlight-${type}`);
-                    console.log(`Highlighted ${id} with ${type} effect`);
-                }, delay);
+                    row.classList.add('method-highlight');
+                    console.log('✅ Highlighted row with enhanced visibility:', patternId);
+                }, index * 200); // 200ms delay between each highlight
+            } else {
+                console.warn('⚠️ Pattern row not found:', patternId);
             }
         });
+
+        // Auto-remove highlighting after 5 seconds for clean UX
+        setTimeout(() => {
+            patterns[method].forEach(patternId => {
+                const row = document.getElementById(patternId);
+                if (row && row.classList.contains('method-highlight')) {
+                    row.classList.remove('method-highlight');
+                }
+            });
+            console.log('🔄 Auto-removed highlighting for:', method);
+        }, 5000);
+    } else {
+        console.warn('⚠️ No highlighting patterns defined for method:', method);
+    }
+}
+/**
+ * Enhanced Pattern Matching Logic highlighting
+ */
+function updatePatternMatchingLogic(method) {
+    console.log('🎯 Updating Pattern Matching Logic for:', method);
+
+    const statusContainer = document.getElementById('pattern-status');
+    if (!statusContainer) {
+        console.warn('⚠️ Pattern status container not found');
+        return;
     }
 
-    console.log(`API reference highlighted for method: ${method}`);
+    // Clear previous highlights
+    document.querySelectorAll('.status-step').forEach(step => {
+        step.classList.remove('step-highlight', 'step-warning', 'step-error');
+    });
+
+    // Update the pattern matching status steps
+    updateProcessingStatusSteps(method);
+
+    // Highlight relevant steps based on method and conditions
+    highlightRelevantSteps(method);
 }
 
+/**
+ * Highlight relevant steps based on payment method and guard conditions
+ */
+function highlightRelevantSteps(method) {
+    const steps = document.querySelectorAll('.status-step');
+    const guardAnalysis = analyzeGuardConditions(method);
+
+    if (steps.length >= 4) {
+        // Step 1: Payment Method Detection (always highlighted)
+        setTimeout(() => {
+            steps[0].classList.add('step-highlight');
+            console.log('✅ Highlighted: Payment Method Detection');
+        }, 100);
+
+        // Step 2: Guard Condition Check
+        setTimeout(() => {
+            if (guardAnalysis.triggered) {
+                steps[1].classList.add('step-warning');
+                console.log('⚡ Highlighted: Guard Condition Triggered');
+            } else {
+                steps[1].classList.add('step-highlight');
+                console.log('✅ Highlighted: Guard Condition Check');
+            }
+        }, 300);
+
+        // Step 3: Validation
+        setTimeout(() => {
+            steps[2].classList.add('step-highlight');
+            console.log('✅ Highlighted: Validation');
+        }, 500);
+
+        // Step 4: Processing
+        setTimeout(() => {
+            if (guardAnalysis.triggered && (guardAnalysis.action.includes('require') || guardAnalysis.action.includes('approval'))) {
+                steps[3].classList.add('step-warning');
+                console.log('⚡ Highlighted: Processing (Requires Action)');
+            } else {
+                steps[3].classList.add('step-highlight');
+                console.log('✅ Highlighted: Processing');
+            }
+        }, 700);
+    }
+
+    // Auto-remove highlighting after 6 seconds
+    setTimeout(() => {
+        document.querySelectorAll('.status-step').forEach(step => {
+            step.classList.remove('step-highlight', 'step-warning', 'step-error');
+        });
+        console.log('🔄 Auto-removed Pattern Matching Logic highlighting');
+    }, 6000);
+}
+
+/**
+ * Update the processing status complete with enhanced highlighting
+ */
+function updateProcessingStatusComplete(data) {
+    const steps = document.querySelectorAll('.status-step');
+
+    // Clear previous highlighting
+    steps.forEach(step => {
+        step.classList.remove('step-highlight', 'step-warning', 'step-error');
+    });
+
+    // Determine final status highlighting
+    const isSuccessful = data.status === 'APPROVED';
+    const requiresAction = data.status === 'REQUIRES_VERIFICATION' || data.status === 'REQUIRES_APPROVAL';
+    const isDeclined = data.status === 'DECLINED' || data.status === 'ERROR';
+
+    // Apply final highlighting with staggered timing
+    steps.forEach((step, index) => {
+        setTimeout(() => {
+            const icon = step.querySelector('.status-icon');
+
+            if (isDeclined) {
+                step.classList.add('step-error');
+                icon.className = 'status-icon';
+                icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            } else if (requiresAction && index === steps.length - 1) {
+                step.classList.add('step-warning');
+                icon.className = 'status-icon';
+                icon.innerHTML = '<i class="fas fa-clock"></i>';
+            } else {
+                step.classList.add('step-highlight');
+                icon.className = 'status-icon';
+                icon.innerHTML = '<i class="fas fa-check"></i>';
+            }
+        }, index * 150);
+    });
+
+    // Update final step with result
+    if (steps[3]) {
+        const text = steps[3].querySelector('div:last-child');
+        if (text) {
+            text.innerHTML = `
+                <div><strong>Payment Processing</strong></div>
+                <small class="text-muted">Result: ${data.status} - ${data.message || data.statusMessage}</small>
+            `;
+        }
+    }
+
+    console.log('✅ Updated Pattern Matching Logic with final result:', data.status);
+}
 /**
  * Update pattern matching logic display
  */

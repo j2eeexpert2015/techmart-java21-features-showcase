@@ -1018,3 +1018,216 @@
         order: unset;
     }
 }
+/* ================================
+   ENHANCED TABLE ROW HIGHLIGHTING - HIGHLY VISIBLE
+   ADD THIS SECTION TO EXISTING CSS FILE
+   ================================ */
+
+.api-reference-table tr.method-highlight {
+    animation: rowHighlightPop 0.4s ease-out;
+}
+
+.api-reference-table tr.method-highlight > td {
+    background-color: #fff3cd !important;
+    border: 4px solid #f59e0b !important;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4) !important;
+    position: relative;
+    font-weight: 700 !important;
+    color: #92400e !important;
+    transition: all 0.3s ease !important;
+    z-index: 10;
+}
+
+/* Add intense glowing effect */
+.api-reference-table tr.method-highlight > td::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, #f59e0b, #fbbf24, #f59e0b, #fbbf24);
+    border-radius: 6px;
+    z-index: -1;
+    opacity: 0.4;
+    animation: intenseGlow 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes rowHighlightPop {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(245, 158, 11, 0);
+    }
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+}
+
+@keyframes intenseGlow {
+    0% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.6;
+        transform: scale(1.01);
+    }
+}
+
+/* Override Bootstrap table styling completely */
+.api-reference-table tr.method-highlight:hover > td {
+    background-color: #fff3cd !important;
+    border-color: #f59e0b !important;
+    color: #92400e !important;
+}
+
+/* Make sure the highlighting is visible over Bootstrap */
+.api-reference-table tr.method-highlight {
+    --bs-table-accent-bg: #fff3cd !important;
+    position: relative;
+    z-index: 5;
+}
+
+/* ================================
+   ENHANCED PATTERN MATCHING LOGIC HIGHLIGHTING
+   ================================ */
+
+.status-step.step-highlight {
+    animation: stepHighlightPop 0.4s ease-out;
+    border: 3px solid #10b981 !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
+    border-radius: 8px !important;
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+    position: relative;
+    z-index: 10;
+}
+
+.status-step.step-highlight::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #10b981, #34d399, #10b981, #34d399);
+    border-radius: 10px;
+    z-index: -1;
+    opacity: 0.3;
+    animation: stepGlow 1.5s ease-in-out infinite alternate;
+}
+
+.status-step.step-highlight .status-icon {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: white !important;
+    border: 2px solid #34d399 !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5) !important;
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+.status-step.step-highlight .status-icon i {
+    animation: iconSpin 3s ease-in-out infinite;
+}
+
+@keyframes stepHighlightPop {
+    0% {
+        transform: translateX(0) scale(1);
+        box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+    }
+    50% {
+        transform: translateX(8px) scale(1.02);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+    100% {
+        transform: translateX(5px) scale(1);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+}
+
+@keyframes stepGlow {
+    0% {
+        opacity: 0.2;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.4;
+        transform: scale(1.01);
+    }
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 25px rgba(16, 185, 129, 0.7);
+    }
+}
+
+@keyframes iconSpin {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(5deg);
+    }
+    75% {
+        transform: rotate(-5deg);
+    }
+}
+
+/* Warning/requires action highlighting */
+.status-step.step-warning {
+    border: 3px solid #f59e0b !important;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%) !important;
+    animation: warningPulse 2s ease-in-out infinite;
+}
+
+.status-step.step-warning .status-icon {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    color: white !important;
+    animation: warningBounce 1s ease-in-out infinite;
+}
+
+@keyframes warningPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 rgba(245, 158, 11, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    }
+}
+
+@keyframes warningBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+/* Error/declined highlighting */
+.status-step.step-error {
+    border: 3px solid #ef4444 !important;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%) !important;
+    animation: errorShake 0.5s ease-in-out;
+}
+
+.status-step.step-error .status-icon {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: white !important;
+}
+
+@keyframes errorShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
