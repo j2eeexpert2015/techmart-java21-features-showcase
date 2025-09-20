@@ -482,29 +482,47 @@ function toggleInstructions() {
 // ============================================================================
 
 /**
- * Update API reference table highlighting
+ * ENHANCED: Update API reference table highlighting with smooth row effects
  */
 function highlightApiReference(method) {
-    // Clear previous highlights
+    // Clear all previous highlights from API reference table
     document.querySelectorAll('.api-reference-table tr').forEach(row => {
-        row.classList.remove('pattern-highlight');
+        row.classList.remove('pattern-highlight', 'method-highlight',
+                           'highlight-pattern', 'highlight-switch', 'highlight-guard', 'highlight-sealed');
     });
 
-    // Highlight relevant patterns
+    // Define patterns and their highlight types
     const patterns = {
-        'creditcard': ['pattern-switch', 'pattern-creditcard', 'pattern-guard'],
-        'paypal': ['pattern-switch', 'pattern-paypal', 'pattern-sealed'],
-        'banktransfer': ['pattern-switch', 'pattern-banktransfer', 'pattern-guard']
+        'creditcard': [
+            { id: 'pattern-switch', type: 'switch', delay: 0 },
+            { id: 'pattern-creditcard', type: 'pattern', delay: 200 },
+            { id: 'pattern-guard', type: 'guard', delay: 400 }
+        ],
+        'paypal': [
+            { id: 'pattern-switch', type: 'switch', delay: 0 },
+            { id: 'pattern-paypal', type: 'pattern', delay: 200 },
+            { id: 'pattern-sealed', type: 'sealed', delay: 400 }
+        ],
+        'banktransfer': [
+            { id: 'pattern-switch', type: 'switch', delay: 0 },
+            { id: 'pattern-banktransfer', type: 'pattern', delay: 200 },
+            { id: 'pattern-guard', type: 'guard', delay: 400 }
+        ]
     };
 
     if (patterns[method]) {
-        patterns[method].forEach(patternId => {
-            const row = document.getElementById(patternId);
+        patterns[method].forEach(({ id, type, delay }) => {
+            const row = document.getElementById(id);
             if (row) {
-                row.classList.add('pattern-highlight');
+                setTimeout(() => {
+                    row.classList.add(`highlight-${type}`);
+                    console.log(`Highlighted ${id} with ${type} effect`);
+                }, delay);
             }
         });
     }
+
+    console.log(`API reference highlighted for method: ${method}`);
 }
 
 /**
