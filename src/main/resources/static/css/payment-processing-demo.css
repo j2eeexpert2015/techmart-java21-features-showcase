@@ -471,44 +471,111 @@
 }
 
 /* ================================
-   COMPACT PROCESSING STATUS
+   ENHANCED PROCESSING STATUS WITH COLORED ICONS
    ================================ */
 
 .processing-status {
     background: #ffffff;
     border: 1px solid #dee2e6;
     border-radius: 8px;
-    padding: 0.75rem; /* Reduced from 1rem */
+    padding: 0.75rem;
 }
 
 .status-step {
     display: flex;
     align-items: center;
-    padding: 0.5rem 0; /* Reduced from 0.75rem */
+    padding: 0.5rem 0;
     border-bottom: 1px solid #e9ecef;
+    transition: all 0.3s ease; /* Smooth transitions for status changes */
 }
 
 .status-step:last-child {
     border-bottom: none;
 }
 
+/* Enhanced status icons with better visual feedback */
 .status-icon {
-    width: 28px; /* Reduced from 32px */
-    height: 28px;
+    width: 32px; /* Increased back to 32px for better visibility */
+    height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 0.625rem; /* Reduced from 0.75rem */
-    font-size: 0.8rem; /* Reduced from 0.9rem */
+    margin-right: 0.625rem;
+    font-size: 0.85rem;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Status icon states with distinct colors */
+.status-icon.status-pending {
+    background: #6b7280 !important; /* Gray */
+}
+
+.status-icon.status-active {
+    background: #06b6d4 !important; /* Blue */
+    animation: statusPulse 2s infinite;
+}
+
+.status-icon.status-complete {
+    background: #10b981 !important; /* Green */
+}
+
+.status-icon.status-warning {
+    background: #f59e0b !important; /* Orange */
+}
+
+.status-icon.status-error {
+    background: #ef4444 !important; /* Red */
+}
+
+/* Pulse animation for active status */
+@keyframes statusPulse {
+    0%, 100% {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+        transform: scale(1.05);
+    }
 }
 
 .status-step div:last-child {
-    font-size: 0.85rem; /* Reduced font size */
+    font-size: 0.85rem;
+    flex-grow: 1;
+}
+
+.status-step div:last-child div {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.25rem;
 }
 
 .status-step small {
-    font-size: 0.7rem; /* Reduced from 0.75rem */
+    font-size: 0.7rem;
+    color: #6b7280;
+    line-height: 1.3;
+}
+
+/* Highlight effect when status changes */
+.status-step.highlight {
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: 6px;
+    animation: statusHighlight 1s ease-out;
+}
+
+@keyframes statusHighlight {
+    0% {
+        background: rgba(59, 130, 246, 0.15);
+        transform: translateX(3px);
+    }
+    100% {
+        background: rgba(59, 130, 246, 0.05);
+        transform: translateX(0);
+    }
 }
 
 /* ================================

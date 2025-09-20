@@ -118,7 +118,7 @@ function setupPaymentMethodSelection() {
 }
 
 /**
- * Handle payment method selection with correct data attribute
+ * ENHANCED: Handle payment method selection with immediate visual feedback
  */
 function selectPaymentMethod(selectedCard) {
     // Get method from data attribute
@@ -138,6 +138,9 @@ function selectPaymentMethod(selectedCard) {
     selectedCard.classList.add('selected');
     selectedPaymentMethod = method;
 
+    // IMMEDIATE VISUAL FEEDBACK - Update pattern matching logic right away
+    updatePatternMatchingLogic(selectedPaymentMethod);
+
     // Log the selection using shared Visual Flow Inspector
     console.log('🔥 Selected payment method:', selectedPaymentMethod);
 
@@ -145,14 +148,20 @@ function selectPaymentMethod(selectedCard) {
     if (typeof logAPIFlow !== 'undefined') {
         logAPIFlow('Operation', `Selected ${getMethodDisplayName(method)} payment method`);
         logAPIFlow('Feature', `Pattern: case ${method.charAt(0).toUpperCase() + method.slice(1)}(...) ->`);
-        logAPIFlow('Operation', 'Guard conditions analysis will occur on processing');
+
+        // Show immediate guard analysis
+        const guardAnalysis = analyzeGuardConditions(method);
+        if (guardAnalysis.triggered) {
+            logAPIFlow('Operation', `Guard condition will trigger: ${guardAnalysis.condition}`);
+        } else {
+            logAPIFlow('Operation', 'No guard conditions will be triggered');
+        }
     }
 
     // Update API reference highlighting
     highlightApiReference(selectedPaymentMethod);
 
-    // Update pattern matching logic display
-    updatePatternMatchingLogic(selectedPaymentMethod);
+    console.log(`Pattern matching logic updated for: ${method}`);
 }
 
 /**
@@ -510,23 +519,26 @@ function updatePatternMatchingLogic(method) {
 }
 
 /**
- * Update processing status steps
+ * FIXED: Update processing status steps with proper visual indicators
  */
 function updateProcessingStatusSteps(method) {
     const steps = document.querySelectorAll('.status-step');
+    const guardAnalysis = analyzeGuardConditions(method);
 
-    // Reset all steps to pending
+    // Reset all steps
     steps.forEach(step => {
         const icon = step.querySelector('.status-icon');
         icon.className = 'status-icon status-pending';
         icon.innerHTML = '<i class="fas fa-clock"></i>';
+        icon.style.removeProperty('background');
     });
 
-    // Update first step (pattern detection) as complete
+    // Step 1: Payment Method Detection (Always complete when method selected)
     if (steps[0]) {
         const icon = steps[0].querySelector('.status-icon');
         icon.className = 'status-icon status-complete';
         icon.innerHTML = '<i class="fas fa-check"></i>';
+        icon.style.background = '#10b981'; // Green
 
         const text = steps[0].querySelector('div:last-child');
         text.innerHTML = `
@@ -535,15 +547,56 @@ function updateProcessingStatusSteps(method) {
         `;
     }
 
-    // Update second step based on guard conditions
+    // Step 2: Guard Condition Check (Active/Complete based on conditions)
     if (steps[1]) {
-        const guardAnalysis = analyzeGuardConditions(method);
+        const icon = steps[1].querySelector('.status-icon');
+
+        if (guardAnalysis.triggered) {
+            icon.className = 'status-icon status-active';
+            icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            icon.style.background = '#f59e0b'; // Orange for guard triggered
+        } else {
+            icon.className = 'status-icon status-complete';
+            icon.innerHTML = '<i class="fas fa-check"></i>';
+            icon.style.background = '#10b981'; // Green for no guards
+        }
+
         const text = steps[1].querySelector('div:last-child');
         text.innerHTML = `
             <div><strong>Guard Condition Check</strong></div>
             <small class="text-muted">${guardAnalysis.description}</small>
         `;
     }
+
+    // Step 3: Validation (Ready when method and conditions analyzed)
+    if (steps[2]) {
+        const icon = steps[2].querySelector('.status-icon');
+        icon.className = 'status-icon status-active';
+        icon.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        icon.style.background = '#06b6d4'; // Blue for ready
+
+        const text = steps[2].querySelector('div:last-child');
+        text.innerHTML = `
+            <div><strong>Validation</strong></div>
+            <small class="text-muted">Ready for processing with ${getMethodDisplayName(method)}</small>
+        `;
+    }
+
+    // Step 4: Payment Processing (Pending until process button clicked)
+    if (steps[3]) {
+        const icon = steps[3].querySelector('.status-icon');
+        icon.className = 'status-icon status-pending';
+        icon.innerHTML = '<i class="fas fa-play"></i>';
+        icon.style.background = '#6b7280'; // Gray for pending
+
+        const text = steps[3].querySelector('div:last-child');
+        text.innerHTML = `
+            <div><strong>Payment Processing</strong></div>
+            <small class="text-muted">Click "Process Payment" to execute pattern matching</small>
+        `;
+    }
+
+    console.log(`Updated pattern matching logic for ${method}:`, guardAnalysis);
 }
 
 /**
