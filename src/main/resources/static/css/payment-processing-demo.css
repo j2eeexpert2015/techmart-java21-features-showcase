@@ -1,35 +1,210 @@
 /* ================================
-   ADDITIONAL STYLES MOVED FROM INLINE HTML
+   ENHANCED PAYMENT PROCESSING DEMO HEADER
+   Similar to shopping cart but with unique identity
    ================================ */
 
-/* International Transaction Toggle Styling - moved from inline style */
-.international-transaction-toggle {
-    background: #f8f9fa !important;
-    padding: 1rem !important;
+/* Enhanced Payment Processing Demo Header */
+.demo-header {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 3px solid #4facfe;
 }
 
-/* Guard Condition Warning - moved from inline style */
-.guard-condition-warning {
-    display: none !important;
+/* Animated background shimmer effect */
+.demo-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    animation: paymentHeaderShimmer 5s ease-in-out infinite;
+    pointer-events: none;
 }
 
-.guard-condition-warning.visible {
-    display: block !important;
+@keyframes paymentHeaderShimmer {
+    0%, 100% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.4;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+        opacity: 0.7;
+    }
 }
 
-/* Visual Flow Inspector Height - moved from inline style */
-.vfi-standard-height {
-    height: 300px !important;
+/* Floating particles effect */
+.demo-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 2px, transparent 2px),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 40% 60%, rgba(255,255,255,0.1) 1.5px, transparent 1.5px);
+    background-size: 100px 100px, 150px 150px, 80px 80px;
+    animation: floatingParticles 8s linear infinite;
+    pointer-events: none;
 }
 
-/* Play Circle Icon - moved from inline style */
-.play-circle-icon {
-    font-size: 1.5rem !important;
-    opacity: 0.5 !important;
+@keyframes floatingParticles {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-20px) rotate(360deg);
+    }
+}
+
+.demo-header h1 {
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    animation: titlePulse 3s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+.demo-header h1 i {
+    font-size: 2rem;
+    color: #fff;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    animation: iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-3px) rotate(2deg);
+    }
+    75% {
+        transform: translateY(3px) rotate(-2deg);
+    }
+}
+
+.demo-header p {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    opacity: 0.95;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+}
+
+/* Java 21 badge with unique styling */
+.java21-badge {
+    display: inline-block;
+    background: linear-gradient(45deg, #10b981, #34d399);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    animation: badgeGlow 2.5s infinite;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+@keyframes badgeGlow {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
+    }
+}
+
+/* Responsive design for payment demo header */
+@media (max-width: 768px) {
+    .demo-header {
+        padding: 1.5rem 1rem;
+    }
+
+    .demo-header h1 {
+        font-size: 1.8rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .demo-header h1 i {
+        font-size: 1.6rem;
+    }
+
+    .demo-header p {
+        font-size: 1rem;
+    }
+
+    .java21-badge {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        padding: 0.3rem 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .demo-header {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .demo-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .demo-header p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Accessibility - reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .demo-header::before,
+    .demo-header::after,
+    .java21-badge,
+    .demo-header h1,
+    .demo-header h1 i {
+        animation: none;
+    }
 }
 
 /* ================================
-   EXISTING STYLES (PRESERVED)
+   BALANCED LAYOUT FIX - PRESERVE UI STRUCTURE
+   Remove excessive spacing without breaking the layout
    ================================ */
 
 /* Reset only problematic elements, not everything */
@@ -183,6 +358,15 @@
     border-radius: 4px;
     padding: 0.25rem;
     font-size: 0.7rem;
+}
+
+/* ================================
+   REDUCE INTERNATIONAL TRANSACTION SECTION
+   ================================ */
+.demo-card[style*="background: #f8f9fa"] {
+    padding: 0.75rem;               /* Reduced padding */
+    margin-bottom: 1rem;
+    background: #f8f9fa !important;
 }
 
 /* ================================
