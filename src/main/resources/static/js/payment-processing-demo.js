@@ -519,11 +519,16 @@ function updatePatternMatchingLogic(method) {
 }
 
 /**
- * FIXED: Update processing status steps with proper visual indicators
+ * ENHANCED: Update processing status steps with proper visual indicators and row highlighting
  */
 function updateProcessingStatusSteps(method) {
     const steps = document.querySelectorAll('.status-step');
     const guardAnalysis = analyzeGuardConditions(method);
+
+    // Clear all existing highlight classes first
+    steps.forEach(step => {
+        step.classList.remove('highlight-yellow', 'highlight-orange', 'highlight-green', 'highlight-blue');
+    });
 
     // Reset all steps
     steps.forEach(step => {
@@ -545,6 +550,11 @@ function updateProcessingStatusSteps(method) {
             <div><strong>Payment Method Detection</strong></div>
             <small class="text-muted">Pattern: ${getMethodDisplayName(method)} identified</small>
         `;
+
+        // Add green highlight effect
+        setTimeout(() => {
+            steps[0].classList.add('highlight-green');
+        }, 100);
     }
 
     // Step 2: Guard Condition Check (Active/Complete based on conditions)
@@ -552,13 +562,23 @@ function updateProcessingStatusSteps(method) {
         const icon = steps[1].querySelector('.status-icon');
 
         if (guardAnalysis.triggered) {
-            icon.className = 'status-icon status-active';
+            icon.className = 'status-icon status-warning';
             icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
             icon.style.background = '#f59e0b'; // Orange for guard triggered
+
+            // Add orange highlight for guard conditions
+            setTimeout(() => {
+                steps[1].classList.add('highlight-orange');
+            }, 300);
         } else {
             icon.className = 'status-icon status-complete';
             icon.innerHTML = '<i class="fas fa-check"></i>';
             icon.style.background = '#10b981'; // Green for no guards
+
+            // Add green highlight for no guards
+            setTimeout(() => {
+                steps[1].classList.add('highlight-green');
+            }, 300);
         }
 
         const text = steps[1].querySelector('div:last-child');
@@ -580,6 +600,11 @@ function updateProcessingStatusSteps(method) {
             <div><strong>Validation</strong></div>
             <small class="text-muted">Ready for processing with ${getMethodDisplayName(method)}</small>
         `;
+
+        // Add blue highlight for ready state
+        setTimeout(() => {
+            steps[2].classList.add('highlight-blue');
+        }, 500);
     }
 
     // Step 4: Payment Processing (Pending until process button clicked)
@@ -594,6 +619,11 @@ function updateProcessingStatusSteps(method) {
             <div><strong>Payment Processing</strong></div>
             <small class="text-muted">Click "Process Payment" to execute pattern matching</small>
         `;
+
+        // Add yellow highlight for pending action
+        setTimeout(() => {
+            steps[3].classList.add('highlight-yellow');
+        }, 700);
     }
 
     console.log(`Updated pattern matching logic for ${method}:`, guardAnalysis);
