@@ -1046,3 +1046,83 @@ small.fw-bold.text-uppercase {
 /* Reduce inter-section gaps only on this page */
 .main-container .mb-4 { margin-bottom: 1rem !important; }
 .main-container .mt-4 { margin-top: 1rem !important; }
+/* Pattern Status Container - Fix Overflow */
+#pattern-status {
+    flex: 1 !important;
+    min-height: 200px !important;
+    max-height: 240px !important;
+    overflow-y: auto !important;
+    padding: 0.75rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    justify-content: flex-start !important;
+}
+
+/* Compact Status Steps */
+.status-step {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.5rem !important;
+    gap: 0.75rem !important;
+    border-bottom: 1px solid #e9ecef !important;
+    margin-bottom: 0 !important;
+}
+
+.status-step:last-child {
+    border-bottom: none !important;
+}
+
+.status-icon {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.75rem !important;
+    flex-shrink: 0 !important;
+    color: white !important;
+}
+
+.status-step > div:last-child {
+    flex: 1 !important;
+    overflow: hidden !important;
+}
+
+.status-step > div:last-child > div {
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.status-step small {
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+    display: block !important;
+    color: #6c757d !important;
+}
+
+/* Ensure parent containers have proper height */
+.java21-pattern-card {
+    min-height: 420px !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.java21-pattern-card .p-1 {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0.5rem !important;
+}
+
+.java21-pattern-card .border-top.pt-2 {
+    flex: 1 !important;
+    min-height: 220px !important;
+    padding-top: 0.5rem !important;
+}
