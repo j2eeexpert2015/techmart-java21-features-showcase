@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechMart - Payment Processing Demo | Java 21 Pattern Matching</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="payment.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="main-container">
+        <!-- Optimized Header with Instructions Button - 100px -->
+        <header class="demo-header">
+            <div class="header-content">
+                <div class="header-main">
+                    <h1>
+                        <i class="fas fa-credit-card"></i>
+                        Payment Processing Engine
+                        <span class="java21-badge">Java 21</span>
+                    </h1>
+                    <p>Interactive demonstration of Java 21 Pattern Matching for Switch with Sealed Payment Hierarchy</p>
+                </div>
+                <button class="btn btn-sm btn-outline-light header-instructions-btn" id="toggle-instructions-btn" title="Demo Instructions">
+                    <i class="fas fa-lightbulb me-1"></i>
+                    Instructions
+                </button>
+            </div>
+        </header>
+        
+        <section class="demo-page-container">
+            <div class="row">
+                <!-- Left Column: Order Summary + Tabs Horizontal, Payment Form Below (75%) -->
+                <div class="col-lg-8">
+                    
+                    <!-- Top Horizontal Section: Order Summary + Payment Method (Left) | Java 21 Pattern Matching (Right) -->
+                    <div class="d-flex justify-content-between align-items-stretch mb-3 gap-3" style="height: 580px;">
+                        <!-- Left Column: Order Summary + Payment Method Stacked - WIDER -->
+                        <div style="flex: 0 0 350px; display: flex; flex-direction: column;">
+                            <!-- Order Summary - Very Top -->
+                            <div class="demo-card mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5><i class="fas fa-shopping-cart"></i> Order Summary</h5>
+                                </div>
+                                <div class="cart-summary-compact" id="order-summary">
+                                    <div class="amount-test-buttons-compact mb-2">
+                                        <small class="text-muted me-1">Quick Tests:</small>
+                                        <button class="btn btn-xs btn-outline-primary me-1" data-amount="500" data-bs-toggle="tooltip" title="Test small amount">
+                                            $500
+                                        </button>
+                                        <button class="btn btn-xs btn-outline-warning me-1" data-amount="1500" data-bs-toggle="tooltip" title="Test high value">
+                                            $1.5K
+                                        </button>
+                                        <button class="btn btn-xs btn-outline-danger" data-amount="6000" data-bs-toggle="tooltip" title="Test very high value">
+                                            $6K
+                                        </button>
+                                    </div>
+                                    <div class="compact-cart-items">
+                                        <div class="cart-item-compact">
+                                            <div><strong>iPhone 15 Pro</strong></div>
+                                            <div class="text-end">$999</div>
+                                        </div>
+                                        <div class="cart-item-compact">
+                                            <div><strong>MacBook Pro M3</strong></div>
+                                            <div class="text-end">$2.5K</div>
+                                        </div>
+                                        <div class="cart-item-compact">
+                                            <div><strong>AirPods Pro ×2</strong></div>
+                                            <div class="text-end">$498</div>
+                                        </div>
+                                        <hr class="my-1">
+                                        <div class="d-flex justify-content-between fw-bold">
+                                            <span>Total:</span>
+                                            <strong class="total-amount" id="total-amount">$3,996</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Method - Below Order Summary -->
+                            <div class="demo-card" style="flex: 1; display: flex; flex-direction: column;">
+                                <h5><i class="fas fa-credit-card me-2"></i>Payment Method</h5>
+                                
+                                <div class="payment-methods-compact mt-3" style="flex: 1; display: flex; flex-direction: column;">
+                                    <div class="d-flex gap-2 mb-3 justify-content-start">
+                                        <div class="payment-method-card-compact selected" data-method="creditcard">
+                                            <div class="payment-method-icon-compact">
+                                                <i class="fab fa-cc-visa"></i>
+                                            </div>
+                                            <div class="payment-method-text">
+                                                <h6 class="mb-0">Credit Card</h6>
+                                                <small class="text-muted d-block">Visa, MC, Amex</small>
+                                            </div>
+                                        </div>
+                                        <div class="payment-method-card-compact" data-method="paypal">
+                                            <div class="payment-method-icon-compact">
+                                                <i class="fab fa-paypal"></i>
+                                            </div>
+                                            <div class="payment-method-text">
+                                                <h6 class="mb-0">PayPal</h6>
+                                                <small class="text-muted d-block">Account</small>
+                                            </div>
+                                        </div>
+                                        <div class="payment-method-card-compact" data-method="banktransfer">
+                                            <div class="payment-method-icon-compact">
+                                                <i class="fas fa-university"></i>
+                                            </div>
+                                            <div class="payment-method-text">
+                                                <h6 class="mb-0">Bank Transfer</h6>
+                                                <small class="text-muted d-block">Direct</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="customer-type-compact mb-3">
+                                        <small class="text-muted mb-2 d-block"><i class="fas fa-user me-1"></i>Customer Type</small>
+                                        <div class="btn-group btn-group-sm w-100">
+                                            <input type="radio" class="btn-check" name="customerType" id="customer-basic" value="basic" checked>
+                                            <label class="btn btn-outline-secondary" for="customer-basic">Basic</label>
+                                            <input type="radio" class="btn-check" name="customerType" id="customer-premium" value="premium">
+                                            <label class="btn btn-outline-primary" for="customer-premium">Premium</label>
+                                            <input type="radio" class="btn-check" name="customerType" id="customer-vip" value="vip">
+                                            <label class="btn btn-outline-warning" for="customer-vip">VIP</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="international-toggle-compact mb-3">
+                                        <div class="form-check form-switch form-switch-sm">
+                                            <input class="form-check-input" type="checkbox" id="international-card">
+                                            <label class="form-check-label" for="international-card">
+                                                International Transaction
+                                            </label>
+                                        </div>
+                                        <small class="text-muted">High amounts + international = verification</small>
+                                    </div>
+                                    
+                                    <div class="guard-condition-warning-compact" id="guard-condition-warning">
+                                        <i class="fas fa-exclamation-triangle me-1 text-warning"></i>
+                                        <strong>High-Value International Detected</strong>
+                                        <small class="d-block text-muted">Amount > $1,000 requires additional verification</small>
+                                    </div>
+                                
+                                    <div style="margin-top: auto;">
+                                        <button class="btn btn-primary-custom mb-2" id="process-payment-btn">
+                                            <i class="fas fa-lock me-1"></i>Process Payment - <span id="button-amount">$3,996</span>
+                                        </button>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-outline-secondary btn-sm flex-fill" id="reset-demo-btn">
+                                                <i class="fas fa-undo me-1"></i> Reset Demo
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm flex-fill" id="scenarios-btn">
+                                                <i class="fas fa-play me-1"></i> Run Scenarios
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column: Java 21 Pattern Matching - TALLER WITHOUT SCROLL -->
+                        <div class="demo-card java21-pattern-card" style="flex: 1; min-width: 320px; max-width: 380px; display: flex; flex-direction: column;">
+                            <h6 class="mb-2"><i class="fas fa-book me-1"></i> Java 21 Pattern Matching</h6>
+                            <div class="p-1" style="flex: 1; display: flex; flex-direction: column;">
+                                <!-- API Reference Section (Top) -->
+                                <small class="fw-bold text-uppercase d-block mb-2">Pattern Matching Reference</small>
+                                <div class="table-responsive mb-2" style="flex: 1; border: 1px solid #dee2e6; border-radius: 4px; background: #f8f9fa; padding: 0.5rem;">
+                                    <table class="table table-sm table-bordered api-reference-table-optimized mb-0">
+                                        <tbody>
+                                        <tr id="pattern-switch" class="api-ref-row">
+                                            <td><code>switch (payment)</code></td>
+                                            <td>Pattern matching switch expression</td>
+                                        </tr>
+                                        <tr id="pattern-creditcard" class="api-ref-row">
+                                            <td><code>case CreditCard(...)</code></td>
+                                            <td>Record pattern with destructuring</td>
+                                        </tr>
+                                        <tr id="pattern-guard" class="api-ref-row">
+                                            <td><code>when amount > 1000</code></td>
+                                            <td>Guard condition for business rules</td>
+                                        </tr>
+                                        <tr id="pattern-paypal" class="api-ref-row">
+                                            <td><code>case PayPal(...)</code></td>
+                                            <td>Alternative payment method pattern</td>
+                                        </tr>
+                                        <tr id="pattern-banktransfer" class="api-ref-row">
+                                            <td><code>case BankTransfer(...)</code></td>
+                                            <td>Bank transfer pattern matching</td>
+                                        </tr>
+                                        <tr id="pattern-sealed" class="api-ref-row">
+                                            <td><code>sealed interface</code></td>
+                                            <td>Sealed hierarchy for type safety</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <small class="text-muted d-block mb-2 api-help-text">
+                                    <i class="fas fa-info-circle me-1"></i>Rows highlight when patterns match
+                                </small>
+                                
+                                <!-- Pattern Status Section (Bottom) -->
+                                <div class="border-top pt-2" style="flex: 1;">
+                                    <small class="fw-bold text-uppercase d-block mb-2">Current Pattern Status</small>
+                                    <div id="pattern-status" style="flex: 1; border: 1px solid #dee2e6; border-radius: 4px; padding: 0.5rem; background: #f8f9fa; display: flex; flex-direction: column; justify-content: space-around;">
+                                        <div class="status-step-optimized">
+                                            <div class="status-icon status-complete">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold small">Payment Method Detection</div>
+                                                <small class="text-muted">Pattern: CreditCard identified</small>
+                                            </div>
+                                        </div>
+                                        <div class="status-step-optimized">
+                                            <div class="status-icon status-active">
+                                                <i class="fas fa-spinner fa-spin"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold small">Guard Condition Check</div>
+                                                <small class="text-muted">Amount > $1,000 → Additional verification</small>
+                                            </div>
+                                        </div>
+                                        <div class="status-step-optimized">
+                                            <div class="status-icon status-pending">
+                                                <i class="fas fa-clock"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold small">Validation</div>
+                                                <small class="text-muted">Pending form completion</small>
+                                            </div>
+                                        </div>
+                                        <div class="status-step-optimized">
+                                            <div class="status-icon status-pending">
+                                                <i class="fas fa-clock"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold small">Payment Processing</div>
+                                                <small class="text-muted">Ready to process</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column: Only Visual Flow Inspector (25%) -->
+                <div class="col-lg-4" style="height: 580px;">
+                    <!-- Visual Flow Inspector - Full Right Column -->
+                    <div class="demo-card" style="height: 100%; display: flex; flex-direction: column;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0"><i class="fas fa-stream me-1"></i> Visual Flow Inspector</h6>
+                            <button class="btn btn-sm btn-outline-secondary clear-log-btn" id="clear-log-btn" title="Clear Log">
+                                <i class="fas fa-eraser"></i> Clear
+                            </button>
+                        </div>
+                        <div id="api-log" class="api-log-container enhanced" style="flex: 1; height: auto; min-height: 540px;">
+                            <div class="text-muted text-center py-2 initial-vfi-message">
+                                <i class="fas fa-play-circle mb-2 play-circle-icon"></i>
+                                <div>Select payment method and process payment to see Java 21 pattern matching flow</div>
+                                <small class="text-muted">Pattern matching visualization ready</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- Instructions Modal -->
+<div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="instructionsModalLabel">
+                    <i class="fas fa-lightbulb text-warning me-2"></i> Demo Instructions
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="instructions-steps-detailed">
+                            <div class="instruction-step-detailed mb-3">
+                                <span class="step-number-detailed">1</span>
+                                <div>
+                                    <strong>Select different payment methods</strong> to see Java 21 pattern matching in action
+                                    <small class="d-block text-muted">Watch VFI and API Reference highlight as patterns match</small>
+                                </div>
+                            </div>
+                            <div class="instruction-step-detailed mb-3">
+                                <span class="step-number-detailed">2</span>
+                                <div>
+                                    <strong>Try changing amounts</strong> using quick test buttons to trigger guard conditions
+                                    <small class="d-block text-muted">$500 (standard), $1,500 (high-value), $6,000 (manager approval)</small>
+                                </div>
+                            </div>
+                            <div class="instruction-step-detailed mb-3">
+                                <span class="step-number-detailed">3</span>
+                                <div>
+                                    <strong>Watch Visual Flow Inspector</strong> to see real-time pattern matching decisions
+                                    <small class="d-block text-muted">Tracks controller → service → pattern matching flow</small>
+                                </div>
+                            </div>
+                            <div class="instruction-step-detailed">
+                                <span class="step-number-detailed">4</span>
+                                <div>
+                                    <strong>Observe API highlighting</strong> when patterns are matched
+                                    <small class="d-block text-muted">Rows animate with gradient highlights</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-primary h-100">
+                            <div class="card-header bg-primary text-white">
+                                <small class="fw-bold">Quick Tips</small>
+                            </div>
+                            <div class="card-body p-2 small">
+                                <div class="mb-2">
+                                    <i class="fas fa-toggle-on text-success me-1"></i>
+                                    <strong>International Toggle:</strong> Triggers additional guard conditions
+                                </div>
+                                <div class="mb-2">
+                                    <i class="fas fa-star text-warning me-1"></i>
+                                    <strong>Customer Types:</strong> Premium/VIP get expedited processing
+                                </div>
+                                <div>
+                                    <i class="fas fa-play-circle text-primary me-1"></i>
+                                    <strong>Scenarios:</strong> Automated test sequences
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Demo Scenarios Modal -->
+<div class="modal fade" id="scenariosModal" tabindex="-1" aria-labelledby="scenariosModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scenariosModalLabel">
+                    <i class="fas fa-play-circle me-2"></i> Automated Demo Scenarios
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">Choose a scenario to see automated pattern matching demonstrations:</p>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary w-100 mb-2" data-scenario="high-value-international">
+                            <i class="fas fa-globe me-2"></i>
+                            <strong>High-Value International</strong>
+                            <small class="d-block text-muted">CreditCard + $1,500 + international = guard conditions</small>
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-warning w-100 mb-2" data-scenario="premium-paypal">
+                            <i class="fas fa-star me-2"></i>
+                            <strong>Premium PayPal</strong>
+                            <small class="d-block text-muted">PayPal + premium customer = expedited processing</small>
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-danger w-100 mb-2" data-scenario="large-bank-transfer">
+                            <i class="fas fa-university me-2"></i>
+                            <strong>Large Bank Transfer</strong>
+                            <small class="d-block text-muted">BankTransfer + $6,000 = manager approval</small>
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-info w-100" data-scenario="all-patterns">
+                            <i class="fas fa-list me-2"></i>
+                            <strong>Test All Patterns</strong>
+                            <small class="d-block text-muted">Cycle through all payment methods automatically</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="payment.js"></script>
+</body>
+</html>
