@@ -275,8 +275,6 @@
             box-shadow: 0 4px 16px rgba(40,167,69,0.4);
         }
         
-
-        
         .pattern-reference {
             font-family: 'Monaco', 'Menlo', monospace;
             font-size: 11px;
@@ -406,82 +404,111 @@
             line-height: 1.1;
         }
         
-        .visual-flow {
-            background: linear-gradient(145deg, #1e1e1e 0%, #2a2a2a 100%);
-            border-radius: 6px;
+        /* STANDARDIZED VISUAL FLOW INSPECTOR - SAME AS OTHER DEMOS */
+        .api-log-container {
+            background-color: #212529;
+            color: #f8f9fa;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8em;
+            padding: .5rem;
+            border-radius: .25rem;
+            height: 320px;
+            overflow-y: auto;
+            border: 1px solid #495057;
+            position: relative;
             flex: 1;
             display: flex;
             flex-direction: column;
-            color: #e0e0e0;
-            font-size: 11px;
             min-height: 100px;
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 12px;
-            overflow-y: auto;
-            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-            line-height: 1.5;
         }
-        
-        .log-entry {
-            margin: 1px 0;
-            padding: 3px 8px;
+
+        .api-flow-block {
+            margin-bottom: .5rem;
+            padding-left: .5rem;
+            border-left: 3px solid #17a2b8;
+            animation: flowSlideIn 0.4s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        .api-flow-block:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(3px);
+            border-left-color: #10b981;
+        }
+
+        @keyframes flowSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .api-flow-child {
+            padding-left: 1.25rem;
+            position: relative;
+            margin-top: 3px;
+            opacity: 0.9;
+        }
+
+        .api-flow-child::before {
+            content: '└──';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        .java21-method-tag {
+            color: #ffffff;
+            background-color: #28a745;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.8em;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .clear-log-btn {
+            line-height: 1;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        /* Method highlighting - same as other demos */
+        .api-reference-table tr[data-highlight="1"] > * {
+            box-shadow: inset 0 0 0 9999px #fffbea !important;
+            background-color: transparent !important;
+            border-top: 2px solid #ffc107 !important;
+            border-bottom: 2px solid #ffc107 !important;
+            transition: box-shadow 250ms ease;
+        }
+        .api-reference-table tr[data-highlight="1"] > *:first-child {
+            border-left: 2px solid #ffc107 !important;
+        }
+        .api-reference-table tr[data-highlight="1"] > *:last-child {
+            border-right: 2px solid #ffc107 !important;
+        }
+
+        /* Scrollbar styles */
+        .api-log-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .api-log-container::-webkit-scrollbar-track {
+            background: #495057;
             border-radius: 4px;
-            font-size: 11px;
-            line-height: 1.4;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
         }
-        
-        .log-entry:hover {
-            background: rgba(255,255,255,0.05);
+        .api-log-container::-webkit-scrollbar-thumb {
+            background: #6c757d;
+            border-radius: 4px;
         }
-        
-        .log-entry.info {
-            color: #90cdf4;
-            background: rgba(144, 205, 244, 0.08);
-            border-left: 3px solid #3182ce;
-            font-weight: 500;
-        }
-        
-        .log-entry.success {
-            color: #68d391;
-            background: rgba(104, 211, 145, 0.08);
-            border-left: 3px solid #38a169;
-        }
-        
-        .log-entry.warning {
-            color: #fbd38d;
-            background: rgba(251, 211, 141, 0.08);
-            border-left: 3px solid #d69e2e;
-        }
-        
-        .log-entry.method {
-            color: #f093c1;
-            background: rgba(240, 147, 193, 0.08);
-            border-left: 3px solid #d53f8c;
-            margin-left: 16px;
-        }
-        
-        .log-entry.detail {
-            color: #a78bfa;
-            background: rgba(167, 139, 250, 0.08);
-            border-left: 3px solid #805ad5;
-            margin-left: 32px;
-        }
-        
-        .log-entry.feature {
-            color: #fbb6ce;
-            background: rgba(251, 182, 206, 0.08);
-            border-left: 3px solid #ed64a6;
-            margin-left: 48px;
-        }
-        
-        .log-icon {
-            margin-right: 8px;
-            font-size: 12px;
-            min-width: 16px;
-            text-align: center;
+        .api-log-container::-webkit-scrollbar-thumb:hover {
+            background: #868e96;
         }
     </style>
 </head>
@@ -631,7 +658,7 @@
                     <div class="status-icon warning">⚠</div>
                     <div class="status-content">
                         <h5 style="font-size: 12px !important; font-weight: bold !important; color: #333 !important;">Guard Condition Check</h5>
-                        <p id="guard-condition" style="font-size: 10px !important; color: #555 !important; font-weight: 500 !important;">Amount > $1,000 — Additional verification</p>
+                        <p id="guard-condition" style="font-size: 10px !important; color: #555 !important; font-weight: 500 !important;">Amount > $1,000 – Additional verification</p>
                     </div>
                 </div>
                 
@@ -653,16 +680,16 @@
             </div>
         </div>
         
-        <!-- Right Panel: Visual Flow Inspector -->
+        <!-- Right Panel: Visual Flow Inspector - STANDARDIZED -->
         <div class="panel">
             <div class="panel-header">
                 <span class="panel-icon">📊</span>
                 Visual Flow Inspector
-                <button style="margin-left: auto; border: 1px solid #ddd; background: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; cursor: pointer;" onclick="clearVisualFlow()">🗑️ Clear</button>
+                <button class="btn btn-sm btn-outline-secondary clear-log-btn" onclick="clearInspectorLog()" style="margin-left: auto; border: 1px solid #ddd; background: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; cursor: pointer;">🗑️ Clear</button>
             </div>
             
-            <div class="visual-flow" id="visual-flow">
-                Pattern matching visualization will appear here
+            <div id="api-log" class="api-log-container" aria-live="polite">
+                <div class="text-muted text-center py-2">Click an action to see the call stack...</div>
             </div>
         </div>
     </div>
@@ -713,12 +740,183 @@
             vip: { tier: 'VIP', discount: 10, priority: 'Express' }
         };
 
+        // STANDARDIZED VISUAL FLOW INSPECTOR FUNCTIONS - SAME AS OTHER DEMOS
+        function createFlowLog(userAction, method, endpoint) {
+            const logContainer = document.getElementById('api-log');
+            if (!logContainer) {
+                console.error('VFI: Cannot create flow log - container not found');
+                return null;
+            }
+
+            // Clear initial message if present
+            const initialMessages = logContainer.querySelectorAll('.text-muted, .text-center');
+            initialMessages.forEach(msg => {
+                if (msg.textContent && msg.textContent.includes('Click')) {
+                    logContainer.innerHTML = '';
+                }
+            });
+
+            const flowBlock = document.createElement('div');
+            const logId = `flow-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            flowBlock.id = logId;
+            flowBlock.className = 'api-flow-block';
+
+            flowBlock.innerHTML = `
+                <div>👤 <strong>${userAction}</strong> (Frontend)</div>
+                <div class="api-flow-child">🌐 API Call: ${method} ${endpoint}</div>
+                <div class="api-flow-child" data-role="controller">🔴 Controller: Pending...</div>
+            `;
+
+            logContainer.insertBefore(flowBlock, logContainer.firstChild);
+
+            // Maintain entry limit
+            while (logContainer.children.length > 12) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+
+            logContainer.scrollTop = 0;
+            return logId;
+        }
+
+        function updateFlowLog(logId, responseData) {
+            if (!logId) return;
+
+            const flowBlock = document.getElementById(logId);
+            if (!flowBlock) return;
+
+            const controllerElement = flowBlock.querySelector('[data-role="controller"]');
+            if (!controllerElement) return;
+
+            // Handle error responses
+            if (responseData.error) {
+                controllerElement.innerHTML = `🔴 Controller: <span style="color: #ef4444;">${responseData.error}</span>`;
+                return;
+            }
+
+            let html = `🔴 Controller: <strong>${responseData.controller_method || 'PaymentController.processPayment'}</strong>`;
+
+            // Handle service calls
+            if (responseData.service_calls && typeof responseData.service_calls === 'object') {
+                html += `<div class="api-flow-child">🟣 Service Layer: Multiple methods called</div>`;
+
+                Object.entries(responseData.service_calls).forEach(([serviceMethod, java21Methods]) => {
+                    if (java21Methods && java21Methods.length > 0) {
+                        html += `<div class="api-flow-child">  └── <strong>${serviceMethod}</strong> → <span class="java21-method-tag">${java21Methods.join(', ')}</span></div>`;
+                        java21Methods.forEach(method => highlightJavaMethod(method));
+                    } else {
+                        html += `<div class="api-flow-child">  └── <strong>${serviceMethod}</strong> → Standard processing</div>`;
+                    }
+                });
+            }
+
+            if (responseData.operation_description) {
+                html += `<div class="api-flow-child">💡 Operation: ${responseData.operation_description}</div>`;
+            }
+
+            controllerElement.innerHTML = html;
+        }
+
+        function clearInspectorLog() {
+            const logContainer = document.getElementById('api-log');
+            if (!logContainer) return;
+            logContainer.innerHTML = '<div class="text-muted text-center py-2">Log cleared. Click an action to see the call stack...</div>';
+        }
+
+        function highlightJavaMethod(methodName) {
+            if (!methodName) return;
+
+            const safe = String(methodName).replace(/\(\)$/, '');
+
+            // Clear previous highlights
+            document.querySelectorAll('tr[data-highlight="1"]').forEach(row => {
+                const cells = Array.from(row.cells);
+                cells.forEach(cell => {
+                    cell.style.removeProperty('box-shadow');
+                    cell.style.removeProperty('background-color');
+                    cell.style.removeProperty('border-top');
+                    cell.style.removeProperty('border-bottom');
+                    cell.style.removeProperty('border-left');
+                    cell.style.removeProperty('border-right');
+                });
+                row.removeAttribute('data-highlight');
+            });
+
+            // Find target row (map pattern matching terms to concepts)
+            let targetSelector = null;
+            switch(safe) {
+                case 'switch':
+                case 'pattern matching':
+                    targetSelector = '[data-pattern="switch"]';
+                    break;
+                case 'CreditCard':
+                case 'credit':
+                    targetSelector = '[data-pattern="credit"]';
+                    break;
+                case 'PayPal':
+                case 'paypal':
+                    targetSelector = '[data-pattern="paypal"]';
+                    break;
+                case 'BankTransfer':
+                case 'bank':
+                    targetSelector = '[data-pattern="bank"]';
+                    break;
+                case 'guard':
+                case 'when':
+                    targetSelector = '[data-pattern="guard"]';
+                    break;
+                case 'sealed':
+                    targetSelector = '[data-pattern="sealed"]';
+                    break;
+            }
+
+            if (!targetSelector) return;
+            const row = document.querySelector(targetSelector);
+            if (!row) return;
+
+            // Apply highlighting
+            const bg = '#fffbea';
+            const border = '#ffc107';
+
+            row.style.setProperty('background', `linear-gradient(145deg, ${bg} 0%, #ffeaa7 100%)`, 'important');
+            row.style.setProperty('border', `2px solid ${border}`, 'important');
+            row.style.setProperty('border-radius', '4px', 'important');
+            row.style.setProperty('padding', '4px 6px', 'important');
+            row.style.setProperty('margin', '2px 0', 'important');
+            row.style.setProperty('box-shadow', `0 2px 8px rgba(255,193,7,0.3)`, 'important');
+
+            row.setAttribute('data-highlight', '1');
+
+            // Auto-remove highlighting
+            setTimeout(() => {
+                if (row.isConnected) {
+                    row.style.removeProperty('background');
+                    row.style.removeProperty('border');
+                    row.style.removeProperty('border-radius');
+                    row.style.removeProperty('padding');
+                    row.style.removeProperty('margin');
+                    row.style.removeProperty('box-shadow');
+                    row.removeAttribute('data-highlight');
+                }
+            }, 2000);
+        }
+
         // Initialize application
         function initApp() {
             updatePatternHighlighting();
             updateStatusIndicators();
-            // Initialize with the detailed cart load log instead of simple message
-            logPatternExecution(appState.paymentMethod, appState.amount, appState.customerType, appState.isInternational);
+            
+            // Initialize with standardized flow log
+            const logId = createFlowLog('Demo Initialization', 'GET', '/api/demo/init');
+            setTimeout(() => {
+                updateFlowLog(logId, {
+                    controller_method: 'PaymentController.initialize',
+                    service_calls: {
+                        'PaymentService.setupPatternMatching': ['switch', 'sealed'],
+                        'ValidationService.initializeRules': ['guard', 'when']
+                    },
+                    operation_description: 'Payment Processing Demo ready with Java 21 Pattern Matching'
+                });
+            }, 500);
         }
 
         // Quick test amount selection
@@ -731,7 +929,18 @@
             updateAmountDisplays(amount);
             updatePatternHighlighting();
             updateStatusIndicators();
-            updateVisualFlow(`Quick test: Set amount to ${amount.toLocaleString()}`);
+            
+            // Use standardized flow logging
+            const logId = createFlowLog('Set Amount', 'PUT', `/api/demo/amount/${amount}`);
+            setTimeout(() => {
+                updateFlowLog(logId, {
+                    controller_method: 'DemoController.setAmount',
+                    service_calls: {
+                        'PaymentService.updateAmount': ['pattern matching']
+                    },
+                    operation_description: `Amount set to ${amount.toLocaleString()}`
+                });
+            }, 300);
         }
 
         // Update order display
@@ -756,7 +965,18 @@
             appState.paymentMethod = method;
             updatePatternHighlighting();
             updateStatusIndicators();
-            updateVisualFlow(`Payment method changed to ${paymentMethods[method].name}`);
+            
+            // Use standardized flow logging
+            const logId = createFlowLog('Select Payment Method', 'PUT', `/api/payment/method/${method}`);
+            setTimeout(() => {
+                updateFlowLog(logId, {
+                    controller_method: 'PaymentController.selectMethod',
+                    service_calls: {
+                        'PaymentService.setPaymentMethod': [paymentMethods[method].name, 'pattern matching']
+                    },
+                    operation_description: `Payment method changed to ${paymentMethods[method].name}`
+                });
+            }, 300);
         }
 
         // Customer type selection
@@ -766,14 +986,36 @@
             
             appState.customerType = type;
             updateStatusIndicators();
-            updateVisualFlow(`Customer type changed to ${customerTypes[type].tier}`);
+            
+            // Use standardized flow logging
+            const logId = createFlowLog('Select Customer Type', 'PUT', `/api/customer/type/${type}`);
+            setTimeout(() => {
+                updateFlowLog(logId, {
+                    controller_method: 'CustomerController.setType',
+                    service_calls: {
+                        'CustomerService.updateType': ['pattern matching']
+                    },
+                    operation_description: `Customer type changed to ${customerTypes[type].tier}`
+                });
+            }, 300);
         }
 
         // International transaction toggle
         function toggleInternational() {
             appState.isInternational = document.getElementById('international').checked;
             updateStatusIndicators();
-            updateVisualFlow(`International transaction: ${appState.isInternational ? 'enabled' : 'disabled'}`);
+            
+            // Use standardized flow logging
+            const logId = createFlowLog('Toggle International', 'PUT', `/api/payment/international/${appState.isInternational}`);
+            setTimeout(() => {
+                updateFlowLog(logId, {
+                    controller_method: 'PaymentController.toggleInternational',
+                    service_calls: {
+                        'ValidationService.setInternational': ['guard', 'when']
+                    },
+                    operation_description: `International transaction: ${appState.isInternational ? 'enabled' : 'disabled'}`
+                });
+            }, 300);
         }
 
         // Update pattern highlighting
@@ -866,8 +1108,8 @@
             document.getElementById('payment-detection').textContent = `Pattern: ${method.name} identified`;
 
             const guardText = appState.amount > 1000 
-                ? `Amount > $1,000 — Additional verification required`
-                : `Amount ≤ $1,000 — Standard processing`;
+                ? `Amount > $1,000 – Additional verification required`
+                : `Amount ≤ $1,000 – Standard processing`;
             document.getElementById('guard-condition').textContent = guardText;
 
             let validationText = `${customer.tier} customer - ${method.validation}`;
@@ -879,149 +1121,34 @@
             document.getElementById('processing-status').textContent = `Ready - ${method.processingTime}`;
         }
 
-        // Update visual flow with development-style logs
-        function updateVisualFlow(message, type = 'info') {
-            const visualFlow = document.getElementById('visual-flow');
-            const timestamp = new Date().toLocaleTimeString();
-            
-            if (visualFlow.textContent === 'Pattern matching visualization will appear here') {
-                visualFlow.innerHTML = '';
-            }
-            
-            const logEntry = document.createElement('div');
-            logEntry.className = `log-entry ${type}`;
-            logEntry.textContent = `${timestamp}: ${message}`;
-            
-            visualFlow.appendChild(logEntry);
-            visualFlow.scrollTop = visualFlow.scrollHeight;
-        }
-
-        // Add detailed pattern matching execution logs with enhanced visual styling
-        function logPatternExecution(paymentMethod, amount, customerType, isInternational) {
-            const visualFlow = document.getElementById('visual-flow');
-            visualFlow.innerHTML = ''; // Clear previous logs
-            
-            // Initial Cart Load (Frontend) with proper icon structure
-            addLogEntry('🏷️', 'Initial Cart Load (Frontend)', 'info');
-            
-            // API Call with globe icon  
-            addLogEntry('🌐', '├─ API Call: GET /api/cart/1', 'method');
-            
-            // Controller with red circle
-            addLogEntry('🔴', '├─ Controller: CartController.getCart', 'method');
-            
-            // Service Layer with purple circle
-            addLogEntry('🟣', '├─ Service Layer: Multiple methods called', 'detail');
-            
-            // Service method calls with proper tree structure
-            addLogEntry('', '│  ├─ ShoppingCartService.getCartItems → Standard Collection API', 'detail');
-            addLogEntry('', '│  ├─ ShoppingCartService.calculateCartTotal → Standard Collection API', 'detail');
-            addLogEntry('', '│  ├─ ShoppingCartService.getOldestItem → getFirst', 'detail');
-            addLogEntry('', '│  └─ ShoppingCartService.getNewestItem → getLast', 'detail');
-            
-            // Operation with bulb icon
-            addLogEntry('💡', '├─ Operation: Initial cart load: basic data + sequence endpoints', 'warning');
-            addLogEntry('', '│   using getFirst()/getLast()', 'warning');
-            
-            // Feature with crown icon
-            addLogEntry('👑', '├─ Feature: Sequenced Collections', 'feature');
-            
-            // JEP with document icon
-            addLogEntry('📋', '└─ JEP: JEP 431: Sequenced Collections', 'feature');
-            
-            // Add spacing and payment processing section
-            setTimeout(() => {
-                addLogEntry('', '', 'info'); // Spacer line
-                
-                // Payment Processing Section
-                addLogEntry('💳', 'Payment Processing (Pattern Matching)', 'info');
-                addLogEntry('⚡', `├─ switch(${paymentMethods[paymentMethod].name.toLowerCase()})`, 'method');
-                addLogEntry('📦', `├─ case ${paymentMethods[paymentMethod].name}(...)`, 'detail');
-                
-                if (amount > 1000) {
-                    addLogEntry('⚠️', '├─ when amount > 1000 → Guard condition triggered', 'warning');
-                } else {
-                    addLogEntry('✅', '├─ Standard processing (amount ≤ 1000)', 'success');
-                }
-                
-                addLogEntry('🔧', '├─ Record pattern with destructuring', 'detail');
-                addLogEntry('🔒', '└─ sealed interface → Type safety', 'feature');
-                
-                if (isInternational) {
-                    addLogEntry('🌍', 'International compliance required', 'warning');
-                }
-            }, 400);
-        }
-
-        function addLogEntry(icon, text, type) {
-            const visualFlow = document.getElementById('visual-flow');
-            const logEntry = document.createElement('div');
-            logEntry.className = `log-entry ${type}`;
-            
-            if (icon) {
-                const iconSpan = document.createElement('span');
-                iconSpan.className = 'log-icon';
-                iconSpan.textContent = icon;
-                logEntry.appendChild(iconSpan);
-            }
-            
-            const textSpan = document.createElement('span');
-            textSpan.textContent = text;
-            logEntry.appendChild(textSpan);
-            
-            visualFlow.appendChild(logEntry);
-            visualFlow.scrollTop = visualFlow.scrollHeight;
-        }
-
-        // Clear visual flow
-        function clearVisualFlow() {
-            const visualFlow = document.getElementById('visual-flow');
-            visualFlow.innerHTML = '<div style="color: #666; text-align: center; margin-top: 40px;">Pattern matching visualization will appear here</div>';
-        }
-
         // Process payment
         function processPayment() {
             if (appState.processing) return;
             
             appState.processing = true;
-            updateVisualFlow('Starting payment processing...');
             
-            // Simulate processing steps
-            setTimeout(() => {
-                updateVisualFlow(`Executing switch(payment) with ${paymentMethods[appState.paymentMethod].name}`);
-            }, 500);
+            // Use standardized flow logging
+            const logId = createFlowLog('Process Payment', 'POST', '/api/payment/process');
             
             setTimeout(() => {
-                updateVisualFlow(`Pattern matched: ${paymentMethods[appState.paymentMethod].pattern}`);
-            }, 1000);
-            
-            setTimeout(() => {
-                if (appState.amount > 1000) {
-                    updateVisualFlow('Guard condition triggered: amount > 1000');
-                }
-            }, 1500);
-            
-            setTimeout(() => {
-                const customer = customerTypes[appState.customerType];
-                updateVisualFlow(`Customer processing: ${customer.tier} (${customer.priority} priority)`);
-            }, 2000);
-            
-            setTimeout(() => {
-                if (appState.isInternational) {
-                    updateVisualFlow('International verification completed');
-                }
-            }, 2500);
-            
-            setTimeout(() => {
-                updateVisualFlow(`Payment processed successfully - ${paymentMethods[appState.paymentMethod].processingTime}`);
+                updateFlowLog(logId, {
+                    controller_method: 'PaymentController.processPayment',
+                    service_calls: {
+                        'PaymentService.executePayment': ['switch', paymentMethods[appState.paymentMethod].name],
+                        'ValidationService.validatePayment': appState.amount > 1000 ? ['guard', 'when'] : [],
+                        'SecurityService.processSecurely': ['sealed']
+                    },
+                    operation_description: `Payment processed successfully using ${paymentMethods[appState.paymentMethod].name} pattern`
+                });
+                
                 appState.processing = false;
-            }, 3000);
+            }, 1000);
         }
 
         // Reset demo
         function resetDemo() {
             appState = {
-                amount: 3996,
+                amount: 500,
                 paymentMethod: 'credit',
                 customerType: 'vip',
                 isInternational: false,
@@ -1042,13 +1169,33 @@
             
             // Reset displays
             setQuickTest(500);
-            clearVisualFlow();
-            updateVisualFlow('Demo reset to initial state');
+            clearInspectorLog();
+            
+            const logId = createFlowLog('Reset Demo', 'POST', '/api/demo/reset');
+            setTimeout(() => {
+                updateFlowLog(logId, {
+                    controller_method: 'DemoController.reset',
+                    service_calls: {
+                        'DemoService.resetState': ['pattern matching']
+                    },
+                    operation_description: 'Demo reset to initial state'
+                });
+            }, 300);
         }
 
         // Run scenarios
         function runScenarios() {
-            updateVisualFlow('Running automated scenarios...');
+            const logId = createFlowLog('Run Scenarios', 'POST', '/api/demo/scenarios');
+            
+            setTimeout(() => {
+                updateFlowLog(logId, {
+                    controller_method: 'DemoController.runScenarios',
+                    service_calls: {
+                        'ScenarioService.executeAll': ['pattern matching', 'switch']
+                    },
+                    operation_description: 'Running automated test scenarios'
+                });
+            }, 300);
             
             const scenarioSteps = [
                 { amount: 500, method: 'credit', customer: 'basic', international: false },
@@ -1059,14 +1206,22 @@
             let stepIndex = 0;
             const runNextStep = () => {
                 if (stepIndex >= scenarioSteps.length) {
-                    updateVisualFlow('All scenarios completed');
+                    const finalLogId = createFlowLog('Scenarios Complete', 'GET', '/api/demo/scenarios/status');
+                    setTimeout(() => {
+                        updateFlowLog(finalLogId, {
+                            controller_method: 'DemoController.getScenariosStatus',
+                            service_calls: {
+                                'ScenarioService.getResults': ['pattern matching']
+                            },
+                            operation_description: 'All scenarios completed successfully'
+                        });
+                    }, 300);
                     return;
                 }
                 
                 const step = scenarioSteps[stepIndex];
-                updateVisualFlow(`Scenario ${stepIndex + 1}: ${step.amount} ${step.method} ${step.customer} ${step.international ? 'international' : 'domestic'}`);
                 
-                // Apply scenario
+                // Apply scenario changes
                 setQuickTest(step.amount);
                 selectPaymentMethod(step.method);
                 selectCustomerType(step.customer);
@@ -1077,7 +1232,7 @@
                 setTimeout(runNextStep, 2000);
             };
             
-            runNextStep();
+            setTimeout(runNextStep, 1000);
         }
 
         // Initialize when page loads
