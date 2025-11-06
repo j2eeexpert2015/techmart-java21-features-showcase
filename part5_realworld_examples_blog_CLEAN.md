@@ -60,27 +60,27 @@ String email = STR."""
 
 ### Output
 
-```
-Dear Sarah Johnson,
+**Result:**
 
-Thank you for your order!
-
-Order #ORD-1001
-Date: 2024-11-06T10:30:00
-
-ITEMS:
-1x Laptop Pro
-Price: $1299.99
-2x Wireless Mouse
-Price: $59.98
-
-Total: $1375.96
-
-Track: https://store.com/track/ORD-1001
-
-Best regards,
-The Team
-```
+> Dear Sarah Johnson,  
+>   
+> Thank you for your order!  
+>   
+> Order #ORD-1001  
+> Date: 2024-11-06T10:30:00  
+>   
+> ITEMS:  
+> 1x Laptop Pro  
+> Price: $1299.99  
+> 2x Wireless Mouse  
+> Price: $59.98  
+>   
+> Total: $1375.96  
+>   
+> Track: https://store.com/track/ORD-1001  
+>   
+> Best regards,  
+> The Team
 
 **Key Points:**
 - Natural multi-line formatting with triple quotes
@@ -126,31 +126,31 @@ String invoice = STR."""
 
 ### Output
 
-```
-═══════════════════════════════════
-      INVOICE #ORD-1001
-═══════════════════════════════════
+**Result:**
 
-Customer: Sarah Johnson
-Date: 2024-11-06
-
-ITEMS:
-Laptop Pro
-Qty: 1
-Price: $1299.99
-Total: $1299.99
-Wireless Mouse
-Qty: 2
-Price: $29.99
-Total: $59.98
-
-───────────────────────────────────
-Total: $1375.96
-═══════════════════════════════════
-
-Payment: Credit Card
-Status: CONFIRMED
-```
+> ═══════════════════════════════════  
+> INVOICE #ORD-1001  
+> ═══════════════════════════════════  
+>   
+> Customer: Sarah Johnson  
+> Date: 2024-11-06  
+>   
+> ITEMS:  
+> Laptop Pro  
+> Qty: 1  
+> Price: $1299.99  
+> Total: $1299.99  
+> Wireless Mouse  
+> Qty: 2  
+> Price: $29.99  
+> Total: $59.98  
+>   
+> ───────────────────────────────────  
+> Total: $1375.96  
+> ═══════════════════════════════════  
+>   
+> Payment: Credit Card  
+> Status: CONFIRMED
 
 **Key Points:**
 - Unicode box characters preserved in template
@@ -180,14 +180,10 @@ String query = STR."""
 
 **What Happens (Injection):**
 
-```sql
--- Query becomes:
-SELECT * FROM orders 
-WHERE email = ''; DROP TABLE orders; --'
-             ↑    ↑
-             |    Malicious command executes!
-             Query ends here
-```
+> SELECT * FROM orders  
+> WHERE email = ''; DROP TABLE orders; --'  
+>   
+> ↑ Query ends here | Malicious command executes! →
 
 **End Result:** 💀 Your orders table is deleted!
 
@@ -298,12 +294,12 @@ String sms = FMT."""
 
 ### Output
 
-```
-Order ORD-1001 confirmed!
-Total: $1375.96
-Items: 2
-Track: store.com/t/ORD-1001
-```
+**Result:**
+
+> Order ORD-1001 confirmed!  
+> Total: $1375.96  
+> Items: 2  
+> Track: store.com/t/ORD-1001
 
 **Format Specifiers:**
 - `%s` - String
